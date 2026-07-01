@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { gradientLeafbtn, styles } from "./styles";
 
-export default function CreateSheet() {
+export default function ShareSheet() {
   return (
     <TouchableOpacity
       activeOpacity={0.1}
@@ -16,7 +16,7 @@ export default function CreateSheet() {
         end={{ x: 0, y: 0 }}
         style={styles.leafBtn}
       >
-        <Text style={styles.btnText}>Click Me</Text>
+        <Text style={styles.btnText}>Shared Sheet</Text>
       </LinearGradient>
 
       <LinearGradient {...gradientLeafbtn}

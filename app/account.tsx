@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { gradientConfig, gradientLeafbtn, styles } from "./styles";
 // import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import HeaderComp from "./headercomp";
 
 GoogleSignin.configure({
   webClientId:
@@ -14,7 +16,7 @@ GoogleSignin.configure({
   ],
 });
 
-export default function HomeScreen() {
+export default function Account() {
 
   type FileItem = {
     id: string;
@@ -22,6 +24,9 @@ export default function HomeScreen() {
   };
   const [files, setFiles] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const [hue, setHue] = useState(0);
   //const [errorLog, setErrorLog] = useState("Account");
 
   const getSheets = async () => {
@@ -48,7 +53,7 @@ export default function HomeScreen() {
       const url =
         `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
           query
-        )}&fields=files(id,name)`;
+        )}&fields=files(id,name,appProperties)`;
 
       //setErrorLog(prev => prev + ":" + url)
       const response = await fetch(url, {
@@ -72,22 +77,36 @@ export default function HomeScreen() {
     }
   };
 
+
+
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      console.log("get Value ");
+      console.log(savedValue);
+
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+        console.log(hue);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("error");
+    }
+  };
+
   useEffect(() => {
+    loadHue();
     getSheets();
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-      }}
-    >
+    <View >
 
-      <View style={[styles.headerLayout]}>
-        <Text style={styles.title}>Account</Text>
-      </View>
+      <HeaderComp />
       <View style={[styles.bodyLayout]}>
+
+
         {/* <Button
           title="Continue with Google Sheet"
           onPress={getSheets}
@@ -114,7 +133,7 @@ export default function HomeScreen() {
                 styles.fileItem,
                 selectedFile?.id === item.id && styles.active,
               ]}
-              onPress={() => setSelectedFile(item)}
+              onPress={() => router.push({ pathname: "/detailspage", params: { layout: item.appProperties?.layout,id:item.id }, })}
             >
               <View style={styles.fileNumber}>
                 <Text style={styles.numberText}>
@@ -133,17 +152,28 @@ export default function HomeScreen() {
       <LinearGradient {...gradientConfig}>
         <View style={[styles.footerLayout]}>
 
+          <TouchableOpacity onPress={() => router.push({ pathname: "/detailspage", })}>
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text style={styles.btnText}>
+                Open
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push({ pathname: "/sharesheet", })}>
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text style={styles.btnText}>
+                Share
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
           <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
-            <LinearGradient
-              {...gradientLeafbtn}
-                      style={styles.leafBtn}
-              
-            >
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text style={styles.btnText}>
                 Create New Account
               </Text>
             </LinearGradient>
-           
           </TouchableOpacity>
 
         </View>

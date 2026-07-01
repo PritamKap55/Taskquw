@@ -1,3 +1,4 @@
+
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -6,9 +7,47 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#fff",
     },
+    settings: {
+        fontSize: 22,
+        position: 'absolute',
+        right: 10
+    },
+
+    overlay: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+
+
+    slidecontainer: {
+        width: '100%',
+        flexDirection: 'row', 
+    
+    },
+
+    rainbow: {
+        height: 25,
+    },
+    slider: {
+        position: 'absolute',
+        width: '105%',
+        height: 25,
+        left:-8
+        ,
+    },
+    container: {
+        width: '100%',
+       
+        zIndex: 10,
+    },
+
     headerLayout: {
         height: "9%",
-        backgroundColor: "#26362C",
+        // backgroundColor: 'hsl(20, 100%, 27%)',
+        alignItems: "center",
+        justifyContent: "flex-end",
     },
     bodyLayout: {
         height: "70%",
@@ -66,30 +105,30 @@ export const styles = StyleSheet.create({
     },
 
     buttonWrapper: {
-    // Keeps the button size constrained to the text width and centers it on the screen
-    alignSelf: 'center', 
-    marginVertical: 10,
-  },
-  leafBtn: {
-    // padding: 5px 13px;
-    paddingVertical: 5,     
-    paddingHorizontal: 13,    
-    
-    // border-radius: 60px 0 60px 0;
-    borderTopLeftRadius: 60,
-    borderBottomRightRadius: 60,
-    borderTopRightRadius: 0,
-    borderBottomLeftRadius: 0,
+        // Keeps the button size constrained to the text width and centers it on the screen
+        alignSelf: 'center',
+        marginVertical: 10,
+    },
+    leafBtn: {
+        // padding: 5px 13px;
+        paddingVertical: 5,
+        paddingHorizontal: 13,
 
-    // display: flex; align-items: center; justify-content: center;
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnText: {
-    color: 'black',        // color: black;
-    fontWeight: 'bold',    // font-weight: bold;
-    fontSize: 16,
-  },
+        // border-radius: 60px 0 60px 0;
+        borderTopLeftRadius: 60,
+        borderBottomRightRadius: 60,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 0,
+
+        // display: flex; align-items: center; justify-content: center;
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    btnText: {
+        color: 'black',        // color: black;
+        fontWeight: 'bold',    // font-weight: bold;
+        fontSize: 16,
+    },
 });
 
 export const gradientConfig: {
@@ -101,13 +140,13 @@ export const gradientConfig: {
 };
 
 export const gradientLeafbtn: {
-  colors: readonly [string, string];
-  locations: readonly [number, number];
-  start: { x: number; y: number };
-  end: { x: number; y: number };
+    colors: readonly [string, string];
+    locations: readonly [number, number];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
 } = {
-  colors: [ "#f4f806","#03870c"],
-  locations: [0, 1],
-  start: { x: 0, y: 0 }, // Left sides
-  end: { x: 1, y: 0 },   // Right side
+    colors: ["#f4f806", "#03870c"],
+    locations: [0, 1],
+    start: { x: 0, y: 0 }, // Left sides
+    end: { x: 1, y: 0 },   // Right side
 };
