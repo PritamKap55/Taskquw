@@ -18,16 +18,10 @@ export default function HomeScreen() {
 
   const login = async () => {
     try {
-
-      //setErrorLog(prev => prev  + ":" + "login")
       await GoogleSignin.hasPlayServices();
-      //setErrorLog(prev => prev +  ":" + "GoogleSignin.hasPlayServices()")
       const userInfo = await GoogleSignin.signIn();
-      //setErrorLog(prev => prev +  ":" + "GoogleSignin.signIn()")
       console.log(userInfo);
-
       router.push({
-
         pathname: "/account",
         params: {
           access_token: userInfo.data?.idToken, headtext: "Account"
@@ -36,40 +30,20 @@ export default function HomeScreen() {
 
     } catch (error) {
       console.log(error);
-      //setErrorLog(prev => prev +  ":" + "error")
-      //setErrorLog(prev => prev +  ":" + error)
     }
   };
 
   return (
-    <Pressable
-      style={{ flex: 1 }}
-      onPress={changeColor}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: bgColor,
-        }}
-
-      >
+    <Pressable style={{ flex: 1 }} onPress={changeColor}>
+      <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',backgroundColor: bgColor,}}>
         <View style={styles.container}>
-
           <Text style={styles.heading}>
             Welcome!...
           </Text>
 
           <Text style={styles.heading}>
-            {/* {errorLog} */}
           </Text>
-
-
-          <Pressable
-            style={styles.button}
-            onPress={login}
-          >
+          <Pressable style={styles.button} onPress={login}>
             <Text style={styles.buttonText}>
               Login
             </Text>
@@ -77,7 +51,5 @@ export default function HomeScreen() {
         </View>
       </View>
     </Pressable>
-
   );
-
 }

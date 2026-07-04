@@ -1,23 +1,34 @@
 import CheckBox from '@react-native-community/checkbox';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useRoute } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-import { gradientConfig, styles } from "./styles";
-import { LinearGradient } from 'expo-linear-gradient';
+import { gradientLeafbtn, styles } from "./styles";
 
 export default function ListLayout() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const route = useRoute();
   const [items, setItems] = useState<any[]>([]);
   const [files, setFiles] = useState<any>(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
 
   const params = useLocalSearchParams();
+  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
+  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
+  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
+  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
+
+  const gradientConfig: {
+    colors: readonly [string, string, string];
+    locations: readonly [number, number, number];
+  } = {
+    colors: [bgF1Color, bgF2Color, bgF3Color],
+    locations: [0, 0.5, 1],
+  };
 
   const handleChange = (
     index: number,
@@ -51,10 +62,8 @@ export default function ListLayout() {
 
       const col = colMap[field];
 
-      await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn();
-      const tokens = await GoogleSignin.getTokens();
-      const accessToken = tokens.accessToken;
+      const accessToken = await getAccessToken();
+      if (!accessToken) return;
 
       await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!${col}${index + 2}?valueInputOption=USER_ENTERED`,
@@ -79,10 +88,8 @@ export default function ListLayout() {
 
   const getSheetData = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn();
-      const tokens = await GoogleSignin.getTokens();
-      const accessToken = tokens.accessToken;
+      const accessToken = await getAccessToken();
+      if (!accessToken) return;
       const res = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!A2:C100`,
         {
@@ -125,8 +132,6 @@ export default function ListLayout() {
     }
   };
 
-
-
   const deleteRow = async (rowIndex: number) => {
     Alert.alert(
       "Delete Row",
@@ -141,10 +146,8 @@ export default function ListLayout() {
           style: "destructive",
           onPress: async () => {
             try {
-              await GoogleSignin.hasPlayServices();
-              await GoogleSignin.signIn();
-              const tokens = await GoogleSignin.getTokens();
-              const accessToken = tokens.accessToken;
+              const accessToken = await getAccessToken();
+              if (!accessToken) return;
               const response = await fetch(
                 `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}:batchUpdate`,
                 {
@@ -200,73 +203,31 @@ export default function ListLayout() {
 
   return (
     <>
-      <HeaderComp />
-      <View style={[styles.bodyLayout]}>
+      <HeaderComp hue={hue} setHue={setHue} />
+      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
 
-        <ScrollView
-          style={{
-            flex: 1,
-            padding: 10,
-          }}
-        >
+        <ScrollView style={{ flex: 1, padding: 10, }}>
           {items.map((item, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              {/* Checkbox */}
+            <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 10, }} >
               {(params?.layout === "Check List") && (
-                <CheckBox
-                  value={String(item.bool).trim().toUpperCase() === "TRUE"}
-                  onValueChange={(value) =>
-                    handleChange(
-                      index,
-                      "bool",
-                      value ? "TRUE" : "FALSE"
-                    )
-                  }
+                <CheckBox value={String(item.bool).trim().toUpperCase() === "TRUE"}
+                  onValueChange={(value) => handleChange(index, "bool", value ? "TRUE" : "FALSE")}
                 />
               )}
-
-              {/* Text input */}
-              <TextInput
-                style={{
-                  flex: 1,
-                  borderBottomWidth: 1,
-                  marginHorizontal: 10,
-                }}
-                value={item.text}
-                onChangeText={(text) =>
-                  handleChange(index, "text", text)
-                }
-                onBlur={() =>
-                  Submit(index, "text", item.text)
-                }
+              <TextInput style={{ flex: 1, borderBottomWidth: 1, marginHorizontal: 10, }}
+                value={item.text} onChangeText={(text) => handleChange(index, "text", text)}
+                onBlur={() => Submit(index, "text", item.text)}
               />
 
-              {/* Note icon */}
-              <TouchableOpacity
-                onPress={() => setOpenNoteIndex(openNoteIndex === index ? null : index)}
-              >
+              <TouchableOpacity onPress={() => setOpenNoteIndex(openNoteIndex === index ? null : index)} >
                 <Text style={{ fontSize: 20 }}>
                   {item.note === "" ? "📌" : "📋"}
                 </Text>
               </TouchableOpacity>
 
               {/* Delete */}
-              <TouchableOpacity
-                onPress={() => deleteRow(index)}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    marginLeft: 10,
-                  }}
-                >
+              <TouchableOpacity onPress={() => deleteRow(index)}>
+                <Text style={{ fontSize: 20, marginLeft: 10, }}>
                   ❌
                 </Text>
               </TouchableOpacity>
@@ -302,98 +263,61 @@ export default function ListLayout() {
           ))}
         </ScrollView>
       </View>
-      <LinearGradient {...gradientConfig}>
-        <View style={[styles.footerLayout]}>
-          <Text>Name</Text>
+      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+        <View style={styles.inputBox}>
+          <Text style={styles.inputlabel}>Name</Text>
 
           <TextInput
             placeholder="Enter File name"
             value={fileName}
             onChangeText={setFileName}
-            style={{
-              borderWidth: 1,
-              marginBottom: 10,
-              padding: 8,
-            }}
+            style={styles.inputtext}
           />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity
-              // onPress={downloadPDF}
-              style={{
-                padding: 10,
-                borderWidth: 1,
-              }}
-            >
-              <Text>Download PDF</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              // onPress={downloadCSV}
-              style={{
-                padding: 10,
-                borderWidth: 1,
-              }}
-            >
-              <Text>Download CSV</Text>
-            </TouchableOpacity>
-          </View>
         </View>
-      </LinearGradient>
-      {/* Delete Popup */}
-      {showDeletePopup && (
         <View
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          <View
+
+          <TouchableOpacity
+            // onPress={downloadPDF}
             style={{
-              backgroundColor: "#fff",
-              padding: 20,
-              borderRadius: 10,
+              padding: 10,
+              borderWidth: 1,
             }}
           >
-            <Text>
-              Are you sure you want to delete?
-            </Text>
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text>Share</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 10,
-              }}
-            >
-              <TouchableOpacity
-                //onPress={confirmDelete}
-                style={{ marginRight: 20 }}
-              >
-                <Text>Yes</Text>
-              </TouchableOpacity>
+          <TouchableOpacity
+            // onPress={downloadPDF}
+            style={{
+              padding: 10,
+              borderWidth: 1,
+            }}
+          ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text>Download PDF</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() =>
-                  setShowDeletePopup(false)
-                }
-              >
-                <Text>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <TouchableOpacity
+            // onPress={downloadCSV}
+            style={{
+              padding: 10,
+              borderWidth: 1,
+            }}
+          >
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text>Download CSV</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-      )}
+
+      </LinearGradient>
 
     </>
   );

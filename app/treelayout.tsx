@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  StyleSheet,
   Text,
-  View,
+  TouchableOpacity,
+  View
 } from "react-native";
 
-import { useLocalSearchParams } from "expo-router";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { router, useLocalSearchParams } from "expo-router";
 
+import { LinearGradient } from "expo-linear-gradient";
+import { getAccessToken } from "./googleAuth";
+import HeaderComp from "./headercomp";
+import { gradientLeafbtn, styles } from "./styles";
 import TreeView from "./treeview";
 
 type TreeNodeType = {
@@ -19,14 +22,23 @@ type TreeNodeType = {
   children: TreeNodeType[];
 };
 
-const TreeLayout = ({
-  hue = "#4f46e5",
-}: {
-  hue?: string;
-}) => {
+const TreeLayout = () => {
   const params = useLocalSearchParams();
-
   const [loading, setLoading] = useState(false);
+  const [hue, setHue] = useState(0);
+  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
+  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
+  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
+  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
+
+  const gradientConfig: {
+    colors: readonly [string, string, string];
+    locations: readonly [number, number, number];
+  } = {
+    colors: [bgF1Color, bgF2Color, bgF3Color],
+    locations: [0, 0.5, 1],
+  };
+
 
   const [treeData, setTreeData] = useState<TreeNodeType[]>([
     {
@@ -73,23 +85,11 @@ const TreeLayout = ({
     try {
       setLoading(true);
 
-      await GoogleSignin.hasPlayServices();
-
-      // Sign in if not already signed in
-      const userInfo = await GoogleSignin.signIn();
-
-      const tokens = await GoogleSignin.getTokens();
-      const accessToken = tokens.accessToken;
-
-      const spreadsheetId = params?.id;
-
-      if (!spreadsheetId) {
-        console.log("Spreadsheet ID missing");
-        return;
-      }
+      const accessToken = await getAccessToken();
+      if (!accessToken) return;
 
       const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:C100`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!A1:C100`,
         {
           method: "GET",
           headers: {
@@ -158,16 +158,10 @@ const TreeLayout = ({
 
       setTreeData(tree);
 
-      console.log(
-        "Generated Tree:",
-        tree
-      );
+      console.log("Generated Tree:", tree);
 
     } catch (error) {
-      console.log(
-        "Error:",
-        error
-      );
+      console.log("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -180,69 +174,36 @@ const TreeLayout = ({
   }, []);
 
   return (
-    <View style={styles.container}>
-      
-      <View
-        style={[
-          styles.headerLayout,
-          {
-            backgroundColor: hue,
-          },
-        ]}
-      >
-        <Text style={styles.headerText}>
-          {params?.name || "Tree"}
-        </Text>
-      </View>
+    <>
+      <HeaderComp hue={hue} setHue={setHue} />
+      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
 
-      <View style={styles.bodyLayout}>
-        {loading ? (
-          <ActivityIndicator
-            size="large"
-          />
-        ) : (
-          <TreeView
-            data={treeData}
-          />
-        )}
-      </View>
+        <View>
+          {loading ? (
+            <ActivityIndicator
+              size="large"
+            />
+          ) : (
+            <TreeView
+              data={treeData}
+            />
+          )}
+        </View>
 
-      <View
-        style={[
-          styles.footerLayout,
-          {
-            backgroundColor: hue,
-          },
-        ]}
-      />
-    </View>
+      </View>
+      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+
+        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
+          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+            <Text style={styles.btnText}>
+              Create New Account
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+      </LinearGradient>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  headerLayout: {
-    padding: 16,
-    alignItems: "center",
-  },
-
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-
-  bodyLayout: {
-    flex: 1,
-    padding: 12,
-  },
-
-  footerLayout: {
-    height: 60,
-  },
-});
 
 export default TreeLayout;

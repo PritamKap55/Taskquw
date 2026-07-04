@@ -1,11 +1,12 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { gradientConfig, gradientLeafbtn, styles } from "./styles";
+import { gradientLeafbtn, styles } from "./styles";
 // import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
 
 GoogleSignin.configure({
@@ -24,74 +25,53 @@ export default function Account() {
   };
   const [files, setFiles] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
-
   const [hue, setHue] = useState(0);
-  //const [errorLog, setErrorLog] = useState("Account");
+  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
+  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
+  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
+  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
+
+  const gradientConfig: {
+    colors: readonly [string, string, string];
+    locations: readonly [number, number, number];
+  } = {
+    colors: [bgF1Color, bgF2Color, bgF3Color],
+    locations: [0, 0.5, 1],
+  };
 
   const getSheets = async () => {
     try {
-      //  setErrorLog(prev => prev + ":" + "getSheets")
-      // Google login
-      await GoogleSignin.hasPlayServices();
-      //setErrorLog(prev => prev + ":" + "GoogleSignin.hasPlayServices()")
-      await GoogleSignin.signIn();
-      //setErrorLog(prev => prev + ":" + "GoogleSignin.signIn()")
+      const accessToken = await getAccessToken();
+      if (!accessToken) return;
 
-      // get token
-      const tokens = await GoogleSignin.getTokens();
-      //setErrorLog(prev => prev + ":" + "tokens")
-      //setErrorLog(prev => prev + ":" + tokens)
-      const accessToken = tokens.accessToken;
-      //setErrorLog(prev => prev + ":" + "accessToken")
-      //setErrorLog(prev => prev + ":" + accessToken)
-      // get only spreadsheet files
-      const query =
-        "mimeType='application/vnd.google-apps.spreadsheet'";
-      //setErrorLog(prev => prev + ":" + query)
-
+      const query = "mimeType='application/vnd.google-apps.spreadsheet'";
       const url =
         `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
           query
         )}&fields=files(id,name,appProperties)`;
-
-      //setErrorLog(prev => prev + ":" + url)
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      //setErrorLog(prev => prev + ":" + "response")
-      const data = await response.json();
-      //setErrorLog(prev => prev + ":" + "data")
-      //setErrorLog(prev => prev + ":" + data)
 
-      console.log("Sheets List:");
-      console.log(data.files);
+      const data = await response.json();
+
       setFiles(data.files);
-      //setErrorLog(prev => prev + ":" + data.files)
+
     } catch (error) {
-      console.log(error);
-      //setErrorLog(prev => prev + ":" + "error")
-      //setErrorLog(prev => prev + ":" + error)
+      console.log("Error", error);
     }
   };
-
-
 
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
-      console.log("get Value ");
-      console.log(savedValue);
-
       if (savedValue !== null) {
         setHue(parseInt(savedValue, 10));
-        console.log(hue);
       }
     } catch (error) {
-      console.log(error);
-      console.log("error");
+      console.log("Error", error);
     }
   };
 
@@ -100,39 +80,22 @@ export default function Account() {
     getSheets();
   }, []);
 
+  useEffect(() => {
+    console.log("Hue:", hue);
+  }, [hue]);
+
+
   return (
-    <View >
-
-      <HeaderComp />
-      <View style={[styles.bodyLayout]}>
-
-
-        {/* <Button
-          title="Continue with Google Sheet"
-          onPress={getSheets}
-        /> */}
-        <Text>
-          {/* {errorLog} */}
-        </Text>
-        {/* <FlatList
-          data={files}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Text>{item.name}</Text>
-          )}
-        /> */}
-
+    <>
+      <HeaderComp hue={hue} setHue={setHue} />
+      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
         <FlatList
           data={files}
           keyExtractor={(item) => item.id}
           numColumns={1}
           contentContainerStyle={styles.fileList}
           renderItem={({ item, index }) => (
-            <TouchableOpacity
-              style={[
-                styles.fileItem,
-                selectedFile?.id === item.id && styles.active,
-              ]}
+            <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
               onPress={() => router.push({ pathname: "/detailspage", params: { layout: item.appProperties?.layout, id: item.id, headtext: item.name }, })}
             >
               <View style={styles.fileNumber}>
@@ -149,38 +112,17 @@ export default function Account() {
         />
       </View>
 
-      <LinearGradient {...gradientConfig}>
-        <View style={[styles.footerLayout]}>
+      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
 
-          <TouchableOpacity onPress={() => router.push({ pathname: "/detailspage", })}>
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text style={styles.btnText}>
-                Open
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => router.push({ pathname: "/sharesheet", })}>
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text style={styles.btnText}>
-                Share
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text style={styles.btnText}>
-                Create New Account
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-        </View>
+        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
+          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+            <Text style={styles.btnText}>
+              Create New Account
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
 
       </LinearGradient>
-
-
-    </View>
+    </>
   );
 }

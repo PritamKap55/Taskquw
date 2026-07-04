@@ -44,8 +44,7 @@ export const styles = StyleSheet.create({
     },
 
     headerLayout: {
-        height: "9%",
-        // backgroundColor: 'hsl(20, 100%, 27%)',
+        height: "10%",
         alignItems: "center",
         justifyContent: "flex-end",
     },
@@ -55,6 +54,7 @@ export const styles = StyleSheet.create({
     },
 
     footerLayout: {
+        
         height: "20%",
         alignItems: "center",
         justifyContent: "center",
@@ -171,15 +171,38 @@ export const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
     },
+
+   
+  inputBox: {
+    borderRadius: 4,
+    overflow: "hidden",
+    paddingTop: 5,
+    paddingBottom: 5,
+    width: "90%",
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputlabel: {
+    backgroundColor: "#22653a",
+    color: "white",
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    minWidth: "25%",
+    textAlign: "center",
+  },
+
+  inputtext: {
+    flex: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    backgroundColor: "#FFF",
+    color: "#1b5e52",
+  },
+
 });
 
-export const gradientConfig: {
-    colors: readonly [string, string, string];
-    locations: readonly [number, number, number];
-} = {
-    colors: ["#e4e6db", "#c0cfb2", "#8ca98a"],
-    locations: [0, 0.5, 1],
-};
+
 
 export const gradientLeafbtn: {
     colors: readonly [string, string];
