@@ -2,11 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import Slider from '@react-native-community/slider';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "./styles";
 
 export default function HeaderLayout() {
+  const params = useLocalSearchParams();
   const [hue, setHue] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [huechecke, setHuechecke] = useState(false);
@@ -52,7 +54,7 @@ export default function HeaderLayout() {
           { backgroundColor: bgColor }
         ]}
       >
-        <Text style={styles.title}>Account</Text>
+        <Text style={styles.title}>{params?.headtext}</Text>
 
         <TouchableOpacity
           style={styles.settings}
@@ -62,42 +64,42 @@ export default function HeaderLayout() {
         </TouchableOpacity>
       </View>
       {showPopup && (
-      <View style={{ position: "absolute", zIndex: 10, top: "9%", width: "100%", }}>
+        <View style={{ position: "absolute", zIndex: 10, top: "9%", width: "100%", }}>
 
-        <View style={styles.slidecontainer}>
+          <View style={styles.slidecontainer}>
 
-          <View style={styles.container}>
-            <LinearGradient
-              colors={['red', 'yellow', 'lime', 'cyan', 'blue', 'magenta', 'red',]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.rainbow} />
+            <View style={styles.container}>
+              <LinearGradient
+                colors={['red', 'yellow', 'lime', 'cyan', 'blue', 'magenta', 'red',]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.rainbow} />
 
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={360}
-              value={hue}
-              minimumTrackTintColor="transparent"
-              maximumTrackTintColor="transparent"
-              onValueChange={(value) => setHue(Math.round(value))}
-              onSlidingComplete={(value) => saveHue(Math.round(value))} />
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={360}
+                value={hue}
+                minimumTrackTintColor="transparent"
+                maximumTrackTintColor="transparent"
+                onValueChange={(value) => setHue(Math.round(value))}
+                onSlidingComplete={(value) => saveHue(Math.round(value))} />
+            </View>
           </View>
-        </View>
-        <CheckBox
-          value={huechecke}
-          onValueChange={setHuechecke}
-          tintColors={{
-            true: 'red',
-            false: 'gray',
-          }}
-          style={{
-            marginLeft: 'auto',
-            transform: [{ scale: 1.7 }],
-          }} />
+          <CheckBox
+            value={huechecke}
+            onValueChange={setHuechecke}
+            tintColors={{
+              true: 'red',
+              false: 'gray',
+            }}
+            style={{
+              marginLeft: 'auto',
+              transform: [{ scale: 1.7 }],
+            }} />
 
 
-      </View>)}
+        </View>)}
     </>
   );
 }

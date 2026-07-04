@@ -3,9 +3,10 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useRoute } from '@react-navigation/native';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import HeaderComp from "./headercomp";
-import { styles } from "./styles";
+import { gradientConfig, styles } from "./styles";
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ListLayout() {
   const [fileName, setFileName] = useState("");
@@ -14,13 +15,13 @@ export default function ListLayout() {
   const [items, setItems] = useState<any[]>([]);
   const [files, setFiles] = useState<any>(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [openNoteIndex, setOpenNoteIndex] = useState(null);
+  const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
+
   const params = useLocalSearchParams();
-  console.log("Fileid", params.id)
 
   const handleChange = (
     index: number,
-    field: string,
+    field: "text" | "note" | "bool",
     value: any
   ) => {
     const newItems = [...items];
@@ -31,8 +32,49 @@ export default function ListLayout() {
     };
 
     setItems(newItems);
+    if (field == "bool") {
+      Submit(index, field, value);
+    }
+  };
 
-    //Submit(index, field, value);
+  const Submit = async (
+    index: number,
+    field: "text" | "note" | "bool",
+    value: string | boolean
+  ) => {
+    try {
+      const colMap = {
+        text: "A",
+        note: "B",
+        bool: "C",
+      };
+
+      const col = colMap[field];
+
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn();
+      const tokens = await GoogleSignin.getTokens();
+      const accessToken = tokens.accessToken;
+
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!${col}${index + 2}?valueInputOption=USER_ENTERED`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            values: [[value]],
+          }),
+        }
+      );
+
+      await getSheetData();
+
+    } catch (error) {
+      console.log("Submit Error:", error);
+    }
   };
 
   const getSheetData = async () => {
@@ -53,7 +95,7 @@ export default function ListLayout() {
       );
 
       const data = await res.json();
-
+      console.log("data get", data)
       const values = data?.values || [];
 
       let updated = values.map((row: any[]) => ({
@@ -81,6 +123,66 @@ export default function ListLayout() {
     } catch (error) {
       console.log("Error loading sheet:", error);
     }
+  };
+
+
+
+  const deleteRow = async (rowIndex: number) => {
+    Alert.alert(
+      "Delete Row",
+      "Are you sure you want to delete this row?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await GoogleSignin.hasPlayServices();
+              await GoogleSignin.signIn();
+              const tokens = await GoogleSignin.getTokens();
+              const accessToken = tokens.accessToken;
+              const response = await fetch(
+                `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}:batchUpdate`,
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    requests: [
+                      {
+                        deleteDimension: {
+                          range: {
+                            sheetId: 0, // Sheet1 ID
+                            dimension: "ROWS",
+                            startIndex: rowIndex + 1, // skip header row
+                            endIndex: rowIndex + 2,
+                          },
+                        },
+                      },
+                    ],
+                  }),
+                }
+              );
+
+              const data = await response.json();
+
+              console.log("Delete Success:", data);
+
+              await getSheetData();
+
+            } catch (error) {
+              console.log("Delete Error:", error);
+            }
+          },
+        },
+      ]
+    );
   };
 
   useEffect(() => {
@@ -119,7 +221,7 @@ export default function ListLayout() {
               {/* Checkbox */}
               {(params?.layout === "Check List") && (
                 <CheckBox
-                  value={item.bool === "TRUE"}
+                  value={String(item.bool).trim().toUpperCase() === "TRUE"}
                   onValueChange={(value) =>
                     handleChange(
                       index,
@@ -141,11 +243,14 @@ export default function ListLayout() {
                 onChangeText={(text) =>
                   handleChange(index, "text", text)
                 }
+                onBlur={() =>
+                  Submit(index, "text", item.text)
+                }
               />
 
               {/* Note icon */}
               <TouchableOpacity
-              // onPress={() =>setOpenNoteIndex( openNoteIndex === index ? null : index)}
+                onPress={() => setOpenNoteIndex(openNoteIndex === index ? null : index)}
               >
                 <Text style={{ fontSize: 20 }}>
                   {item.note === "" ? "📌" : "📋"}
@@ -154,7 +259,7 @@ export default function ListLayout() {
 
               {/* Delete */}
               <TouchableOpacity
-              //onPress={() => deleteRow(index)}
+                onPress={() => deleteRow(index)}
               >
                 <Text
                   style={{
@@ -176,14 +281,20 @@ export default function ListLayout() {
                   onChangeText={(text) =>
                     handleChange(index, "note", text)
                   }
+                  onBlur={() =>
+                    Submit(index, "note", item.note)
+                  }
                   style={{
                     position: "absolute",
                     top: 40,
-                    right: 0,
+                    // right: 0,
+                    left: "50%",
+                    transform: [{ translateX: -100 }], // half of width (200/2)
                     width: 200,
                     borderWidth: 1,
                     backgroundColor: "#fff",
                     padding: 8,
+                    zIndex: 9
                   }}
                 />
               )}
@@ -191,48 +302,49 @@ export default function ListLayout() {
           ))}
         </ScrollView>
       </View>
-      <View style={[styles.footerLayout]}>
-        <Text>Name</Text>
+      <LinearGradient {...gradientConfig}>
+        <View style={[styles.footerLayout]}>
+          <Text>Name</Text>
 
-        <TextInput
-          placeholder="Enter File name"
-          value={fileName}
-          onChangeText={setFileName}
-          style={{
-            borderWidth: 1,
-            marginBottom: 10,
-            padding: 8,
-          }}
-        />
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            // onPress={downloadPDF}
+          <TextInput
+            placeholder="Enter File name"
+            value={fileName}
+            onChangeText={setFileName}
             style={{
-              padding: 10,
               borderWidth: 1,
+              marginBottom: 10,
+              padding: 8,
+            }}
+          />
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            <Text>Download PDF</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={downloadPDF}
+              style={{
+                padding: 10,
+                borderWidth: 1,
+              }}
+            >
+              <Text>Download PDF</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            // onPress={downloadCSV}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-            }}
-          >
-            <Text>Download CSV</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={downloadCSV}
+              style={{
+                padding: 10,
+                borderWidth: 1,
+              }}
+            >
+              <Text>Download CSV</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-
+      </LinearGradient>
       {/* Delete Popup */}
       {showDeletePopup && (
         <View

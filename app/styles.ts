@@ -23,8 +23,8 @@ export const styles = StyleSheet.create({
 
     slidecontainer: {
         width: '100%',
-        flexDirection: 'row', 
-    
+        flexDirection: 'row',
+
     },
 
     rainbow: {
@@ -34,12 +34,12 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         width: '105%',
         height: 25,
-        left:-8
+        left: -8
         ,
     },
     container: {
         width: '100%',
-       
+
         zIndex: 10,
     },
 
@@ -128,6 +128,48 @@ export const styles = StyleSheet.create({
         color: 'black',        // color: black;
         fontWeight: 'bold',    // font-weight: bold;
         fontSize: 16,
+    },
+    tableContainer: {
+        maxHeight: 350,
+        borderRadius: 4,
+    },
+    row: {
+        flexDirection: "row",
+        borderWidth: 1,
+        minHeight: 50,
+        alignItems: "center",
+    },
+
+    headerRow: {
+        backgroundColor: "#ddd",
+    },
+    cell: {
+        width: 120,
+        padding: 10,
+    },
+
+    actionContainer: {
+        flexDirection: "row",
+    },
+
+    icon: {
+        fontSize: 20,
+        marginHorizontal: 10,
+    },
+    button: {
+        borderWidth: 1,
+        padding: 10,
+        marginTop: 10,
+        alignItems: "center",
+    },
+
+    buttonText: {
+        fontWeight: "bold",
+    },
+    input: {
+        borderWidth: 1,
+        marginVertical: 10,
+        padding: 10,
     },
 });
 

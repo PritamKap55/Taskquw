@@ -133,7 +133,7 @@ export default function Account() {
                 styles.fileItem,
                 selectedFile?.id === item.id && styles.active,
               ]}
-              onPress={() => router.push({ pathname: "/detailspage", params: { layout: item.appProperties?.layout,id:item.id }, })}
+              onPress={() => router.push({ pathname: "/detailspage", params: { layout: item.appProperties?.layout, id: item.id, headtext: item.name }, })}
             >
               <View style={styles.fileNumber}>
                 <Text style={styles.numberText}>

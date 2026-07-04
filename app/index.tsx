@@ -27,17 +27,17 @@ export default function HomeScreen() {
       console.log(userInfo);
 
       router.push({
-        
+
         pathname: "/account",
         params: {
-          access_token: userInfo.data?.idToken,
+          access_token: userInfo.data?.idToken, headtext: "Account"
         },
       });
 
     } catch (error) {
       console.log(error);
       //setErrorLog(prev => prev +  ":" + "error")
-       //setErrorLog(prev => prev +  ":" + error)
+      //setErrorLog(prev => prev +  ":" + error)
     }
   };
 
