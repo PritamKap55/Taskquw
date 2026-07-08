@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from "react";
-import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from "react-native";
-
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import {
-    useNavigation,
-    useRoute
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import HeaderComp from "./headercomp";
+import { gradientLeafbtn, styles } from "./styles";
+import { getAccessToken } from "./googleAuth";
 
-const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
+const TableLayoutEdit = () => {
+    const [hue, setHue] = useState(0);
+    const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
+    const bgF1Color = `hsl(${hue}, 100%, 94%)`;
+    const bgF2Color = `hsl(${hue}, 100%, 75%)`;
+    const bgF3Color = `hsl(${hue}, 100%, 27%)`;
+    const gradientConfig: {
+        colors: readonly [string, string, string];
+        locations: readonly [number, number, number];
+    } = {
+        colors: [bgF1Color, bgF2Color, bgF3Color],
+        locations: [0, 0.5, 1],
+    };
+
     type FormField = {
         label: string;
         value: string;
     };
     const route = useRoute();
     const navigation = useNavigation();
-
     const params = useLocalSearchParams();
-
     const [formData, setFormData] = useState<FormField[]>([]);
 
     useEffect(() => {
@@ -35,35 +38,21 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
     async function GetValue() {
         try {
             if (params?.selectedId !== "") {
-                await GoogleSignin.hasPlayServices();
-                await GoogleSignin.signIn();
-                const tokens = await GoogleSignin.getTokens();
-                const accesstoken = tokens.accessToken;
+                 const accessToken = await getAccessToken();
+                      if (!accessToken) return;
 
                 const response = await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values:batchGet?ranges=Sheet1!1:1&ranges=Sheet1!${params?.selectedId}:${params?.selectedId}`,
                     {
                         method: "GET",
                         headers: {
-                            Authorization: `Bearer ${accesstoken}`,
+                            Authorization: `Bearer ${accessToken}`,
                         },
                     }
                 );
-
                 const data = await response.json();
-
-                console.log(
-                    "Sheet Data:",
-                    data
-                );
-
-                const headers =
-                    data.valueRanges?.[0]
-                        ?.values?.[0] || [];
-
-                const row =
-                    data.valueRanges?.[1]
-                        ?.values?.[0] || [];
+                const headers = data.valueRanges?.[0]?.values?.[0] || [];
+                const row =data.valueRanges?.[1]?.values?.[0] || [];
 
                 const formatted =
                     headers.map(
@@ -79,7 +68,6 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
         } catch (error) {
 
             console.log("error", error)
-
         }
     }
 
@@ -92,18 +80,15 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
                     formData.map(
                         item => item.value
                     );
-                await GoogleSignin.hasPlayServices();
-                await GoogleSignin.signIn();
-                const tokens = await GoogleSignin.getTokens();
-                const accesstoken = tokens.accessToken;
-
+                 const accessToken = await getAccessToken();
+                      if (!accessToken) return;
                 await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!${params?.selectedId}:${params.selectedId}?valueInputOption=RAW`,
                     {
                         method: "PUT",
                         headers: {
                             Authorization:
-                                `Bearer ${accesstoken}`,
+                                `Bearer ${accessToken}`,
                             "Content-Type":
                                 "application/json",
                         },
@@ -125,18 +110,15 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
                     formData.map(
                         item => item.value
                     );
-                await GoogleSignin.hasPlayServices();
-                await GoogleSignin.signIn();
-                const tokens = await GoogleSignin.getTokens();
-                const accesstoken = tokens.accessToken;
-
+                const accessToken = await getAccessToken();
+                     if (!accessToken) return;
                 await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1:append?valueInputOption=RAW`,
                     {
                         method: "POST",
                         headers: {
                             Authorization:
-                                `Bearer ${accesstoken}`,
+                                `Bearer ${accessToken}`,
                             "Content-Type":
                                 "application/json",
                         },
@@ -147,10 +129,7 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
                 );
             }
 
-            Alert.alert(
-                "Success",
-                "Data saved"
-            );
+            Alert.alert("Success","Data saved");
 
             navigation.goBack();
 
@@ -184,172 +163,44 @@ const TableLayoutEdit = ({ hue = "#4f46e5" }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <>
 
-            <View
-                style={[
-                    styles.header,
-                    {
-                        backgroundColor: hue
-                    }
-                ]}
-            >
-                <Text style={styles.headerText}>
-                    Edit
-                </Text>
-            </View>
+            <HeaderComp hue={hue} setHue={setHue} />
+            <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
+                <ScrollView>
+                    {formData.map(
+                        (item, index) => (
+                            <View key={index} style={ styles.inputBox}>
+                                <Text style={styles.inputlabel}>
+                                    {params?.selectedId ==="1"? "Name": item.label}
+                                </Text>
 
-            <ScrollView
-                style={styles.body}
-            >
-                {formData.map(
-                    (item, index) => (
-                        <View
-                            key={index}
-                            style={
-                                styles.inputBox
-                            }
-                        >
-                            <Text
-                                style={
-                                    styles.label
-                                }
-                            >
-                                {params?.selectedId ===
-                                    "1"
-                                    ? "Name"
-                                    : item.label}
-                            </Text>
-
-                            <TextInput
-                                style={
-                                    styles.input
-                                }
-                                value={
-                                    item.value
-                                }
-                                onChangeText={(
-                                    text
-                                ) =>
-                                    handleChange(
-                                        index,
-                                        text
-                                    )
-                                }
-                            />
-                        </View>
-                    )
-                )}
-            </ScrollView>
-
-            <View
-                style={styles.footer}
-            >
-                {params?.selectedId ===
-                    "1" && (
-                        <TouchableOpacity
-                            style={
-                                styles.button
-                            }
-                            onPress={
-                                AddColumn
-                            }
-                        >
-                            <Text
-                                style={
-                                    styles.buttonText
-                                }
-                            >
-                                Add
-                            </Text>
-                        </TouchableOpacity>
+                                <TextInput style={styles.inputtext}
+                                    value={item.value}
+                                    onChangeText={(text) => handleChange(index, text)}
+                                />
+                            </View>
+                        )
                     )}
-
-                <TouchableOpacity
-                    style={
-                        styles.button
-                    }
-                    onPress={
-                        Submit
-                    }
-                >
-                    <Text
-                        style={
-                            styles.buttonText
-                        }
-                    >
-                        Submit
-                    </Text>
-                </TouchableOpacity>
-
+                </ScrollView>
             </View>
-        </View>
+            <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+
+                {params?.selectedId === "1" && (
+                    <TouchableOpacity style={styles.button} onPress={AddColumn} >
+                        <Text style={styles.buttonText} > Add </Text>
+                    </TouchableOpacity>
+                )}
+
+                <TouchableOpacity onPress={Submit}>
+                    <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                        <Text style={styles.btnText}>
+                            Submit
+                        </Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+            </LinearGradient>
+        </>
     );
 };
-
-const styles =
-    StyleSheet.create({
-        container: {
-            flex: 1,
-        },
-
-        header: {
-            padding: 15,
-            alignItems:
-                "center",
-        },
-
-        headerText: {
-            color: "#fff",
-            fontSize: 20,
-            fontWeight:
-                "bold",
-        },
-
-        body: {
-            flex: 1,
-            padding: 15,
-        },
-
-        inputBox: {
-            marginBottom: 15,
-        },
-
-        label: {
-            fontWeight:
-                "bold",
-            marginBottom: 5,
-        },
-
-        input: {
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 10,
-        },
-
-        footer: {
-            padding: 15,
-            flexDirection:
-                "row",
-            justifyContent:
-                "space-around",
-        },
-
-        button: {
-            backgroundColor:
-                "#4f46e5",
-            padding: 12,
-            borderRadius: 8,
-            minWidth: 120,
-            alignItems:
-                "center",
-        },
-
-        buttonText: {
-            color: "#fff",
-            fontWeight:
-                "bold",
-        },
-    });
-
 export default TableLayoutEdit;

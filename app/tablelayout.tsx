@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getAccessToken } from './googleAuth';
@@ -97,6 +97,7 @@ export default function ListLayout() {
                 <View style={styles.actionContainer}>
                   <TouchableOpacity
                   // onPress={() => navigate("TableLayoutEdit", {access_token,files,selectedId: rowIndex + 2,})}
+                   onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout:"", id: params?.id, headtext: "Table Edit", selectedId:rowIndex+2}, })}
                   >
                     <Text style={styles.icon}>✏️</Text>
                   </TouchableOpacity>

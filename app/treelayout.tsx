@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Text,
+  TextInput,
   TouchableOpacity,
   View
 } from "react-native";
 
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { getAccessToken } from "./googleAuth";
@@ -30,7 +31,7 @@ const TreeLayout = () => {
   const bgF1Color = `hsl(${hue}, 100%, 94%)`;
   const bgF2Color = `hsl(${hue}, 100%, 75%)`;
   const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-
+  const [fileName, setFileName] = useState("");
   const gradientConfig: {
     colors: readonly [string, string, string];
     locations: readonly [number, number, number];
@@ -192,16 +193,44 @@ const TreeLayout = () => {
 
       </View>
       <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+        <View style={styles.inputBox}>
+          
+          <TextInput
+            placeholder="Enter File name"
+            value={fileName}
+            onChangeText={setFileName}
+            style={styles.inputtext}
+          />
+           <TouchableOpacity
+          // onPress={downloadPDF}
+          >
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text>Share</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
-          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-            <Text style={styles.btnText}>
-              Create New Account
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+
+         
+
+          <TouchableOpacity
+          // onPress={downloadPDF}
+          ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text> search </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+         
+        </View>
 
       </LinearGradient>
+
     </>
   );
 };
