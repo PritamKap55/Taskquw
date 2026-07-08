@@ -283,10 +283,6 @@ export default function ListLayout() {
 
           <TouchableOpacity
             // onPress={downloadPDF}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-            }}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text>Share</Text>
@@ -295,24 +291,16 @@ export default function ListLayout() {
 
           <TouchableOpacity
             // onPress={downloadPDF}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-            }}
           ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text>Download PDF</Text>
+              <Text> PDF</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
             // onPress={downloadCSV}
-            style={{
-              padding: 10,
-              borderWidth: 1,
-            }}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text>Download CSV</Text>
+              <Text> CSV</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>

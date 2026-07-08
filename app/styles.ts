@@ -1,5 +1,6 @@
 
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+const { width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
     title: {
@@ -54,7 +55,7 @@ export const styles = StyleSheet.create({
     },
 
     footerLayout: {
-        
+
         height: "20%",
         alignItems: "center",
         justifyContent: "center",
@@ -135,7 +136,7 @@ export const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        borderWidth: 1,
+        borderWidth:0.5,
         minHeight: 50,
         alignItems: "center",
     },
@@ -172,33 +173,52 @@ export const styles = StyleSheet.create({
         padding: 10,
     },
 
-   
-  inputBox: {
-    borderRadius: 4,
-    overflow: "hidden",
-    paddingTop: 5,
-    paddingBottom: 5,
-    width: "90%",
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  inputlabel: {
-    backgroundColor: "#22653a",
-    color: "white",
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    minWidth: "25%",
-    textAlign: "center",
-  },
 
-  inputtext: {
-    flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    backgroundColor: "#FFF",
-    color: "#1b5e52",
-  },
+    inputBox: {
+        flexDirection: "row",
+        borderRadius: 4,
+        overflow: "hidden",
+        paddingTop: 5,
+        paddingBottom: 5,
+        width: "90%",
+        alignSelf: "center",
+        alignItems: "center",
+    },
+    inputlabel: {
+        backgroundColor: "#22653a",
+        color: "white",
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        width: "25%",
+        textAlign: "center",
+    },
+
+    inputtext: {
+        flex: 1,
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+        backgroundColor: "#FFF",
+        color: "#1b5e52",
+    },
+    carousel: {
+        width: width,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    slide: {
+        width: width, // use actual screen width
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+
+    card: {
+        width: width - 40, // leave space for padding
+        padding: 20,
+        borderRadius: 12,
+        backgroundColor: "#fff",
+    },
 
 });
 

@@ -1,10 +1,10 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-import { styles } from "./styles";
-import { LinearGradient } from 'expo-linear-gradient';
+import { gradientLeafbtn, styles } from "./styles";
 
 export default function ListLayout() {
   const params = useLocalSearchParams();
@@ -109,46 +109,62 @@ export default function ListLayout() {
             ))}
           </View>
         </ScrollView>
+
+        {/* Add Row */}
+        <TouchableOpacity
+          style={styles.button}
+        // onPress={() =>navigate("TableLayoutEdit", {access_token,files,selectedId: "0",})}
+        >
+          <Text style={styles.buttonText}>
+            + Add New Row
+          </Text>
+        </TouchableOpacity>
       </View>
-      {/* Add Row */}
-      <TouchableOpacity
-        style={styles.button}
-      // onPress={() =>navigate("TableLayoutEdit", {access_token,files,selectedId: "0",})}
-      >
-        <Text style={styles.buttonText}>
-          + Add New Row
-        </Text>
-      </TouchableOpacity>
 
-      {/* Footer */}
-        <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-        <Text>Name</Text>
+      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+        <View style={styles.inputBox}>
+          <Text style={styles.inputlabel}>Name</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Enter File Name"
-          value={fileName}
-          onChangeText={setFileName}
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-        // onPress={() => getOrCreateFile()}
+          <TextInput
+            placeholder="Enter File name"
+            value={fileName}
+            onChangeText={setFileName}
+            style={styles.inputtext}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          <Text style={styles.buttonText}>
-            Download PDF
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-        // onPress={() => getOrCreateFile()}
-        >
-          <Text style={styles.buttonText}>
-            Download CSV
-          </Text>
-        </TouchableOpacity>
-       </LinearGradient>
+          <TouchableOpacity
+          // onPress={downloadPDF}
+          >
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text>Share</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+          // onPress={downloadPDF}
+          ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text> PDF</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+          // onPress={downloadCSV}
+          >
+            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+              <Text> CSV</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+
+      </LinearGradient>
+
 
     </>
 

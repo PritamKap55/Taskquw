@@ -100,6 +100,7 @@ const TreeLayout = () => {
 
       const data = await res.json();
 
+
       console.log("Sheet Response:", data);
 
       if (!data.values) {
@@ -107,7 +108,6 @@ const TreeLayout = () => {
         return;
       }
 
-      // Skip header row
       const rows = data.values.slice(1);
 
       const list: TreeNodeType[] = rows.map(
