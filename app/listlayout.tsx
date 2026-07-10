@@ -1,13 +1,19 @@
 import CheckBox from '@react-native-community/checkbox';
-import { useRoute } from '@react-navigation/native';
+import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
+import * as Sharing from "expo-sharing";
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-import { gradientLeafbtn, styles } from "./styles";
 
+import * as FileSystem from "expo-file-system";
+import * as Print from "expo-print";
+;
+
+import { gradientLeafbtn, styles } from "./styles";
+global.Buffer = Buffer;
 export default function ListLayout() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
@@ -201,6 +207,8 @@ export default function ListLayout() {
     }
   }, []);
 
+
+
   return (
     <>
       <HeaderComp hue={hue} setHue={setHue} />
@@ -282,7 +290,7 @@ export default function ListLayout() {
         >
 
           <TouchableOpacity
-            // onPress={downloadPDF}
+            //onPress={downloadPDF}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text>Share</Text>
@@ -290,14 +298,14 @@ export default function ListLayout() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={downloadPDF}
+            //onPress={downloadPDF}
           ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text> PDF</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={downloadCSV}
+            //onPress={downloadCSV}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text> CSV</Text>

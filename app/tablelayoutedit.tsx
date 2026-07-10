@@ -1,12 +1,11 @@
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
-import { getAccessToken } from "./googleAuth";
 
 const TableLayoutEdit = () => {
     const [hue, setHue] = useState(0);
@@ -38,8 +37,8 @@ const TableLayoutEdit = () => {
     async function GetValue() {
         try {
             if (params?.selectedId !== "") {
-                 const accessToken = await getAccessToken();
-                      if (!accessToken) return;
+                const accessToken = await getAccessToken();
+                if (!accessToken) return;
 
                 const response = await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values:batchGet?ranges=Sheet1!1:1&ranges=Sheet1!${params?.selectedId}:${params?.selectedId}`,
@@ -52,7 +51,7 @@ const TableLayoutEdit = () => {
                 );
                 const data = await response.json();
                 const headers = data.valueRanges?.[0]?.values?.[0] || [];
-                const row =data.valueRanges?.[1]?.values?.[0] || [];
+                const row = data.valueRanges?.[1]?.values?.[0] || [];
 
                 const formatted =
                     headers.map(
@@ -80,8 +79,8 @@ const TableLayoutEdit = () => {
                     formData.map(
                         item => item.value
                     );
-                 const accessToken = await getAccessToken();
-                      if (!accessToken) return;
+                const accessToken = await getAccessToken();
+                if (!accessToken) return;
                 await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!${params?.selectedId}:${params.selectedId}?valueInputOption=RAW`,
                     {
@@ -111,7 +110,7 @@ const TableLayoutEdit = () => {
                         item => item.value
                     );
                 const accessToken = await getAccessToken();
-                     if (!accessToken) return;
+                if (!accessToken) return;
                 await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1:append?valueInputOption=RAW`,
                     {
@@ -129,9 +128,10 @@ const TableLayoutEdit = () => {
                 );
             }
 
-            Alert.alert("Success","Data saved");
+            Alert.alert("Success", "Data saved");
 
-            navigation.goBack();
+            //navigation.goBack();
+            router.replace({ pathname: "/tablelayout" ,params: { layout: params?.layout, id: params?.id, headtext: params?.name },});
 
         } catch (error) {
             console.log("error", error)
@@ -170,9 +170,9 @@ const TableLayoutEdit = () => {
                 <ScrollView>
                     {formData.map(
                         (item, index) => (
-                            <View key={index} style={ styles.inputBox}>
+                            <View key={index} style={styles.inputBox}>
                                 <Text style={styles.inputlabel}>
-                                    {params?.selectedId ==="1"? "Name": item.label}
+                                    {params?.selectedId === "1" ? "Name" : item.label}
                                 </Text>
 
                                 <TextInput style={styles.inputtext}
@@ -187,8 +187,10 @@ const TableLayoutEdit = () => {
             <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
 
                 {params?.selectedId === "1" && (
-                    <TouchableOpacity style={styles.button} onPress={AddColumn} >
-                        <Text style={styles.buttonText} > Add </Text>
+                    <TouchableOpacity onPress={AddColumn} >
+                        <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                            <Text style={styles.buttonText} > Add </Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 )}
 

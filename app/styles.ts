@@ -131,13 +131,13 @@ export const styles = StyleSheet.create({
         fontSize: 16,
     },
     tableContainer: {
-        maxHeight: 350,
+        maxHeight: 'auto',
         borderRadius: 4,
     },
     row: {
         flexDirection: "row",
         borderWidth:0.5,
-        minHeight: 50,
+        //minHeight: 50,
         alignItems: "center",
     },
 
@@ -145,7 +145,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#ddd",
     },
     cell: {
-        width: 120,
+         width: 120,
         padding: 10,
     },
 
