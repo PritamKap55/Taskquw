@@ -10,6 +10,8 @@ import {
   View
 } from "react-native";
 
+import { Shadow } from 'react-native-shadow-2';
+
 type TreeNodeType = {
   id: number;
   name: string;
@@ -18,10 +20,16 @@ type TreeNodeType = {
 
 type TreeNodeProps = {
   node: TreeNodeType;
+  onNodePress: (id: number) => void;
+  openNodes: number[];
+  onToggle: (id: number) => void;
 };
 
-const TreeNode: React.FC<TreeNodeProps> = ({ node }) => {
-  const [isOpen, setIsOpen] = useState(false);
+
+
+const TreeNode: React.FC<TreeNodeProps> = ({ node, onNodePress ,openNodes, onToggle},) => {
+  //const [isOpen, setIsOpen] = useState(false);
+  const isOpen = openNodes.includes(node.id);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -38,7 +46,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({ node }) => {
           style={styles.toggleContainer}
           onPress={() =>
             hasChildren &&
-            setIsOpen(!isOpen)
+            onToggle(node.id)
           }
         >
           <Text style={styles.toggle}>
@@ -47,31 +55,30 @@ const TreeNode: React.FC<TreeNodeProps> = ({ node }) => {
               : ""}
           </Text>
         </TouchableOpacity>
-
-        <View style={styles.nodeCard}>
-          <View style={styles.contentRow}>
-            <Text>⬇️ </Text>
-
-            <Text style={styles.nodeName}>
-              {node.name}
-            </Text>
-
-            <TouchableOpacity>
-              <Text> ➡️ </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                console.log(
-                  "Delete:",
-                  node.id
-                );
-              }}
-            >
-              <Text> ❌ </Text>
-            </TouchableOpacity>
+        <Shadow offset={[2, 4]}
+          distance={2}
+          startColor="rgba(0, 0, 0, 0.3)">
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#f7f2d5",
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            borderRadius: 2,
+          }}>
+            <View style={styles.contentRow}>
+              <TouchableOpacity
+                onPress={() => {
+                  onNodePress(node.id)
+                }}
+              >
+                <Text style={styles.nodeName}>
+                  {node.name}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </Shadow>
       </View>
 
       {isOpen && hasChildren && (
@@ -81,7 +88,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({ node }) => {
               <TreeNode
                 key={child.id}
                 node={child}
-              />
+                onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle} />
             )
           )}
         </View>
@@ -107,18 +114,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   nodeCard: {
-    flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderRadius: 8,
     marginLeft: 5,
+
   },
   contentRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   nodeName: {
-    flex: 1,
+
     fontSize: 16,
   },
   children: {

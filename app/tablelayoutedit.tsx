@@ -131,7 +131,7 @@ const TableLayoutEdit = () => {
             Alert.alert("Success", "Data saved");
 
             //navigation.goBack();
-            router.replace({ pathname: "/tablelayout" ,params: { layout: params?.layout, id: params?.id, headtext: params?.name },});
+            router.replace({ pathname: "/tablelayout", params: { layout: params?.layout, id: params?.id, headtext: params?.name }, });
 
         } catch (error) {
             console.log("error", error)
@@ -161,6 +161,9 @@ const TableLayoutEdit = () => {
             }
         ]);
     };
+    const deleteColumn = (index: number) => {
+        setFormData((prev) => prev.filter((_, i) => i !== index));
+    };
 
     return (
         <>
@@ -179,6 +182,13 @@ const TableLayoutEdit = () => {
                                     value={item.value}
                                     onChangeText={(text) => handleChange(index, text)}
                                 />
+                                {params?.selectedId === "1" && (
+                                    <TouchableOpacity onPress={() => deleteColumn(index)} >
+                                        <Text style={{ fontSize: 20, marginLeft: 10, }}>
+                                            ❌
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
                             </View>
                         )
                     )}
@@ -186,21 +196,23 @@ const TableLayoutEdit = () => {
             </View>
             <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
 
-                {params?.selectedId === "1" && (
-                    <TouchableOpacity onPress={AddColumn} >
+                <View style={{ flexDirection: "row", justifyContent: "space-between", }}>
+                    {params?.selectedId === "1" && (
+                        <TouchableOpacity onPress={AddColumn} >
+                            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                                <Text style={styles.buttonText} > Add </Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity onPress={Submit}>
                         <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                            <Text style={styles.buttonText} > Add </Text>
+                            <Text style={styles.btnText}>
+                                Submit
+                            </Text>
                         </LinearGradient>
                     </TouchableOpacity>
-                )}
-
-                <TouchableOpacity onPress={Submit}>
-                    <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                        <Text style={styles.btnText}>
-                            Submit
-                        </Text>
-                    </LinearGradient>
-                </TouchableOpacity>
+                </View>
             </LinearGradient>
         </>
     );

@@ -17,12 +17,7 @@ export default function ListLayout() {
   const bgF1Color = `hsl(${hue}, 100%, 94%)`;
   const bgF2Color = `hsl(${hue}, 100%, 75%)`;
   const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-  const [items, setItems] = useState<(string | number)[][]>([
-    ["id", "name", "age"],
-    [1, "Pritam", 25],
-    [2, "Kap", 28],
-    [3, "Jane", 28],
-  ]);
+  const [items, setItems] = useState<(string | number)[][]>([]);
   const gradientConfig: {
     colors: readonly [string, string, string];
     locations: readonly [number, number, number];
@@ -71,6 +66,16 @@ export default function ListLayout() {
     if (params?.id) {
       getSheetData();
 
+    }
+    else {
+      const data: (string | number)[][] = [
+        ["id", "name", "age"],
+        [1, "Pritam", 25],
+        [2, "Kap", 28],
+        [3, "Jane", 28],
+      ];
+
+      setItems(data);
     }
   }, []);
   return (
@@ -137,8 +142,8 @@ export default function ListLayout() {
       <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
         {/* Add Row */}
         <TouchableOpacity
-          
-                              onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId:items.length+1 }, })}
+
+          onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
         >
           <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
             <Text style={styles.buttonText}>

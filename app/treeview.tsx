@@ -10,10 +10,15 @@ type TreeNodeType = {
 
 type TreeViewProps = {
   data: TreeNodeType[];
+  onNodePress: (id: number) => void;
+  openNodes: number[];
+  onToggle: (id: number) => void;
 };
 
 
-const TreeView: React.FC<TreeViewProps> = ({ data }) => {
+const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onToggle,}) => {
+
+
   return (
     <View style={styles.tree}>
       <FlatList
@@ -22,7 +27,7 @@ const TreeView: React.FC<TreeViewProps> = ({ data }) => {
           item.id.toString()
         }
         renderItem={({ item }) => (
-          <TreeNode node={item} />
+          <TreeNode node={item} onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle}/>
         )}
       />
     </View>
