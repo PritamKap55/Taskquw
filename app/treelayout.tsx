@@ -32,6 +32,7 @@ const TreeLayout = () => {
   const bgF1Color = `hsl(${hue}, 100%, 94%)`;
   const bgF2Color = `hsl(${hue}, 100%, 75%)`;
   const bgF3Color = `hsl(${hue}, 100%, 27%)`;
+  const bgColor = `hsl(${hue},100%,27%)`;
   const [nodetext, setNodetext] = useState("");
   const [selectnode, setSelectnode] = useState(0);
   const [selectnodetext, setSelectnodetext] = useState("");
@@ -468,6 +469,9 @@ const TreeLayout = () => {
         </View>
 
       </LinearGradient>
+      <View style={[styles.footerMobile, { backgroundColor: bgColor }]}>
+
+      </View>
 
     </>
   );

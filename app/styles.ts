@@ -45,21 +45,27 @@ export const styles = StyleSheet.create({
     },
 
     headerLayout: {
-        height: "10%",
+        height: "9%",
         alignItems: "center",
         justifyContent: "flex-end",
     },
     bodyLayout: {
-        height: "70%",
+        height: "68%",
         backgroundColor: "#f0f4dd",
     },
 
     footerLayout: {
 
-        height: "20%",
+        height: "18%",
         alignItems: "center",
         justifyContent: "center",
     },
+    footerMobile: {
+        height: "5%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
 
     fileList: {
         padding: 10,
@@ -136,7 +142,7 @@ export const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        borderWidth:0.5,
+        borderWidth: 0.5,
         //minHeight: 50,
         alignItems: "center",
     },
@@ -145,7 +151,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#ddd",
     },
     cell: {
-         width: 120,
+        width: 120,
         padding: 10,
     },
 

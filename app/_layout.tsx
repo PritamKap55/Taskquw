@@ -8,6 +8,8 @@ import 'react-native-reanimated';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useEffect } from 'react';
 
+import { registerForPushNotifications } from '../notification';
+
 export const unstable_settings = {
   anchor: 'index',
 };
@@ -20,6 +22,7 @@ export default function RootLayout() {
       webClientId:
         '470784951477-1mcdh3c1puclmb9ttot8mchl3onvsshb.apps.googleusercontent.com',
     });
+    registerForPushNotifications();
   }, []);
 
   return (

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "7021425060",
+    "project_id": "testquw-f7fa8",
+    "storage_bucket": "testquw-f7fa8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7021425060:android:c7bf767114c12120f75131",
+        "android_client_info": {
+          "package_name": "com.pritamkap123.taskquw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoeE1kS52nT_4jA76YXDBFeT4gQqg9R98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

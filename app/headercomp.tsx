@@ -76,7 +76,7 @@ export default function HeaderComp({
           style={{
             position: "absolute",
             zIndex: 10,
-            top: "10%",
+            top: "9%",
             width: "100%"
           }}
         >
