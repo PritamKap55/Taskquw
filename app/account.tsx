@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { gradientLeafbtn, styles } from "./styles";
 // import LinearGradient from 'react-native-linear-gradient';
+import { registerForPushNotifications } from '@/notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
-import { getThemeColors } from "./color";
 
 GoogleSignin.configure({
   webClientId:
@@ -33,7 +34,9 @@ export default function Account() {
   const bgF3Color = `hsl(${hue}, 100%, 27%)`;
   //const bgColor = `hsl(${hue},100%,27%)`;
 
-  const {bgbodyColor,bgColor,gradientConfig,} = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+
+
 
   // const gradientConfig: {
   //   colors: readonly [string, string, string];
@@ -47,7 +50,7 @@ export default function Account() {
     try {
       const accessToken = await getAccessToken();
       if (!accessToken) return;
-
+      const token = await registerForPushNotifications();
       const query = "mimeType='application/vnd.google-apps.spreadsheet'";
       const url =
         `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
@@ -62,6 +65,17 @@ export default function Account() {
       const data = await response.json();
 
       setFiles(data.files);
+
+      for (const file of files) {
+        checkSheet2(file.id, accessToken).then(async (exists) => {
+          if (exists == false) {
+            createSheet2(file.id, accessToken);
+          }
+
+
+          await insertIntoSheet2(file.id, accessToken, token!);
+        });
+      }
 
     } catch (error) {
       console.log("Error", error);
@@ -88,6 +102,70 @@ export default function Account() {
     console.log("Hue:", hue);
   }, [hue]);
 
+
+  async function checkSheet2(spreadsheetId: any, accessToken: any) {
+
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const spreadsheet = await response.json();
+    return spreadsheet.sheets.some(
+      (sheet: { properties: { title: string; }; }) => sheet.properties.title === "Sheet2"
+    );
+  }
+
+  async function createSheet2(spreadsheetId: any, accessToken: any) {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: "Sheet2",
+                },
+              },
+            },
+          ],
+        }),
+      }
+    );
+  }
+
+  async function insertIntoSheet2(
+    spreadsheetId: string,
+    accessToken: string,
+    value: string
+  ) {
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A:A:append?valueInputOption=USER_ENTERED`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          values: [[value]],
+        }),
+      }
+    );
+
+    const result = await response.json();
+    console.log(result);
+  }
 
   return (
     <>

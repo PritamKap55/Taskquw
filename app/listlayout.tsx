@@ -2,14 +2,12 @@ import CheckBox from '@react-native-community/checkbox';
 import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
-import * as Sharing from "expo-sharing";
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
+import { sendNotification } from "./sendNotification";
 
-import * as FileSystem from "expo-file-system";
-import * as Print from "expo-print";
 ;
 
 import { gradientLeafbtn, styles } from "./styles";
@@ -195,18 +193,23 @@ export default function ListLayout() {
   };
 
   useEffect(() => {
-
-    if (params?.new == "List") {
-      let NewAccount = [];
-      while (NewAccount.length < 11) {
-        NewAccount.push("");
+    if (params?.new === "List") {
+      const newAccount = [];
+      while (newAccount.length < 11) {
+        newAccount.push("");
       }
-      setItems(NewAccount);
+      setItems(newAccount);
     } else {
       getSheetData();
     }
-  }, []);
 
+    return () => {
+      sendNotification(
+        "ExponentPushToken[g2G-CgPJqxy0M4-ZANUic5]",
+        "List Page"
+      ).catch(console.error);
+    };
+  }, []);
 
 
   return (
@@ -290,7 +293,7 @@ export default function ListLayout() {
         >
 
           <TouchableOpacity
-            //onPress={downloadPDF}
+          //onPress={downloadPDF}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text>Share</Text>
@@ -298,14 +301,14 @@ export default function ListLayout() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            //onPress={downloadPDF}
+          //onPress={downloadPDF}
           ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text> PDF</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
-            //onPress={downloadCSV}
+          //onPress={downloadCSV}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
               <Text> CSV</Text>
