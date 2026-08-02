@@ -1,37 +1,41 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getThemeColors } from "./color";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-import { sendNotification } from "./sendNotification";
-
-;
 
 import { gradientLeafbtn, styles } from "./styles";
 global.Buffer = Buffer;
-export default function ListLayout() {
+
+type LayoutProps = {
+  layout: string;
+};
+
+export default function ListLayout({ layout }: LayoutProps) {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
   const [items, setItems] = useState<any[]>([]);
   const [files, setFiles] = useState<any>(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
+  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
 
   const params = useLocalSearchParams();
-  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
 
-  const gradientConfig: {
-    colors: readonly [string, string, string];
-    locations: readonly [number, number, number];
-  } = {
-    colors: [bgF1Color, bgF2Color, bgF3Color],
-    locations: [0, 0.5, 1],
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
   const handleChange = (
@@ -193,7 +197,9 @@ export default function ListLayout() {
   };
 
   useEffect(() => {
-    if (params?.new === "List") {
+    loadHue();
+    console.log("create file", layout)
+    if (layout === "List") {
       const newAccount = [];
       while (newAccount.length < 11) {
         newAccount.push("");
@@ -203,19 +209,23 @@ export default function ListLayout() {
       getSheetData();
     }
 
-    return () => {
-      sendNotification(
-        "ExponentPushToken[g2G-CgPJqxy0M4-ZANUic5]",
-        "List Page"
-      ).catch(console.error);
-    };
+    // return () => {
+    //   sendNotification(
+    //     "ExponentPushToken[g2G-CgPJqxy0M4-ZANUic5]",
+    //     "List Page"
+    //   ).catch(console.error);
+    // };
   }, []);
+
+
 
 
   return (
     <>
-      <HeaderComp hue={hue} setHue={setHue} />
-      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
+      {layout === undefined && (
+        <HeaderComp hue={hue} setHue={setHue} />
+      )}
+      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
         <ScrollView style={{ flex: 1, padding: 10, }}>
           {items.map((item, index) => (
@@ -273,51 +283,57 @@ export default function ListLayout() {
             </View>
           ))}
         </ScrollView>
-      </View>
-      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputlabel}>Name</Text>
+      </View >
 
-          <TextInput
-            placeholder="Enter File name"
-            value={fileName}
-            onChangeText={setFileName}
-            style={styles.inputtext}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
+      {layout === undefined && (
+        <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+          <View style={styles.inputBox}>
+            <Text style={styles.inputlabel}>Name</Text>
 
-          <TouchableOpacity
-          //onPress={downloadPDF}
+            <TextInput
+              placeholder="Enter File name"
+              value={fileName}
+              onChangeText={setFileName}
+              style={styles.inputtext}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
           >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text>Share</Text>
-            </LinearGradient>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-          //onPress={downloadPDF}
-          ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text> PDF</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+            <TouchableOpacity
+            //onPress={downloadPDF}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text>Share</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-          //onPress={downloadCSV}
-          >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text> CSV</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              onPress={() => Linking.openURL("https://tool-spot.vercel.app/")
 
-      </LinearGradient>
+              }
+            ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text> PDF</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
+            <TouchableOpacity
+              onPress={() => Linking.openURL("https://tool-spot.vercel.app/#/Details")
+              }
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text> CSV</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+
+        </LinearGradient>
+      )
+      }
     </>
   );
 }

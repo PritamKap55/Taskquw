@@ -214,16 +214,14 @@ export const styles = StyleSheet.create({
 
     slide: {
         width: width, // use actual screen width
-        justifyContent: "center",
+        //justifyContent: "center",
         alignItems: "center",
-        padding: 20,
     },
 
     card: {
-        width: width - 40, // leave space for padding
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: "#fff",
+        width: width - 20, 
+         height: "100%",
+         backgroundColor: "#FFF",
     },
 
 });

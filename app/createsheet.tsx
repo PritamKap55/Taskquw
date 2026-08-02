@@ -1,12 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { getThemeColors } from "./color";
 import HeaderComp from "./headercomp";
 import ListLayout from "./listlayout";
 import { gradientLeafbtn, styles } from "./styles";
@@ -14,49 +11,49 @@ import TableLayout from "./tablelayout";
 import TreeLayout from "./treelayout";
 
 export default function createsheet() {
-  const [hue, setHue] = useState(0);
-  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
 
-  const gradientConfig: {
-    colors: readonly [string, string, string];
-    locations: readonly [number, number, number];
-  } = {
-    colors: [bgF1Color, bgF2Color, bgF3Color],
-    locations: [0, 0.5, 1],
+  const [hue, setHue] = useState(0);
+  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
+  useEffect(() => {
+    loadHue();
+  }, []);
   return (
     <>
       <HeaderComp hue={hue} setHue={setHue} />
       <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
           <View style={styles.slide}>
-            <View style={styles.card}>
-              <ListLayout />
+            <View style={styles.card} pointerEvents="none">
+
+              <ListLayout layout="List" />
             </View>
           </View>
 
           <View style={styles.slide}>
             <View style={styles.card}>
-              <ListLayout />
+              <ListLayout layout="List" />
             </View>
           </View>
 
           <View style={styles.slide}>
             <View style={styles.card}>
-              <TableLayout />
+              <TableLayout layout="New" />
             </View>
           </View>
 
           <View style={styles.slide}>
             <View style={styles.card}>
-              <TreeLayout />
+              <TreeLayout layout="New" />
             </View>
           </View>
         </ScrollView>

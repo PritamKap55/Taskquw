@@ -1,30 +1,35 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getThemeColors } from "./color";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
 
+type LayoutProps = {
+  layout: string;
+};
 
 
-
-export default function ListLayout() {
+export default function TableLayout({ layout }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-  const [items, setItems] = useState<(string | number)[][]>([]);
-  const gradientConfig: {
-    colors: readonly [string, string, string];
-    locations: readonly [number, number, number];
-  } = {
-    colors: [bgF1Color, bgF2Color, bgF3Color],
-    locations: [0, 0.5, 1],
+  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
+
+  const [items, setItems] = useState<(string | number)[][]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -63,6 +68,8 @@ export default function ListLayout() {
   };
 
   useEffect(() => {
+    loadHue();
+
     if (params?.id) {
       getSheetData();
 
@@ -81,10 +88,11 @@ export default function ListLayout() {
   return (
     <>
 
-      <HeaderComp hue={hue} setHue={setHue} />
+      {layout === undefined && (
+        <HeaderComp hue={hue} setHue={setHue} />
+      )}
+      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
-      {/* Table */}
-      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
         {/* <ScrollView
           horizontal
           nestedScrollEnabled={true}
@@ -138,55 +146,55 @@ export default function ListLayout() {
 
 
       </View>
-
-      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-        {/* Add Row */}
-        <TouchableOpacity
-
-          onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
-        >
-          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-            <Text style={styles.buttonText}>
-              + Add New Row
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputlabel}>Name</Text>
-
-          <TextInput
-            placeholder="Enter File name"
-            value={fileName}
-            onChangeText={setFileName}
-            style={styles.inputtext}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-
+      {layout === undefined && (
+        <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+          {/* Add Row */}
           <TouchableOpacity
-          // onPress={downloadPDF}
+
+            onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text>Share</Text>
+              <Text style={styles.buttonText}>
+                + Add New Row
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
+          <View style={styles.inputBox}>
+            <Text style={styles.inputlabel}>Name</Text>
 
-          <TouchableOpacity
-          // onPress={downloadCSV}
+            <TextInput
+              placeholder="Enter File name"
+              value={fileName}
+              onChangeText={setFileName}
+              style={styles.inputtext}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
           >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text> CSV</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
 
-      </LinearGradient>
+            <TouchableOpacity
+            // onPress={downloadPDF}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text>Share</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
+            <TouchableOpacity
+            // onPress={downloadCSV}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text> CSV</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+
+        </LinearGradient>
+      )};
 
     </>
 

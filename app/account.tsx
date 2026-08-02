@@ -28,30 +28,14 @@ export default function Account() {
   const [files, setFiles] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [hue, setHue] = useState(0);
-  //const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-  //const bgColor = `hsl(${hue},100%,27%)`;
-
   const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
-
-
-
-  // const gradientConfig: {
-  //   colors: readonly [string, string, string];
-  //   locations: readonly [number, number, number];
-  // } = {
-  //   colors: [bgF1Color, bgF2Color, bgF3Color],
-  //   locations: [0, 0.5, 1],
-  // };
 
   const getSheets = async () => {
     try {
       const accessToken = await getAccessToken();
       if (!accessToken) return;
       const token = await registerForPushNotifications();
-      const query = "mimeType='application/vnd.google-apps.spreadsheet'";
+      const query = "mimeType='application/vnd.google-apps.spreadsheet' and appProperties has { key='app' and value='PKapp' } and trashed=false";
       const url =
         `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
           query
@@ -196,7 +180,7 @@ export default function Account() {
 
       <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
 
-        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", })}>
+        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", params: { headtext: "Create Page" } })}>
           <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
             <Text style={styles.btnText}>
               Create New Account

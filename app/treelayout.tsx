@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
-
-import { useLocalSearchParams } from "expo-router";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
 import TreeView from "./treeview";
+
 
 type TreeNodeType = {
   id: number;
@@ -24,28 +18,29 @@ type TreeNodeType = {
   children: TreeNodeType[];
 };
 
-const TreeLayout = () => {
+type LayoutProps = {
+  layout: string;
+};
+
+export default function TreeLayout({ layout }: LayoutProps) {
   const params = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [hue, setHue] = useState(0);
-  const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-  const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-  const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-  const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-  const bgColor = `hsl(${hue},100%,27%)`;
+  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
   const [nodetext, setNodetext] = useState("");
   const [selectnode, setSelectnode] = useState(0);
   const [selectnodetext, setSelectnodetext] = useState("");
   const [openNodes, setOpenNodes] = useState<number[]>([]);
-
-  const gradientConfig: {
-    colors: readonly [string, string, string];
-    locations: readonly [number, number, number];
-  } = {
-    colors: [bgF1Color, bgF2Color, bgF3Color],
-    locations: [0, 0.5, 1],
-  };
-
 
   const [treeData, setTreeData] = useState<TreeNodeType[]>([
     {
@@ -175,6 +170,8 @@ const TreeLayout = () => {
   };
 
   useEffect(() => {
+    loadHue();
+
     if (params?.id) {
       getSheetData();
     }
@@ -407,8 +404,11 @@ const TreeLayout = () => {
 
   return (
     <>
-      <HeaderComp hue={hue} setHue={setHue} />
-      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
+      {layout === undefined && (
+        <HeaderComp hue={hue} setHue={setHue} />
+      )}
+      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
+
 
         <View>
           {loading ? (
@@ -426,55 +426,53 @@ const TreeLayout = () => {
         </View>
 
       </View>
-      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-        <Text style={styles.inputlabel}>{selectnodetext}</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputlabel}>Text</Text>
-          <TextInput
-            placeholder="Enter File name"
-            value={nodetext}
-            onChangeText={setNodetext}
-            style={styles.inputtext}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            onPress={handleAddRoot}
+      {layout === undefined && (
+        <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
+          <Text style={styles.inputlabel}>{selectnodetext}</Text>
+          <View style={styles.inputBox}>
+            <Text style={styles.inputlabel}>Text</Text>
+            <TextInput
+              placeholder="Enter File name"
+              value={nodetext}
+              onChangeText={setNodetext}
+              style={styles.inputtext}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
           >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text>Root</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleAddRoot}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text>Root</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={handleAddChild}
-          >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text> Child </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => deleteNodeFromSheet()}
-          >
-            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text> Delete </Text>
-            </LinearGradient>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleAddChild}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text> Child </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => deleteNodeFromSheet()}
+            >
+              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+                <Text> Delete </Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-        </View>
+          </View>
 
-      </LinearGradient>
-      <View style={[styles.footerMobile, { backgroundColor: bgColor }]}>
-
-      </View>
+        </LinearGradient>
+      )};
 
     </>
   );
 };
 
-export default TreeLayout;
