@@ -9,11 +9,11 @@ import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
 
 type LayoutProps = {
-  layout: string;
+  template: string;
 };
 
 
-export default function TableLayout({ layout }: LayoutProps) {
+export default function TableLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
@@ -88,21 +88,16 @@ export default function TableLayout({ layout }: LayoutProps) {
   return (
     <>
 
-      {layout === undefined && (
+      {template === undefined && (
         <HeaderComp hue={hue} setHue={setHue} />
       )}
-      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
+      <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
-        {/* <ScrollView
-          horizontal
-          nestedScrollEnabled={true}
-        > */}
         <ScrollView horizontal showsHorizontalScrollIndicator={true}>
           <ScrollView showsVerticalScrollIndicator={true}>
 
             <View style={styles.tableContainer}>
 
-              {/* Header Row */}
               <View style={[styles.row, styles.headerRow]}>
                 {items[0]?.map((header, i) => (
                   <Text key={i} style={styles.cell}>
@@ -117,7 +112,7 @@ export default function TableLayout({ layout }: LayoutProps) {
                 </TouchableOpacity>
               </View>
 
-              {/* Data Rows */}
+
               {items.slice(1).map((row, rowIndex) => (
                 <View key={rowIndex} style={styles.row}>
                   {items[0].map((_, colIndex) => (
@@ -146,11 +141,10 @@ export default function TableLayout({ layout }: LayoutProps) {
 
 
       </View>
-      {layout === undefined && (
+      {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-          {/* Add Row */}
+         
           <TouchableOpacity
-
             onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
@@ -194,7 +188,7 @@ export default function TableLayout({ layout }: LayoutProps) {
           </View>
 
         </LinearGradient>
-      )};
+      )}
 
     </>
 

@@ -19,10 +19,10 @@ type TreeNodeType = {
 };
 
 type LayoutProps = {
-  layout: string;
+  template: string;
 };
 
-export default function TreeLayout({ layout }: LayoutProps) {
+export default function TreeLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [hue, setHue] = useState(0);
@@ -404,10 +404,10 @@ export default function TreeLayout({ layout }: LayoutProps) {
 
   return (
     <>
-      {layout === undefined && (
+      {template === undefined && (
         <HeaderComp hue={hue} setHue={setHue} />
       )}
-      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
+      <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
 
         <View>
@@ -421,12 +421,13 @@ export default function TreeLayout({ layout }: LayoutProps) {
               onNodePress={handleNodePress}
               openNodes={openNodes}
               onToggle={toggleNode}
+              template={template}
             />
           )}
         </View>
 
       </View>
-      {layout === undefined && (
+      {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
           <Text style={styles.inputlabel}>{selectnodetext}</Text>
           <View style={styles.inputBox}>
@@ -470,7 +471,7 @@ export default function TreeLayout({ layout }: LayoutProps) {
           </View>
 
         </LinearGradient>
-      )};
+      )}
 
     </>
   );

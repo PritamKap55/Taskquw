@@ -1,15 +1,6 @@
-import {
-  useNavigation,
-  useRoute
-} from "@react-navigation/native";
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
-
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Shadow } from 'react-native-shadow-2';
 
 type TreeNodeType = {
@@ -23,13 +14,16 @@ type TreeNodeProps = {
   onNodePress: (id: number) => void;
   openNodes: number[];
   onToggle: (id: number) => void;
+  template: string;
 };
 
 
 
-const TreeNode: React.FC<TreeNodeProps> = ({ node, onNodePress ,openNodes, onToggle},) => {
+const TreeNode: React.FC<TreeNodeProps> = ({ node, onNodePress, openNodes, onToggle, template },) => {
   //const [isOpen, setIsOpen] = useState(false);
-  const isOpen = openNodes.includes(node.id);
+  //const isOpen = true; //openNodes.includes(node.id);
+
+  const isOpen = template === "New" ? true : openNodes.includes(node.id);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -88,7 +82,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({ node, onNodePress ,openNodes, onTog
               <TreeNode
                 key={child.id}
                 node={child}
-                onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle} />
+                onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle} template={template} />
             )
           )}
         </View>

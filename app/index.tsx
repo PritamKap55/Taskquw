@@ -33,23 +33,42 @@ export default function HomeScreen() {
     }
   };
 
-  return (
-    <Pressable style={{ flex: 1 }} onPress={changeColor}>
-      <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',backgroundColor: bgColor,}}>
-        <View style={styles.container}>
-          <Text style={styles.heading}>
-            Welcome!...
-          </Text>
+  const logout = async () => {
+    try {
+      await GoogleSignin.signOut();
+      console.log("Logged out");
+    } catch (error) {
+      console.log("logout Error", error);
+    }
+  };
 
-          <Text style={styles.heading}>
-          </Text>
-          <Pressable style={styles.button} onPress={login}>
-            <Text style={styles.buttonText}>
-              Login
+  return (
+    <>
+      <Pressable style={{ flex: 1 }} onPress={changeColor}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: bgColor, }}>
+          <View style={styles.container}>
+            <Text style={styles.heading}>
+              Welcome!...
             </Text>
-          </Pressable>
+
+            <Text style={styles.heading}>
+            </Text>
+            <Pressable style={styles.button} onPress={login}>
+              <Text style={styles.buttonText}>
+                Login
+              </Text>
+            </Pressable>
+            <Pressable style={styles.button} onPress={logout}>
+              <Text style={styles.buttonText}>
+                Logout
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+
+
+
+    </>
   );
 }

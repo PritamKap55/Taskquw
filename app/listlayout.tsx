@@ -2,21 +2,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getThemeColors } from "./color";
+import { list } from "./data";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-
 import { gradientLeafbtn, styles } from "./styles";
 global.Buffer = Buffer;
 
 type LayoutProps = {
+  template: string;
   layout: string;
 };
 
-export default function ListLayout({ layout }: LayoutProps) {
+export default function ListLayout({ template, layout }: LayoutProps) {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
   const [items, setItems] = useState<any[]>([]);
@@ -56,12 +57,43 @@ export default function ListLayout({ layout }: LayoutProps) {
     }
   };
 
+  const checkWritePermission = async () => {
+    const accessToken = await getAccessToken();
+    if (!accessToken) return false;
+
+    const res = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${params?.id}?fields=capabilities`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(data);
+
+    return data.capabilities?.canEdit ?? false;
+  };
+
   const Submit = async (
     index: number,
     field: "text" | "note" | "bool",
     value: string | boolean
   ) => {
     try {
+
+      const canEdit = await checkWritePermission();
+
+      if (!canEdit) {
+        Alert.alert(
+          "Permission Denied",
+          "You don't have permission to edit this file."
+        );
+        return;
+      }
+
       const colMap = {
         text: "A",
         note: "B",
@@ -86,6 +118,7 @@ export default function ListLayout({ layout }: LayoutProps) {
           }),
         }
       );
+
 
       await getSheetData();
 
@@ -199,12 +232,14 @@ export default function ListLayout({ layout }: LayoutProps) {
   useEffect(() => {
     loadHue();
     console.log("create file", layout)
-    if (layout === "List") {
-      const newAccount = [];
-      while (newAccount.length < 11) {
-        newAccount.push("");
-      }
-      setItems(newAccount);
+    if (template === "New") {
+      // const newAccount = [];
+      // while (newAccount.length < 11) {
+      //   newAccount.push("");
+      // }
+      setItems(list.values);
+
+      console.log("params", params)
     } else {
       getSheetData();
     }
@@ -222,15 +257,15 @@ export default function ListLayout({ layout }: LayoutProps) {
 
   return (
     <>
-      {layout === undefined && (
+      {template === undefined && (
         <HeaderComp hue={hue} setHue={setHue} />
       )}
-      <View style={[{ height: layout === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
+      <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
         <ScrollView style={{ flex: 1, padding: 10, }}>
           {items.map((item, index) => (
             <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 10, }} >
-              {(params?.layout === "Check List") && (
+              {(params?.layout === "Check List" || layout === "Check List") && (
                 <CheckBox value={String(item.bool).trim().toUpperCase() === "TRUE"}
                   onValueChange={(value) => handleChange(index, "bool", value ? "TRUE" : "FALSE")}
                 />
@@ -285,7 +320,7 @@ export default function ListLayout({ layout }: LayoutProps) {
         </ScrollView>
       </View >
 
-      {layout === undefined && (
+      {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
           <View style={styles.inputBox}>
             <Text style={styles.inputlabel}>Name</Text>
@@ -304,9 +339,7 @@ export default function ListLayout({ layout }: LayoutProps) {
             }}
           >
 
-            <TouchableOpacity
-            //onPress={downloadPDF}
-            >
+            <TouchableOpacity onPress={() => router.push({ pathname: "/shareFile", params: { id: params?.id } })}>
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
                 <Text>Share</Text>
               </LinearGradient>

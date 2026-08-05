@@ -13,10 +13,11 @@ type TreeViewProps = {
   onNodePress: (id: number) => void;
   openNodes: number[];
   onToggle: (id: number) => void;
+  template:string;
 };
 
 
-const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onToggle,}) => {
+const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onToggle, template}) => {
 
 
   return (
@@ -27,7 +28,7 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onTog
           item.id.toString()
         }
         renderItem={({ item }) => (
-          <TreeNode node={item} onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle}/>
+          <TreeNode node={item} onNodePress={onNodePress} openNodes={openNodes} onToggle={onToggle} template={template}/>
         )}
       />
     </View>
