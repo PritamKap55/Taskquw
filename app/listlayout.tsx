@@ -3,12 +3,13 @@ import CheckBox from '@react-native-community/checkbox';
 import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getThemeColors } from "./color";
 import { list } from "./data";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
+import { sendNotification } from './sendNotification';
 import { gradientLeafbtn, styles } from "./styles";
 global.Buffer = Buffer;
 
@@ -27,6 +28,8 @@ export default function ListLayout({ template, layout }: LayoutProps) {
   const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
 
   const params = useLocalSearchParams();
+  const notificationRef = useRef(false);
+  const nftokensRef = useRef<string[]>([]);
 
   const loadHue = async () => {
     try {
@@ -35,7 +38,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error loadHue", error);
     }
   };
 
@@ -72,8 +75,6 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
     const data = await res.json();
 
-    console.log(data);
-
     return data.capabilities?.canEdit ?? false;
   };
 
@@ -83,7 +84,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
     value: string | boolean
   ) => {
     try {
-
+      notificationRef.current = true;
       const canEdit = await checkWritePermission();
 
       if (!canEdit) {
@@ -119,11 +120,10 @@ export default function ListLayout({ template, layout }: LayoutProps) {
         }
       );
 
-
       await getSheetData();
 
     } catch (error) {
-      console.log("Submit Error:", error);
+      console.log("Error Submit", error);
     }
   };
 
@@ -143,7 +143,6 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       );
 
       const data = await res.json();
-      console.log("data get", data)
       const values = data?.values || [];
 
       let updated = values.map((row: any[]) => ({
@@ -168,6 +167,31 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
       setItems(updated);
 
+
+      if (!accessToken) {
+        console.log("No access token");
+        return;
+      }
+
+      const range = encodeURIComponent("Sheet2!A:A");
+      // Read existing values
+      const getResponse = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/${range}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data2 = await getResponse.json();
+
+      const tokens = (data2.values || [])
+        .slice(1)
+        .map((row: any[]) => row[0])
+        .filter((token: any) => token);
+
+      nftokensRef.current = tokens;
     } catch (error) {
       console.log("Error loading sheet:", error);
     }
@@ -216,12 +240,10 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
               const data = await response.json();
 
-              console.log("Delete Success:", data);
-
               await getSheetData();
 
             } catch (error) {
-              console.log("Delete Error:", error);
+              console.log("Error Delete", error);
             }
           },
         },
@@ -231,27 +253,43 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
   useEffect(() => {
     loadHue();
-    console.log("create file", layout)
     if (template === "New") {
-      // const newAccount = [];
-      // while (newAccount.length < 11) {
-      //   newAccount.push("");
-      // }
+
       setItems(list.values);
 
-      console.log("params", params)
     } else {
       getSheetData();
     }
+    return () => {
+      if (notificationRef.current == true) {
+        console.log("Leaving page → call_notification()");
 
-    // return () => {
-    //   sendNotification(
-    //     "ExponentPushToken[g2G-CgPJqxy0M4-ZANUic5]",
-    //     "List Page"
-    //   ).catch(console.error);
-    // };
+        call_notification();
+      }
+    };
   }, []);
 
+  const call_notification = async () => {
+    try {
+
+      console.log("call_notification", nftokensRef.current)
+      console.log("sheetId: params?.id,", params?.id,)
+
+      // Example notification
+      await sendNotification(
+        nftokensRef.current,
+        String(params?.headtext ?? ""),
+        "normal",
+        {
+          sheetId: params?.id,
+          NF_Type: 2,
+        }
+      );
+
+    } catch (error) {
+      console.error("call_notification error:", error);
+    }
+  };
 
 
 

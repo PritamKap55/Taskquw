@@ -25,7 +25,7 @@ export default function TableLayout({ template }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error loadHue", error);
     }
   };
 
@@ -58,12 +58,10 @@ export default function TableLayout({ template }: LayoutProps) {
 
       const data = await res.json();
 
-      console.log("data", data)
-
       setItems(data?.values || []);
 
     } catch (error) {
-      console.log("Get Sheet Error:", error);
+      console.log("Error Get Sheet", error);
     }
   };
 
@@ -143,7 +141,7 @@ export default function TableLayout({ template }: LayoutProps) {
       </View>
       {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-         
+
           <TouchableOpacity
             onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
           >

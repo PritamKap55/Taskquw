@@ -28,7 +28,6 @@ export default function ShareFile() {
 
     try {
       setLoading(true);
-      console.log("fileId", params?.id)
       const accessToken = await getAccessToken();
       if (!accessToken) return;
       const response = await fetch(

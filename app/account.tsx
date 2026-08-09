@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
+import { sendNotification } from "./sendNotification";
 
 GoogleSignin.configure({
   webClientId:
@@ -30,11 +31,12 @@ export default function Account() {
   const [hue, setHue] = useState(0);
   const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
 
+
   const getSheets = async () => {
     try {
       const accessToken = await getAccessToken();
       if (!accessToken) return;
-      const token = await registerForPushNotifications();
+      const NF_token = await registerForPushNotifications();
       const query = "mimeType='application/vnd.google-apps.spreadsheet' and appProperties has { key='app' and value='PKapp' } and trashed=false";
       const url =
         `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
@@ -50,19 +52,12 @@ export default function Account() {
 
       setFiles(data.files);
 
-      for (const file of files) {
-        checkSheet2(file.id, accessToken).then(async (exists) => {
-          if (exists == false) {
-            createSheet2(file.id, accessToken);
-          }
-
-
-          await insertIntoSheet2(file.id, accessToken, token!);
-        });
+      for (const file of data.files) {
+        await notification_access(file.id, accessToken, NF_token!);
       }
 
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error getSheets", error);
     }
   };
 
@@ -73,7 +68,7 @@ export default function Account() {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error loadHue", error);
     }
   };
 
@@ -83,72 +78,57 @@ export default function Account() {
   }, []);
 
   useEffect(() => {
-    console.log("Hue:", hue);
+
   }, [hue]);
 
 
-  async function checkSheet2(spreadsheetId: any, accessToken: any) {
-
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    const spreadsheet = await response.json();
-    return spreadsheet.sheets.some(
-      (sheet: { properties: { title: string; }; }) => sheet.properties.title === "Sheet2"
-    );
-  }
-
-  async function createSheet2(spreadsheetId: any, accessToken: any) {
-    await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requests: [
-            {
-              addSheet: {
-                properties: {
-                  title: "Sheet2",
-                },
-              },
-            },
-          ],
-        }),
-      }
-    );
-  }
-
-  async function insertIntoSheet2(
-    spreadsheetId: string,
+  async function notification_access(
+    sheetId: string,
     accessToken: string,
-    value: string
+    NF_token: string
   ) {
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A:A:append?valueInputOption=USER_ENTERED`,
+    const range = encodeURIComponent("Sheet2!A:A");
+    // Read existing values
+    const getResponse = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`,
       {
-        method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          values: [[value]],
-        }),
       }
     );
 
-    const result = await response.json();
-    console.log(result);
+    const data = await getResponse.json();
+
+    const values: string[][] = data.values || [];
+
+    // Check if value already exists
+    const exists = values.some(row => row[0] === NF_token);
+
+    if (exists) {
+
+      return;
+    }
+
+    const tokens = [
+      data.values?.[0]?.[0]
+    ];
+
+    console.log("data.values?.[0]?.[0];", data.values?.[0]?.[0])
+
+    sendNotification(
+      tokens,
+      "Add Notification token",
+      "silent",
+      {
+        userNF_token: NF_token,
+        userType: "1",
+        sheetId: sheetId,
+        NF_Type: 1,
+      }
+
+    ).catch(console.error);
+
   }
 
   return (

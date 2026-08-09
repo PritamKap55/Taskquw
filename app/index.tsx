@@ -20,7 +20,7 @@ export default function HomeScreen() {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
+  
       router.push({
         pathname: "/account",
         params: {
@@ -29,16 +29,15 @@ export default function HomeScreen() {
       });
 
     } catch (error) {
-      console.log(error);
+      console.log("Error login",error);
     }
   };
 
   const logout = async () => {
     try {
       await GoogleSignin.signOut();
-      console.log("Logged out");
     } catch (error) {
-      console.log("logout Error", error);
+      console.log("Error logout", error);
     }
   };
 

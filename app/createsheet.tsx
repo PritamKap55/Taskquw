@@ -25,7 +25,7 @@ export default function createsheet() {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error loadHue", error);
     }
   };
 
@@ -139,66 +139,11 @@ export default function createsheet() {
 
       return spreadsheetId;
     } catch (error) {
-      console.log(error);
+      console.log("Error getOrCreateFile",error);
       Alert.alert("Error", "Failed to create spreadsheet.");
     }
   };
 
-  // const getOrCreateFile = async (fileName: any,) => {
-  //   try {
-  //     // Get Google access token
-  //     const { accessToken } = await GoogleSignin.getTokens();
-
-  //     const query = `name='${fileName}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`;
-
-  //     // Search for existing file
-  //     const searchRes = await fetch(
-  //       `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-
-  //     const searchData = await searchRes.json();
-
-  //     if (searchData.files?.length > 0) {
-  //       const fileId = searchData.files[0].id;
-
-  //       Alert.alert("Success", "File already exists");
-  //       return fileId;
-  //     }
-
-  //     // Create spreadsheet
-  //     const createRes = await fetch(
-  //       "https://www.googleapis.com/drive/v3/files",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           name: fileName,
-  //           mimeType: "application/vnd.google-apps.spreadsheet",
-  //           appProperties: {
-  //             app: "PKapp",
-  //             layout: layoutOptions[index],
-  //           },
-  //         }),
-  //       }
-  //     );
-
-  //     const createData = await createRes.json();
-
-  //     Alert.alert("Success", "File created");
-  //     return createData.id;
-  //   } catch (error) {
-  //     console.log(error);
-
-  //   }
-  // };
 
   useEffect(() => {
     loadHue();

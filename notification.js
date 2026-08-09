@@ -33,7 +33,6 @@ export async function registerForPushNotifications() {
 
   const token = await Notifications.getExpoPushTokenAsync();
 
-  console.log("Expo Push Token:", token.data);
 
   return token.data;
 }

@@ -63,11 +63,10 @@ const TreeLayoutEdit = () => {
           setFieldName(row[1]);
         }
 
-        console.log("Selected Row:", row);
       }
 
     } catch (error) {
-      console.log("error", error)
+      console.log("Error GetValue", error)
     }
   }
 
@@ -98,7 +97,7 @@ const TreeLayoutEdit = () => {
       );
 
     } catch (error) {
-      console.log("error", error)
+      console.log("Error Update", error)
     }
   }
 
@@ -131,7 +130,7 @@ const TreeLayoutEdit = () => {
       );
 
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error Add", error);
     }
   }
 

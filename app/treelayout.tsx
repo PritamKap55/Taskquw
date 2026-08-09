@@ -34,7 +34,7 @@ export default function TreeLayout({ template }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error loadHue", error);
     }
   };
   const [nodetext, setNodetext] = useState("");
@@ -102,9 +102,6 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       const data = await res.json();
 
-
-      console.log("Sheet Response:", data);
-
       if (!data.values) {
         setTreeData([]);
         return;
@@ -160,10 +157,8 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       setTreeData(tree);
 
-      console.log("Generated Tree:", tree);
-
     } catch (error) {
-      console.log("Error:", error);
+      console.log("Error getSheetData", error);
     } finally {
       setLoading(false);
     }
@@ -178,7 +173,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   }, []);
 
   const handleNodePress = (id: number) => {
-    console.log(id);
+
     setSelectnode(id);
     const node = findNodeById(treeData, selectnode);
     setSelectnodetext(node?.name ?? "")
@@ -324,11 +319,10 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       const data = await res.json();
 
-      console.log("Saved:", data);
 
       getSheetData(); // Refresh tree
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log("Error saveNode", error);
     }
   };
 
@@ -380,11 +374,9 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       const data = await res.json();
 
-      console.log(data);
-
       return true;
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log("Error deleteNodeFromSheet",error);
       return false;
     }
   };

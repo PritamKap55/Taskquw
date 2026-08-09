@@ -66,7 +66,7 @@ const TableLayoutEdit = () => {
             }
         } catch (error) {
 
-            console.log("error", error)
+            console.log("Error GetValue", error)
         }
     }
 
@@ -134,7 +134,7 @@ const TableLayoutEdit = () => {
             router.replace({ pathname: "/tablelayout", params: { layout: params?.layout, id: params?.id, headtext: params?.name }, });
 
         } catch (error) {
-            console.log("error", error)
+            console.log("Error Submit", error)
         }
     }
 

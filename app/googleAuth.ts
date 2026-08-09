@@ -22,7 +22,7 @@ export const getAccessToken = async (): Promise<string | null> => {
     return tokens.accessToken;
 
   } catch (error) {
-    console.log("Token Error:", error);
+    console.log("Error Token", error);
     return null;
   }
 };
