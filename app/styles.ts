@@ -219,11 +219,30 @@ export const styles = StyleSheet.create({
     },
 
     card: {
-        width: width - 20, 
-         height: "100%",
-         backgroundColor: "#FFF",
+        width: width - 20,
+        height: "100%",
+        backgroundColor: "#FFF",
     },
 
+    roleText: {
+        color: "#4285F4",
+        fontWeight: "600",
+    },
+    selectedText: {
+        color: "#fff",
+    },
+
+    roleButton: {
+        width: "48%",
+        borderWidth: 1,
+        borderColor: "#4285F4",
+        borderRadius: 8,
+        padding: 14,
+        alignItems: "center",
+    },
+    selectedButton: {
+        backgroundColor: "#4285F4",
+    },
 });
 
 
@@ -239,3 +258,4 @@ export const gradientLeafbtn: {
     start: { x: 0, y: 0 }, // Left sides
     end: { x: 1, y: 0 },   // Right side
 };
+
