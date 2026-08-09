@@ -25,7 +25,7 @@ export default function createsheet() {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error loadHue", error);
+      console.error("Error loadHue", error);
     }
   };
 
@@ -139,7 +139,7 @@ export default function createsheet() {
 
       return spreadsheetId;
     } catch (error) {
-      console.log("Error getOrCreateFile",error);
+      console.error("Error getOrCreateFile",error);
       Alert.alert("Error", "Failed to create spreadsheet.");
     }
   };

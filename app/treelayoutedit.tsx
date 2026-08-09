@@ -66,7 +66,7 @@ const TreeLayoutEdit = () => {
       }
 
     } catch (error) {
-      console.log("Error GetValue", error)
+      console.error("Error GetValue", error)
     }
   }
 
@@ -97,7 +97,7 @@ const TreeLayoutEdit = () => {
       );
 
     } catch (error) {
-      console.log("Error Update", error)
+      console.error("Error Update", error)
     }
   }
 
@@ -130,7 +130,7 @@ const TreeLayoutEdit = () => {
       );
 
     } catch (error) {
-      console.log("Error Add", error);
+      console.error("Error Add", error);
     }
   }
 

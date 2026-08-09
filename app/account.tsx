@@ -57,7 +57,7 @@ export default function Account() {
       }
 
     } catch (error) {
-      console.log("Error getSheets", error);
+      console.error("Error getSheets", error);
     }
   };
 
@@ -68,7 +68,7 @@ export default function Account() {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error loadHue", error);
+      console.error("Error loadHue", error);
     }
   };
 
@@ -111,11 +111,8 @@ export default function Account() {
     }
 
     const tokens = [
-      data.values?.[0]?.[0]
+      data.values?.[1]?.[0]
     ];
-
-    console.log("data.values?.[0]?.[0];", data.values?.[0]?.[0])
-
     sendNotification(
       tokens,
       "Add Notification token",

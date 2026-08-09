@@ -38,7 +38,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error loadHue", error);
+      console.error("Error loadHue", error);
     }
   };
 
@@ -123,7 +123,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       await getSheetData();
 
     } catch (error) {
-      console.log("Error Submit", error);
+      console.error("Error Submit", error);
     }
   };
 
@@ -169,7 +169,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
 
       if (!accessToken) {
-        console.log("No access token");
+       
         return;
       }
 
@@ -193,7 +193,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
       nftokensRef.current = tokens;
     } catch (error) {
-      console.log("Error loading sheet:", error);
+      console.error("Error loading sheet:", error);
     }
   };
 
@@ -243,7 +243,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
               await getSheetData();
 
             } catch (error) {
-              console.log("Error Delete", error);
+              console.error("Error Delete", error);
             }
           },
         },
@@ -262,7 +262,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
     }
     return () => {
       if (notificationRef.current == true) {
-        console.log("Leaving page → call_notification()");
+      
 
         call_notification();
       }
@@ -272,8 +272,6 @@ export default function ListLayout({ template, layout }: LayoutProps) {
   const call_notification = async () => {
     try {
 
-      console.log("call_notification", nftokensRef.current)
-      console.log("sheetId: params?.id,", params?.id,)
 
       // Example notification
       await sendNotification(
@@ -287,7 +285,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       );
 
     } catch (error) {
-      console.error("call_notification error:", error);
+      console.error("Error call_notification :", error);
     }
   };
 

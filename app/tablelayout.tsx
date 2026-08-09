@@ -25,7 +25,7 @@ export default function TableLayout({ template }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error loadHue", error);
+      console.error("Error loadHue", error);
     }
   };
 
@@ -61,7 +61,7 @@ export default function TableLayout({ template }: LayoutProps) {
       setItems(data?.values || []);
 
     } catch (error) {
-      console.log("Error Get Sheet", error);
+      console.error("Error Get Sheet", error);
     }
   };
 

@@ -29,7 +29,7 @@ export default function HomeScreen() {
       });
 
     } catch (error) {
-      console.log("Error login",error);
+      console.error("Error login",error);
     }
   };
 
@@ -37,7 +37,7 @@ export default function HomeScreen() {
     try {
       await GoogleSignin.signOut();
     } catch (error) {
-      console.log("Error logout", error);
+      console.error("Error logout", error);
     }
   };
 

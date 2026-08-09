@@ -34,7 +34,7 @@ export default function TreeLayout({ template }: LayoutProps) {
         setHue(parseInt(savedValue, 10));
       }
     } catch (error) {
-      console.log("Error loadHue", error);
+      console.error("Error loadHue", error);
     }
   };
   const [nodetext, setNodetext] = useState("");
@@ -158,7 +158,7 @@ export default function TreeLayout({ template }: LayoutProps) {
       setTreeData(tree);
 
     } catch (error) {
-      console.log("Error getSheetData", error);
+      console.error("Error getSheetData", error);
     } finally {
       setLoading(false);
     }
@@ -322,7 +322,7 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       getSheetData(); // Refresh tree
     } catch (error) {
-      console.log("Error saveNode", error);
+      console.error("Error saveNode", error);
     }
   };
 
@@ -376,7 +376,7 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       return true;
     } catch (error) {
-      console.log("Error deleteNodeFromSheet",error);
+      console.error("Error deleteNodeFromSheet",error);
       return false;
     }
   };

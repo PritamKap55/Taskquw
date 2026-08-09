@@ -1,25 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
 
 const TableLayoutEdit = () => {
     const [hue, setHue] = useState(0);
-    const bgbodyColor = `hsl(${hue}, 100%, 95%)`;
-    const bgF1Color = `hsl(${hue}, 100%, 94%)`;
-    const bgF2Color = `hsl(${hue}, 100%, 75%)`;
-    const bgF3Color = `hsl(${hue}, 100%, 27%)`;
-    const gradientConfig: {
-        colors: readonly [string, string, string];
-        locations: readonly [number, number, number];
-    } = {
-        colors: [bgF1Color, bgF2Color, bgF3Color],
-        locations: [0, 0.5, 1],
-    };
+    const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+
 
     type FormField = {
         label: string;
@@ -30,7 +23,19 @@ const TableLayoutEdit = () => {
     const params = useLocalSearchParams();
     const [formData, setFormData] = useState<FormField[]>([]);
 
+    const loadHue = async () => {
+        try {
+            const savedValue = await AsyncStorage.getItem('myHue');
+            if (savedValue !== null) {
+                setHue(parseInt(savedValue, 10));
+            }
+        } catch (error) {
+            console.error("Error loadHue", error);
+        }
+    };
+
     useEffect(() => {
+        loadHue();
         GetValue();
     }, []);
 
@@ -66,7 +71,7 @@ const TableLayoutEdit = () => {
             }
         } catch (error) {
 
-            console.log("Error GetValue", error)
+            console.error("Error GetValue", error)
         }
     }
 
@@ -134,7 +139,7 @@ const TableLayoutEdit = () => {
             router.replace({ pathname: "/tablelayout", params: { layout: params?.layout, id: params?.id, headtext: params?.name }, });
 
         } catch (error) {
-            console.log("Error Submit", error)
+            console.error("Error Submit", error)
         }
     }
 

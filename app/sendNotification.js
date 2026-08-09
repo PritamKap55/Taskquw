@@ -27,14 +27,13 @@ export async function sendNotification(
             body,
             data,
         });
-        console.log("myHeaders raw", raw);
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: raw,
             redirect: "follow",
         };
-        console.log("myHeaders requestOptions", requestOptions);
+        console.log("Api", requestOptions)
         const response = await fetch(API_URL, requestOptions);
         const result = await response.json();
 

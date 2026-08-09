@@ -39,7 +39,7 @@ export default function HeaderComp({
         value.toString()
       );
     } catch (error) {
-      console.log("Error saveHue", error);
+      console.error("Error saveHue", error);
     }
   };
 
