@@ -17,7 +17,7 @@ export default function TableLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -152,7 +152,8 @@ export default function TableLayout({ template }: LayoutProps) {
             </LinearGradient>
           </TouchableOpacity>
           <View style={styles.inputBox}>
-            <Text style={styles.inputlabel}>Name</Text>
+            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+              Name</Text>
 
             <TextInput
               placeholder="Enter File name"

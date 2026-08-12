@@ -30,14 +30,9 @@ export default function HeaderComp({
   const bgColor =
     `hsl(${hue},100%,27%)`;
 
-  const saveHue = async (
-    value: number
-  ) => {
+  const saveHue = async (value: number) => {
     try {
-      await AsyncStorage.setItem(
-        'myHue',
-        value.toString()
-      );
+      await AsyncStorage.setItem('myHue',value.toString());
     } catch (error) {
       console.error("Error saveHue", error);
     }

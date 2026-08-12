@@ -26,7 +26,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -376,7 +376,7 @@ export default function TreeLayout({ template }: LayoutProps) {
 
       return true;
     } catch (error) {
-      console.error("Error deleteNodeFromSheet",error);
+      console.error("Error deleteNodeFromSheet", error);
       return false;
     }
   };
@@ -421,9 +421,11 @@ export default function TreeLayout({ template }: LayoutProps) {
       </View>
       {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-          <Text style={styles.inputlabel}>{selectnodetext}</Text>
+          <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+            {selectnodetext}</Text>
           <View style={styles.inputBox}>
-            <Text style={styles.inputlabel}>Text</Text>
+            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+              Text</Text>
             <TextInput
               placeholder="Enter File name"
               value={nodetext}

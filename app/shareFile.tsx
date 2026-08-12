@@ -10,7 +10,7 @@ import { gradientLeafbtn, styles } from './styles';
 
 export default function ShareFile() {
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
   const params = useLocalSearchParams();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"reader" | "writer">("reader");
@@ -127,7 +127,8 @@ export default function ShareFile() {
       <View style={[{ height: "68%", backgroundColor: bgbodyColor, },]} >
 
         <View style={styles.inputBox}>
-          <Text style={styles.inputlabel}>Email</Text>
+          <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+            Email</Text>
 
           <TextInput
             placeholder="Enter Email"
@@ -138,7 +139,8 @@ export default function ShareFile() {
         </View>
 
 
-        <Text style={styles.inputlabel}>Permission</Text>
+        <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+          Permission</Text>
 
         <View style={styles.row}>
           <TouchableOpacity

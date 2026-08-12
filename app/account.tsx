@@ -30,7 +30,7 @@ export default function Account() {
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [hue, setHue] = useState(0);
   const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
-
+  const [sheetStatus, setSheetStatus] = useState<Record<string, string | null>>({});
 
   const getSheets = async () => {
     try {
@@ -105,11 +105,18 @@ export default function Account() {
     // Check if value already exists
     const exists = values.some(row => row[0] === NF_token);
 
+    const savedValue = await AsyncStorage.getItem(sheetId);
+
+
+    setSheetStatus(prev => ({
+      ...prev,
+      [sheetId]: savedValue,
+    }));
     if (exists) {
 
       return;
     }
-
+    alert("notification")
     const tokens = [
       data.values?.[1]?.[0]
     ];
@@ -141,8 +148,17 @@ export default function Account() {
             <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
               onPress={() => router.push({ pathname: "/detailspage", params: { layout: item.appProperties?.layout, id: item.id, headtext: item.name }, })}
             >
-              <View style={styles.fileNumber}>
-                <Text style={styles.numberText}>
+              <View
+                style={[
+                  styles.fileNumber,
+                  sheetStatus[item.id] === "1" && {
+                    backgroundColor: "#00A300",
+                    borderRadius: 18,
+                  },
+                ]}
+              >
+                <Text
+                  style={styles.numberText}>
                   {String(index + 1).padStart(2, "0")}
                 </Text>
               </View>

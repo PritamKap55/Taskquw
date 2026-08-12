@@ -11,7 +11,7 @@ import { gradientLeafbtn, styles } from "./styles";
 
 const TableLayoutEdit = () => {
     const [hue, setHue] = useState(0);
-    const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+    const { bgbodyColor, bgColor, gradientConfig,bglabelColor } = getThemeColors(hue);
 
 
     type FormField = {
@@ -179,7 +179,7 @@ const TableLayoutEdit = () => {
                     {formData.map(
                         (item, index) => (
                             <View key={index} style={styles.inputBox}>
-                                <Text style={styles.inputlabel}>
+                                <Text style={[styles.inputlabel,{backgroundColor:bglabelColor}]}>
                                     {params?.selectedId === "1" ? "Name" : item.label}
                                 </Text>
 

@@ -191,7 +191,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     inputlabel: {
-        backgroundColor: "#22653a",
+       // backgroundColor: "#22653a",
         color: "white",
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -201,8 +201,8 @@ export const styles = StyleSheet.create({
 
     inputtext: {
         flex: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 5,
+        //paddingVertical: 5,
+        // paddingHorizontal: 5,
         backgroundColor: "#FFF",
         color: "#1b5e52",
     },

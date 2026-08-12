@@ -1,5 +1,5 @@
-
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   DarkTheme,
   DefaultTheme,
@@ -79,7 +79,14 @@ export default function RootLayout() {
               break;
 
             case 2:
-              console.log("NF Type 2");
+              console.log(String(data?.sheetId ?? ""));
+
+              try {
+                await AsyncStorage.setItem(String(data?.sheetId ?? ""), "1");
+              } catch (error) {
+                console.error("Error saveHue", error);
+              }
+
               break;
 
             case 3:

@@ -4,6 +4,7 @@ export const getThemeColors = (hue: number) => {
   const bgF2Color = `hsl(${hue}, 100%, 75%)`;
   const bgF3Color = `hsl(${hue}, 100%, 27%)`;
   const bgColor = `hsl(${hue}, 100%, 27%)`;
+  const bglabelColor = `hsl(${hue}, 50%, 26%)`;
 
   const gradientConfig = {
     colors: [bgF1Color, bgF2Color, bgF3Color] as const,
@@ -17,5 +18,6 @@ export const getThemeColors = (hue: number) => {
     bgF3Color,
     bgColor,
     gradientConfig,
+    bglabelColor,
   };
 };

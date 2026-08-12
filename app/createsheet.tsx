@@ -14,7 +14,7 @@ import TreeLayout from './treelayout';
 export default function createsheet() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor } = getThemeColors(hue);
   const [index, setIndex] = useState(0);
   const layoutOptions = ["List", "Check List", "Table", "Tree"];
   const { width } = Dimensions.get("window");
@@ -139,7 +139,7 @@ export default function createsheet() {
 
       return spreadsheetId;
     } catch (error) {
-      console.error("Error getOrCreateFile",error);
+      console.error("Error getOrCreateFile", error);
       Alert.alert("Error", "Failed to create spreadsheet.");
     }
   };
@@ -188,7 +188,8 @@ export default function createsheet() {
 
 
         <View style={styles.inputBox}>
-          <Text style={styles.inputlabel}>Name</Text>
+          <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+            Name</Text>
 
           <TextInput
             placeholder="Enter File name"

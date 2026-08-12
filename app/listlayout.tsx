@@ -25,7 +25,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
   const [files, setFiles] = useState<any>(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
 
   const params = useLocalSearchParams();
   const notificationRef = useRef(false);
@@ -169,7 +169,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
 
       if (!accessToken) {
-       
+
         return;
       }
 
@@ -262,7 +262,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
     }
     return () => {
       if (notificationRef.current == true) {
-      
+
 
         call_notification();
       }
@@ -271,7 +271,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
   const call_notification = async () => {
     try {
-
+      alert("send NF");
 
       // Example notification
       await sendNotification(
@@ -359,7 +359,8 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
           <View style={styles.inputBox}>
-            <Text style={styles.inputlabel}>Name</Text>
+            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+              Name</Text>
 
             <TextInput
               placeholder="Enter File name"
