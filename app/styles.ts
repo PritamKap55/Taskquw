@@ -8,10 +8,43 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#fff",
     },
+
+    leftMenu: {
+        fontSize: 22,
+        position: 'absolute',
+        left: 10
+    },
+
     settings: {
         fontSize: 22,
         position: 'absolute',
         right: 10
+    },
+
+
+    menu: {
+        position: 'absolute',
+        top: 60,
+        left: 10,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 8,
+        paddingVertical: 5,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        minWidth: 150,
+        zIndex: 10,
+    },
+
+    menuItem: {
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+    },
+
+    menuText: {
+        fontSize: 16,
+        color: '#222',
     },
 
     overlay: {
@@ -191,7 +224,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     inputlabel: {
-       // backgroundColor: "#22653a",
+        // backgroundColor: "#22653a",
         color: "white",
         paddingVertical: 10,
         paddingHorizontal: 10,

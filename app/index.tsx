@@ -1,6 +1,6 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { styles } from "./loginstyles";
 export default function HomeScreen() {
@@ -20,7 +20,7 @@ export default function HomeScreen() {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-  
+
       router.push({
         pathname: "/account",
         params: {
@@ -29,17 +29,14 @@ export default function HomeScreen() {
       });
 
     } catch (error) {
-      console.error("Error login",error);
+      console.error("Error login", error);
     }
   };
 
-  const logout = async () => {
-    try {
-      await GoogleSignin.signOut();
-    } catch (error) {
-      console.error("Error logout", error);
-    }
-  };
+
+  useEffect(() => {
+    login();
+  }, []);
 
   return (
     <>
@@ -57,11 +54,7 @@ export default function HomeScreen() {
                 Login
               </Text>
             </Pressable>
-            <Pressable style={styles.button} onPress={logout}>
-              <Text style={styles.buttonText}>
-                Logout
-              </Text>
-            </Pressable>
+
           </View>
         </View>
       </Pressable>

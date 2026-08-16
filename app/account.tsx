@@ -181,13 +181,6 @@ export default function Account() {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", params: { headtext: "Create Page" } })}>
-          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-            <Text style={styles.btnText}>
-              Log Out
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
 
       </LinearGradient>
 
