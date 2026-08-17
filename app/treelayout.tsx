@@ -8,7 +8,7 @@ import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
 import TreeView from "./treeview";
-
+import { treeview } from "./data";
 
 type TreeNodeType = {
   id: number;
@@ -42,46 +42,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   const [selectnodetext, setSelectnodetext] = useState("");
   const [openNodes, setOpenNodes] = useState<number[]>([]);
 
-  const [treeData, setTreeData] = useState<TreeNodeType[]>([
-    {
-      id: 1,
-      name: "Parent 1",
-      parent: 0,
-      rowNumber: 1,
-      children: [
-        {
-          id: 2,
-          name: "Child 1",
-          parent: 1,
-          rowNumber: 2,
-          children: [
-            {
-              id: 3,
-              name: "Grandchild 1",
-              parent: 2,
-              rowNumber: 3,
-              children: [],
-            },
-          ],
-        },
-        {
-          id: 4,
-          name: "Child 2",
-          parent: 1,
-          rowNumber: 4,
-          children: [
-            {
-              id: 6,
-              name: "Grandchild 2",
-              parent: 4,
-              rowNumber: 5,
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [treeData, setTreeData] = useState<TreeNodeType[]>(treeview);
 
   const getSheetData = async () => {
     try {
