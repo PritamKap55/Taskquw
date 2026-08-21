@@ -352,3 +352,24 @@ export const treeview: TreeNodeType[] = [
         ],
     },
 ];
+
+// data.ts
+
+export const tableData: (string | number)[][] = [
+    ["Items", "Stock", "Price", "Category", "Supplier"],
+    ["Vegetables", 40, 120, "Food", "Fresh Mart"],
+    ["Grocery", 55, 250, "Food", "Daily Needs"],
+    ["Clothes", 28, 850, "Fashion", "Style Hub"],
+    ["Hardware", 35, 450, "Tools", "Tool World"],
+    ["Electronics", 18, 1250, "Electronics", "Tech Store"],
+    ["Furniture", 12, 5500, "Home", "Home Center"],
+    ["Shoes", 25, 1200, "Fashion", "Footwear Hub"],
+    ["Stationery", 60, 80, "Office", "Paper House"],
+    ["Cosmetics", 32, 450, "Beauty", "Beauty Point"],
+    ["Kitchenware", 20, 750, "Kitchen", "Kitchen World"],
+    ["Toys", 45, 350, "Kids", "Toy Store"],
+    ["Books", 38, 300, "Education", "Book House"],
+    ["Sports", 22, 900, "Fitness", "Sport Center", ],
+    ["Medicines", 50, 180, "Healthcare", "Health Mart"],
+    ["Gardening", 16, 650, "Garden", "Green World"],
+];

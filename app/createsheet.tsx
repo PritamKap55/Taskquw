@@ -171,8 +171,8 @@ export default function createsheet() {
             </View>
           </View>
 
-          <View style={styles.slide}>
-            <View style={styles.card} pointerEvents="none">
+          <View style={{ width: width * 2 }}>
+            <View pointerEvents="none" >
               <TableLayout template="New" />
             </View>
           </View>

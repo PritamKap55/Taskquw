@@ -1,10 +1,14 @@
-import React from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { getThemeColors } from "./color";
+
 
 type TreeNodeType = {
   id: number;
@@ -18,6 +22,7 @@ type TreeNodeProps = {
   openNodes: number[];
   onToggle: (id: number) => void;
   template: string;
+  selectedNodeId: number | null;
 };
 
 const TreeNode: React.FC<TreeNodeProps> = ({
@@ -26,6 +31,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   openNodes,
   onToggle,
   template,
+  selectedNodeId,
 }) => {
   const isOpen =
     template === "New" ? true : openNodes.includes(node.id);
@@ -33,14 +39,30 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const hasChildren =
     !!node.children && node.children.length > 0;
 
+  const [hue, setHue] = useState(0);
+
+
+  const loadHue = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem('myHue');
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.error("Error loadHue", error);
+    }
+  };
+  const { oppositeColor, oppositeColor1 } = getThemeColors(hue);
+  useEffect(() => {
+    loadHue();
+  }, []);
   return (
     <View style={styles.container}>
 
       {/* Current Node */}
       <View style={styles.nodeRow}>
 
-        {/* Expand / Collapse */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.toggleContainer}
           disabled={!hasChildren}
           onPress={() => {
@@ -52,16 +74,29 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           <Text style={styles.toggle}>
             {hasChildren
               ? isOpen
-                ? "−"
-                : "+"
-              : ""}
+                ? <MaterialCommunityIcons
+                  name="folder-open"
+                  size={24}
+                  color={oppositeColor}
+                />
+                : <MaterialCommunityIcons
+                  name="folder"
+                  size={24}
+                  color={oppositeColor1}
+                />
+              : "•"}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        {/* Folder / Bullet + Name */}
+
         <TouchableOpacity
           style={styles.nodeContent}
-          onPress={() => onNodePress(node.id)}
+          onPress={() => {
+            onNodePress(node.id);
+
+            onToggle(node.id);
+
+          }}
         >
           <Text
             style={[
@@ -71,12 +106,23 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           >
             {hasChildren
               ? isOpen
-                ? "📂"
-                : "📁"
+                ? <MaterialCommunityIcons
+                  name="folder-open"
+                  size={24}
+                  color={oppositeColor}
+                />
+                : <MaterialCommunityIcons
+                  name="folder"
+                  size={24}
+                  color={oppositeColor1}
+                />
               : "•"}
           </Text>
 
-          <Text style={styles.nodeName}>
+          <Text style={[
+            styles.nodeName,
+            selectedNodeId === node.id && styles.selectedNodeName,
+          ]}>
             {node.name}
           </Text>
         </TouchableOpacity>
@@ -113,10 +159,12 @@ const TreeNode: React.FC<TreeNodeProps> = ({
 
                   <TreeNode
                     node={child}
+
                     onNodePress={onNodePress}
                     openNodes={openNodes}
                     onToggle={onToggle}
                     template={template}
+                    selectedNodeId={selectedNodeId}
                   />
 
                 </View>
@@ -227,6 +275,10 @@ const styles = StyleSheet.create({
   // Last item's horizontal line
   lastHorizontalLine: {
     backgroundColor: "#BDBDBD",
+  },
+  selectedNodeName: {
+    color: "#028702",
+    fontWeight: "700",
   },
 });
 

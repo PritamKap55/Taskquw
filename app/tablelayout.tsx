@@ -7,6 +7,7 @@ import { getThemeColors } from "./color";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
 import { gradientLeafbtn, styles } from "./styles";
+import { tableData } from "./data";
 
 type LayoutProps = {
   template: string;
@@ -73,14 +74,9 @@ export default function TableLayout({ template }: LayoutProps) {
 
     }
     else {
-      const data: (string | number)[][] = [
-        ["id", "name", "age"],
-        [1, "Pritam", 25],
-        [2, "Kap", 28],
-        [3, "Jane", 28],
-      ];
+   
 
-      setItems(data);
+      setItems(tableData);
     }
   }, []);
   return (

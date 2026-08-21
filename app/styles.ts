@@ -150,24 +150,36 @@ export const styles = StyleSheet.create({
         marginVertical: 10,
     },
     leafBtn: {
-        // padding: 5px 13px;
-        paddingVertical: 5,
-        paddingHorizontal: 13,
+        height: 50,
 
-        // border-radius: 60px 0 60px 0;
-        borderTopLeftRadius: 60,
-        borderBottomRightRadius: 60,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 0,
+        paddingHorizontal: 22,
 
-        // display: flex; align-items: center; justify-content: center;
-        justifyContent: 'center',
+        borderTopLeftRadius: 35,
+        borderTopRightRadius: 35,
+        borderBottomRightRadius: 35,
+        borderBottomLeftRadius: 35,
+
+        borderWidth: 3,
+        borderColor: '#FFF',
+
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
     btnText: {
-        color: 'black',        // color: black;
+        color: '#FFFFFF',        // color: black;
         fontWeight: 'bold',    // font-weight: bold;
-        fontSize: 16,
+        fontSize: 18,
+    },
+
+    arrow: {
+        position: "absolute",
+        right: 20,
+        top: "50%",
+        transform: [{ translateY: -10 }],
+        fontSize: 40,
+        lineHeight: 40,
+        color: "#FFFFFF",
     },
     tableContainer: {
         maxHeight: 'auto',

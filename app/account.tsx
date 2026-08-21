@@ -1,7 +1,7 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { gradientLeafbtn, styles } from "./styles";
+import { styles } from "./styles";
 // import LinearGradient from 'react-native-linear-gradient';
 import { registerForPushNotifications } from '@/notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -29,7 +29,7 @@ export default function Account() {
   const [files, setFiles] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, gradientLeafbtn } = getThemeColors(hue);
   const [sheetStatus, setSheetStatus] = useState<Record<string, string | null>>({});
 
   const getSheets = async () => {
@@ -53,7 +53,7 @@ export default function Account() {
       setFiles(data.files);
 
       for (const file of data.files) {
-        await notification_access(file.id, accessToken, NF_token!);
+        //await notification_access(file.id, accessToken, NF_token!);
       }
 
     } catch (error) {
@@ -67,6 +67,7 @@ export default function Account() {
       if (savedValue !== null) {
         setHue(parseInt(savedValue, 10));
       }
+      console.log(hue)
     } catch (error) {
       console.error("Error loadHue", error);
     }
@@ -166,6 +167,7 @@ export default function Account() {
               <Text style={styles.fileName}>
                 {item.name}
               </Text>
+              <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
           )}
         />
@@ -174,15 +176,18 @@ export default function Account() {
       <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
 
         <TouchableOpacity onPress={() => router.push({ pathname: "/createsheet", params: { headtext: "Create Page" } })}>
-          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
+          <LinearGradient {...gradientLeafbtn} style={[styles.leafBtn]} >
             <Text style={styles.btnText}>
               Create New Account
             </Text>
+            
           </LinearGradient>
         </TouchableOpacity>
 
 
       </LinearGradient>
+
+
 
       <View style={[styles.footerMobile, { backgroundColor: bgColor }]}>
 

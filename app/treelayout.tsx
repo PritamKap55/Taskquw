@@ -4,11 +4,11 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getThemeColors } from "./color";
+import { treeview } from "./data";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
-import { gradientLeafbtn, styles } from "./styles";
+import { styles } from "./styles";
 import TreeView from "./treeview";
-import { treeview } from "./data";
 
 type TreeNodeType = {
   id: number;
@@ -26,7 +26,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = getThemeColors(hue);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -43,6 +43,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   const [openNodes, setOpenNodes] = useState<number[]>([]);
 
   const [treeData, setTreeData] = useState<TreeNodeType[]>(treeview);
+
 
   const getSheetData = async () => {
     try {
@@ -134,7 +135,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   }, []);
 
   const handleNodePress = (id: number) => {
-
+    console.log("handleNodePress", id)
     setSelectnode(id);
     const node = findNodeById(treeData, selectnode);
     setSelectnodetext(node?.name ?? "")
@@ -190,6 +191,7 @@ export default function TreeLayout({ template }: LayoutProps) {
       );
       return;
     }
+
     const node = findNodeById(treeData, selectnode);
 
     const newNode: TreeNodeType = {
@@ -255,6 +257,7 @@ export default function TreeLayout({ template }: LayoutProps) {
 
   const saveNode = async (node: TreeNodeType) => {
     try {
+      console.log(node);
       const accessToken = await getAccessToken();
       if (!accessToken) return;
 
@@ -288,6 +291,8 @@ export default function TreeLayout({ template }: LayoutProps) {
   };
 
   const toggleNode = (id: number) => {
+    console.log("toggleNode", id)
+    setSelectnode(id)
     setOpenNodes((prev) =>
       prev.includes(id)
         ? prev.filter((x) => x !== id)
@@ -382,7 +387,7 @@ export default function TreeLayout({ template }: LayoutProps) {
       </View>
       {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-          <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
+          <Text style={[styles.inputlabel,]}>
             {selectnodetext}</Text>
           <View style={styles.inputBox}>
             <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
@@ -404,7 +409,7 @@ export default function TreeLayout({ template }: LayoutProps) {
               onPress={handleAddRoot}
             >
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text>Root</Text>
+                <Text style={styles.btnText}>Root</Text>
               </LinearGradient>
             </TouchableOpacity>
 
@@ -412,14 +417,14 @@ export default function TreeLayout({ template }: LayoutProps) {
               onPress={handleAddChild}
             >
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text> Child </Text>
+                <Text style={styles.btnText}> Child </Text>
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => deleteNodeFromSheet()}
             >
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text> Delete </Text>
+                <Text style={styles.btnText}> Delete </Text>
               </LinearGradient>
             </TouchableOpacity>
 
