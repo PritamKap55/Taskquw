@@ -4,10 +4,10 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getThemeColors } from "./color";
+import { tableData } from "./data";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
-import { gradientLeafbtn, styles } from "./styles";
-import { tableData } from "./data";
+import { styles } from "./styles";
 
 type LayoutProps = {
   template: string;
@@ -18,7 +18,7 @@ export default function TableLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
+  const { gradientLeafbtn,bgbodyColor, bgF1Color,bgF2Color,bgF3Color,bgF4Color, bgColor, gradientConfig, bglabelColor ,oppositeColor, oppositeColor1,oppositeColor3,oppositeColor4 } = getThemeColors(hue);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -74,7 +74,7 @@ export default function TableLayout({ template }: LayoutProps) {
 
     }
     else {
-   
+
 
       setItems(tableData);
     }
@@ -92,9 +92,9 @@ export default function TableLayout({ template }: LayoutProps) {
 
             <View style={styles.tableContainer}>
 
-              <View style={[styles.row, styles.headerRow]}>
+              <View style={[styles.row, { backgroundColor: oppositeColor }]}>
                 {items[0]?.map((header, i) => (
-                  <Text key={i} style={styles.cell}>
+                  <Text key={i} style={[styles.cell, { color: "#FFF" }]}>
                     {header}
                   </Text>
                 ))}
@@ -108,7 +108,13 @@ export default function TableLayout({ template }: LayoutProps) {
 
 
               {items.slice(1).map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.row}>
+                <View key={rowIndex} style={[
+      styles.row,
+      {
+        backgroundColor:
+          rowIndex % 2 === 0 ? bgbodyColor : bgF4Color,
+      },
+    ]}>
                   {items[0].map((_, colIndex) => (
                     <Text key={colIndex} style={styles.cell}>
                       {row[colIndex] || ""}

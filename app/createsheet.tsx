@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Dimensions, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getThemeColors } from "./color";
 import HeaderComp from "./headercomp";
 import ListLayout from "./listlayout";
@@ -14,10 +14,11 @@ import TreeLayout from './treelayout';
 export default function createsheet() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor } = getThemeColors(hue);
   const [index, setIndex] = useState(0);
-  const layoutOptions = ["List", "Check List", "Table", "Tree"];
+  const layoutOptions = ["List", "Check List", "Table", "Table", "Tree"];
   const { width } = Dimensions.get("window");
+  const [loading, setLoading] = useState(false);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -30,6 +31,7 @@ export default function createsheet() {
   };
 
   const getOrCreateFile = async (fileName: string) => {
+    setLoading(true);
     try {
       const { accessToken } = await GoogleSignin.getTokens();
       const token = await registerForPushNotifications();
@@ -50,6 +52,7 @@ export default function createsheet() {
 
       if (searchData.files?.length > 0) {
         Alert.alert("Success", "File already exists");
+        setLoading(false);
         return searchData.files[0].id;
       }
 
@@ -136,11 +139,12 @@ export default function createsheet() {
       );
 
       Alert.alert("Success", "Spreadsheet created successfully.");
-
+      setLoading(false);
       return spreadsheetId;
     } catch (error) {
       console.error("Error getOrCreateFile", error);
       Alert.alert("Error", "Failed to create spreadsheet.");
+      setLoading(false);
     }
   };
 
@@ -212,6 +216,11 @@ export default function createsheet() {
         </TouchableOpacity>
 
       </LinearGradient>
+      {loading && (
+        <View style={styles.loaderOverlay}>
+          <ActivityIndicator size="large" color={oppositeColor} />
+        </View>
+      )}
     </>
   );
 }

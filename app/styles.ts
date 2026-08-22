@@ -190,10 +190,11 @@ export const styles = StyleSheet.create({
         borderWidth: 0.5,
         //minHeight: 50,
         alignItems: "center",
+
     },
 
     headerRow: {
-        backgroundColor: "#ddd",
+        backgroundColor: "#316630",
     },
     cell: {
         width: 120,
@@ -287,6 +288,17 @@ export const styles = StyleSheet.create({
     },
     selectedButton: {
         backgroundColor: "#4285F4",
+    },
+    loaderOverlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(255,255,255,0.7)",
+        zIndex: 999,
     },
 });
 
