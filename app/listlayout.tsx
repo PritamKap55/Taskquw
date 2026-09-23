@@ -3,14 +3,15 @@ import CheckBox from '@react-native-community/checkbox';
 import { Buffer } from "buffer";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getThemeColors } from "./color";
 import { list } from "./data";
 import { getAccessToken } from './googleAuth';
 import HeaderComp from "./headercomp";
+import Loader from './loader';
 import { sendNotification } from './sendNotification';
-import { gradientLeafbtn, styles } from "./styles";
+import { styles } from "./styles";
 global.Buffer = Buffer;
 
 type LayoutProps = {
@@ -25,11 +26,11 @@ export default function ListLayout({ template, layout }: LayoutProps) {
   const [files, setFiles] = useState<any>(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
-
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn, } = getThemeColors(hue);
+  const [loading, setLoading] = useState(false);
   const params = useLocalSearchParams();
-  const notificationRef = useRef(false);
-  const nftokensRef = useRef<string[]>([]);
+  const [notificationRef, setNotificationRef] = useState(false);
+  const [nftokensRef, setNftokensRef] = useState<string[]>([]);
 
   const loadHue = async () => {
     try {
@@ -83,8 +84,10 @@ export default function ListLayout({ template, layout }: LayoutProps) {
     field: "text" | "note" | "bool",
     value: string | boolean
   ) => {
+
+    setLoading(true)
     try {
-      notificationRef.current = true;
+
       const canEdit = await checkWritePermission();
 
       if (!canEdit) {
@@ -121,13 +124,21 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       );
 
       await getSheetData();
+      setLoading(false)
+      if (notificationRef == true) {
+        call_notification();
+      }
+      setNotificationRef(false)
 
     } catch (error) {
+      setLoading(false)
       console.error("Error Submit", error);
     }
+    setLoading(false)
   };
 
   const getSheetData = async () => {
+    setLoading(true)
     try {
       const accessToken = await getAccessToken();
       if (!accessToken) return;
@@ -191,13 +202,17 @@ export default function ListLayout({ template, layout }: LayoutProps) {
         .map((row: any[]) => row[0])
         .filter((token: any) => token);
 
-      nftokensRef.current = tokens;
+      setNftokensRef(tokens);
+      setLoading(false)
     } catch (error) {
       console.error("Error loading sheet:", error);
+      setLoading(false)
     }
+    setLoading(false)
   };
 
   const deleteRow = async (rowIndex: number) => {
+
     Alert.alert(
       "Delete Row",
       "Are you sure you want to delete this row?",
@@ -211,6 +226,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
           style: "destructive",
           onPress: async () => {
             try {
+              setLoading(true)
               const accessToken = await getAccessToken();
               if (!accessToken) return;
               const response = await fetch(
@@ -239,43 +255,48 @@ export default function ListLayout({ template, layout }: LayoutProps) {
               );
 
               const data = await response.json();
-
+              setLoading(false)
               await getSheetData();
 
             } catch (error) {
+              setLoading(false)
               console.error("Error Delete", error);
             }
           },
         },
       ]
     );
+    setLoading(false)
   };
 
   useEffect(() => {
     loadHue();
+    removeSheetIdFromStorage();
     if (template === "New") {
-
       setItems(list.values);
-
     } else {
       getSheetData();
     }
-    return () => {
-      if (notificationRef.current == true) {
 
-
-        call_notification();
-      }
-    };
   }, []);
+
+  const removeSheetIdFromStorage = async () => {
+    try {
+      const savedValue = await AsyncStorage.getItem(params?.id as string);
+      if (savedValue !== null) {
+        await AsyncStorage.removeItem(params?.id as string);
+      }
+    } catch (error) {
+      console.error("Error removing sheetId:", error);
+    }
+  };
 
   const call_notification = async () => {
     try {
-      alert("send NF");
 
       // Example notification
       await sendNotification(
-        nftokensRef.current,
+        nftokensRef,
         String(params?.headtext ?? ""),
         "normal",
         {
@@ -288,8 +309,6 @@ export default function ListLayout({ template, layout }: LayoutProps) {
       console.error("Error call_notification :", error);
     }
   };
-
-
 
   return (
     <>
@@ -304,10 +323,15 @@ export default function ListLayout({ template, layout }: LayoutProps) {
               {(params?.layout === "Check List" || layout === "Check List") && (
                 <CheckBox value={String(item.bool).trim().toUpperCase() === "TRUE"}
                   onValueChange={(value) => handleChange(index, "bool", value ? "TRUE" : "FALSE")}
+                  tintColors={{
+                    true: "#000000",
+                    false: "#000000",
+                  }}
                 />
               )}
               <TextInput style={{ flex: 1, borderBottomWidth: 1, marginHorizontal: 10, }}
-                value={item.text} onChangeText={(text) => handleChange(index, "text", text)}
+                value={item.text}
+                onChangeText={(text) => handleChange(index, "text", text)}
                 onBlur={() => Submit(index, "text", item.text)}
               />
 
@@ -358,17 +382,7 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
       {template === undefined && (
         <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-          <View style={styles.inputBox}>
-            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-              Name</Text>
 
-            <TextInput
-              placeholder="Enter File name"
-              value={fileName}
-              onChangeText={setFileName}
-              style={styles.inputtext}
-            />
-          </View>
           <View
             style={{
               flexDirection: "row",
@@ -378,32 +392,16 @@ export default function ListLayout({ template, layout }: LayoutProps) {
 
             <TouchableOpacity onPress={() => router.push({ pathname: "/shareFile", params: { id: params?.id } })}>
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text>Share</Text>
+                <Text style={styles.btnText}>Share</Text>
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => Linking.openURL("https://tool-spot.vercel.app/")
-
-              }
-            ><LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text> PDF</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => Linking.openURL("https://tool-spot.vercel.app/#/Details")
-              }
-            >
-              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text> CSV</Text>
-              </LinearGradient>
-            </TouchableOpacity>
           </View>
 
         </LinearGradient>
       )
       }
+      <Loader visible={loading} />
     </>
   );
 }

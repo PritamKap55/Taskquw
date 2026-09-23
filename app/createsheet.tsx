@@ -7,14 +7,14 @@ import { ActivityIndicator, Alert, Dimensions, ScrollView, Text, TextInput, Touc
 import { getThemeColors } from "./color";
 import HeaderComp from "./headercomp";
 import ListLayout from "./listlayout";
-import { gradientLeafbtn, styles } from "./styles";
+import { styles } from "./styles";
 import TableLayout from './tablelayout';
 import TreeLayout from './treelayout';
 
 export default function createsheet() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor, gradientLeafbtn } = getThemeColors(hue);
   const [index, setIndex] = useState(0);
   const layoutOptions = ["List", "Check List", "Table", "Table", "Tree"];
   const { width } = Dimensions.get("window");
@@ -31,6 +31,10 @@ export default function createsheet() {
   };
 
   const getOrCreateFile = async (fileName: string) => {
+    if (!fileName.trim()) {
+      alert("Please enter an account name");
+      return;
+    }
     setLoading(true);
     try {
       const { accessToken } = await GoogleSignin.getTokens();
@@ -68,7 +72,7 @@ export default function createsheet() {
           body: JSON.stringify({
             name: fileName,
             mimeType: "application/vnd.google-apps.spreadsheet",
-            appProperties: {
+            properties: {
               app: "PKapp",
               layout: layoutOptions[index],
             },
@@ -122,7 +126,7 @@ export default function createsheet() {
 
       // Write Sheet2 values
       await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A1:A2?valueInputOption=RAW`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A1:B2?valueInputOption=RAW`,
         {
           method: "PUT",
           headers: {
@@ -130,15 +134,17 @@ export default function createsheet() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            range: "Sheet2!A1:B2",
+            majorDimension: "ROWS",
             values: [
-              ["Notifications token"],
-              [token ?? ""],
+              ["Notifications token", "Admin"],
+              [token ?? "", "True"],
             ],
           }),
         }
       );
 
-      Alert.alert("Success", "Spreadsheet created successfully.");
+      Alert.alert("Success", "created successfully.");
       setLoading(false);
       return spreadsheetId;
     } catch (error) {

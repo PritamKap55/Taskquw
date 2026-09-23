@@ -150,6 +150,7 @@ export const styles = StyleSheet.create({
         marginVertical: 10,
     },
     leafBtn: {
+        minWidth: 100,
         height: 50,
 
         paddingHorizontal: 22,
@@ -187,10 +188,9 @@ export const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        borderWidth: 0.5,
-        //minHeight: 50,
+        justifyContent: "center",
         alignItems: "center",
-
+        width: "100%",
     },
 
     headerRow: {
@@ -282,7 +282,7 @@ export const styles = StyleSheet.create({
         width: "48%",
         borderWidth: 1,
         borderColor: "#4285F4",
-        borderRadius: 8,
+
         padding: 14,
         alignItems: "center",
     },

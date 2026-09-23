@@ -41,9 +41,7 @@ export default function AboutUs() {
     <>
       <HeaderComp hue={hue} setHue={setHue} />
 
-      <View
-        style={[
-          styles.bodyLayout,
+      <View style={[ styles.bodyLayout,
           {
             backgroundColor: bgbodyColor,
           },
@@ -58,9 +56,7 @@ export default function AboutUs() {
         >
           {/* App Title */}
           <View style={aboutStyles.header}>
-            <View
-              style={[
-                aboutStyles.logoCircle,
+            <View style={[ aboutStyles.logoCircle,
                 {
                   backgroundColor: bgColor,
                 },

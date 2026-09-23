@@ -18,7 +18,7 @@ export default function TableLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { gradientLeafbtn,bgbodyColor, bgF1Color,bgF2Color,bgF3Color,bgF4Color, bgColor, gradientConfig, bglabelColor ,oppositeColor, oppositeColor1,oppositeColor3,oppositeColor4 } = getThemeColors(hue);
+  const { gradientLeafbtn, bgbodyColor, bgF1Color, bgF2Color, bgF3Color, bgF4Color, bgColor, gradientConfig, bglabelColor, oppositeColor, oppositeColor1, oppositeColor3, oppositeColor4 } = getThemeColors(hue);
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -109,12 +109,12 @@ export default function TableLayout({ template }: LayoutProps) {
 
               {items.slice(1).map((row, rowIndex) => (
                 <View key={rowIndex} style={[
-      styles.row,
-      {
-        backgroundColor:
-          rowIndex % 2 === 0 ? bgbodyColor : bgF4Color,
-      },
-    ]}>
+                  styles.row,
+                  {
+                    backgroundColor:
+                      rowIndex % 2 === 0 ? bgbodyColor : bgF4Color,
+                  },
+                ]}>
                   {items[0].map((_, colIndex) => (
                     <Text key={colIndex} style={styles.cell}>
                       {row[colIndex] || ""}
@@ -148,22 +148,12 @@ export default function TableLayout({ template }: LayoutProps) {
             onPress={() => router.push({ pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1 }, })}
           >
             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-              <Text style={styles.buttonText}>
+              <Text style={styles.btnText}>
                 + Add New Row
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          <View style={styles.inputBox}>
-            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-              Name</Text>
-
-            <TextInput
-              placeholder="Enter File name"
-              value={fileName}
-              onChangeText={setFileName}
-              style={styles.inputtext}
-            />
-          </View>
+         
           <View
             style={{
               flexDirection: "row",
@@ -175,17 +165,11 @@ export default function TableLayout({ template }: LayoutProps) {
             // onPress={downloadPDF}
             >
               <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text>Share</Text>
+                <Text style={styles.btnText}>Share</Text>
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity
-            // onPress={downloadCSV}
-            >
-              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text> CSV</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+          
           </View>
 
         </LinearGradient>

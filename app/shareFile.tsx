@@ -6,11 +6,11 @@ import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from './headercomp';
-import { gradientLeafbtn, styles } from './styles';
+import { styles } from './styles';
 
 export default function ShareFile() {
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn, } = getThemeColors(hue);
   const params = useLocalSearchParams();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"reader" | "writer">("reader");
@@ -18,8 +18,6 @@ export default function ShareFile() {
   const [sharedUsers, setSharedUsers] = useState<any[]>([]);
 
   const loadHue = async () => {
-
-
 
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -138,10 +136,6 @@ export default function ShareFile() {
           />
         </View>
 
-
-        <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-          Permission</Text>
-
         <View style={styles.row}>
           <TouchableOpacity
             style={[
@@ -205,7 +199,7 @@ export default function ShareFile() {
 
         <TouchableOpacity onPress={shareFile}>
           <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-            <Text>Share File</Text>
+            <Text style={styles.btnText}>Share File</Text>
           </LinearGradient>
         </TouchableOpacity>
       </LinearGradient>

@@ -7,11 +7,11 @@ import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "reac
 import { getThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
 import HeaderComp from "./headercomp";
-import { gradientLeafbtn, styles } from "./styles";
+import {  styles } from "./styles";
 
 const TableLayoutEdit = () => {
     const [hue, setHue] = useState(0);
-    const { bgbodyColor, bgColor, gradientConfig,bglabelColor } = getThemeColors(hue);
+    const { bgbodyColor, bgColor, gradientConfig,bglabelColor,gradientLeafbtn } = getThemeColors(hue);
 
 
     type FormField = {
@@ -205,7 +205,7 @@ const TableLayoutEdit = () => {
                     {params?.selectedId === "1" && (
                         <TouchableOpacity onPress={AddColumn} >
                             <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                                <Text style={styles.buttonText} > Add </Text>
+                                <Text style={styles.btnText} > Add </Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     )}
