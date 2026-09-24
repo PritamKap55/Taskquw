@@ -3,12 +3,13 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
 
   container: {
-  flex: 1,
-  justifyContent: 'center', // vertical center
-  alignItems: 'center',     // horizontal center
-  padding: 10,
-},
-   heading: {
+    flex: 1,
+    justifyContent: 'center', // vertical center
+    alignItems: 'center',     // horizontal center
+    padding: 10,
+    width: "100%",
+  },
+  heading: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#333',
@@ -39,9 +40,30 @@ export const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   buttonText: {
-  color: '#fff',
-  fontSize: 16,
-  fontWeight: '600',
-  letterSpacing: 0.5,
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+  },
+  inputtext: {
+    //flex: 1,
+    //paddingVertical: 5,
+    // paddingHorizontal: 5,
+    width: "70%",
+    backgroundColor: "#FFF",
+    color: "#1b5e52",
+  },
+  inputlabel: {
+    // backgroundColor: "#22653a",
+    color: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: "25%",
+    textAlign: "center",
+  },
+  inputRow: {
+  width: "100%",
+  flexDirection: "row",
+  alignItems: "center",
 },
 });

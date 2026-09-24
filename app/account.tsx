@@ -36,6 +36,7 @@ export default function Account() {
   const { bgbodyColor, bgColor, gradientConfig, gradientLeafbtn, oppositeColor } = getThemeColors(hue);
   const [sheetStatus, setSheetStatus] = useState<Record<string, string | null>>({});
   const [loading, setLoading] = useState(false);
+  const [userEmail, setuserEmail] = useState("");
   const getSheets = async () => {
     setLoading(true)
     try {
@@ -59,7 +60,7 @@ export default function Account() {
       setLoading(false)
       for (const file of data.files) {
 
-        const userEmail = String(params.email ?? "").trim().toLowerCase();
+        setuserEmail(String(params.email ?? "").trim().toLowerCase());
 
 
         const permission = file.permissions?.find(
@@ -73,6 +74,8 @@ export default function Account() {
         }
 
         await notification_access(file.id, accessToken, NF_token!, writerPermission);
+
+        saveSheetsToDevice();
       }
 
     } catch (error) {
@@ -92,6 +95,36 @@ export default function Account() {
       console.log(hue)
     } catch (error) {
       console.error("Error loadHue", error);
+    }
+  };
+
+  const SHEETS_CACHE_KEY = userEmail + "Account";
+
+  const saveSheetsToDevice = async () => {
+    try {
+      await AsyncStorage.setItem(
+        SHEETS_CACHE_KEY,
+        JSON.stringify(files)
+      );
+
+      alert("Sheets saved to device");
+    } catch (error) {
+      alert("Error saving sheets:");
+    }
+  };
+
+  const getSheetsFromDevice = async () => {
+    try {
+      const savedData = await AsyncStorage.getItem(SHEETS_CACHE_KEY);
+
+      if (!savedData) {
+        return [];
+      }
+
+      return JSON.parse(savedData);
+    } catch (error) {
+      console.error("Error reading sheets:", error);
+      return [];
     }
   };
 
@@ -128,7 +161,7 @@ export default function Account() {
 
     // Check if value already exists
     const exists = values.some(row => row[0] === NF_token);
-    console.log("exists", exists + ":" +writerPermission)
+    console.log("exists", exists + ":" + writerPermission)
 
 
     if (!exists && writerPermission == true) {
