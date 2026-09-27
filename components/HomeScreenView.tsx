@@ -10,9 +10,10 @@ type HomeScreenViewProps = {
     setEmail: (email: string) => void;
     changeColor: () => void;
     login: () => void;
+    offine: () => void;
 };
 
-export default function HomeScreenView({bgColor,email,online,setEmail,changeColor,login,}: HomeScreenViewProps) {
+export default function HomeScreenView({ bgColor, email, online, setEmail, changeColor, login,offine }: HomeScreenViewProps) {
     return (
         <>
             <Pressable style={{ flex: 1 }} onPress={changeColor}>
@@ -60,7 +61,7 @@ export default function HomeScreenView({bgColor,email,online,setEmail,changeColo
                                     />
                                 </View>
 
-                                <Pressable style={styles.button} onPress={login}>
+                                <Pressable style={styles.button} onPress={offine}>
                                     <Text style={styles.buttonText}>
                                         Offline
                                     </Text>

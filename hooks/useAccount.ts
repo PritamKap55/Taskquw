@@ -1,34 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 
 import { getAccessToken } from "../app/googleAuth";
-import {getGoogleSheets,notificationAccess,FileItem,} from "../services/accountSheets";
+import { FileItem, getGoogleSheets, notificationAccess, } from "../services/accountSheets";
 
 import { registerForPushNotifications } from "@/notification";
 import {
-  saveSheetsToDevice,
+  getAccount,
+  saveAccount,
 } from "../services/accountStorage";
 
 export function useAccount() {
 
   const params = useLocalSearchParams();
-
   const [files, setFiles] = useState<FileItem[]>([]);
-  const [selectedFile, setSelectedFile] =
-    useState<FileItem | null>(null);
-
+  const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [hue, setHue] = useState(0);
-
-  const [sheetStatus, setSheetStatus] =
-    useState<Record<string, string | null>>({});
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [userEmail, setUserEmail] =
-    useState("");
-
+  const [sheetStatus, setSheetStatus] = useState<Record<string, string | null>>({});
+  const [loading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [login, setLogin] = useState("");
   const loadHue = async (): Promise<void> => {
 
     try {
@@ -53,69 +45,67 @@ export function useAccount() {
     setLoading(true);
 
     try {
-
-      const email = String(
-        params.email ?? ""
-      )
-        .trim()
-        .toLowerCase();
-
+      const email = String(params.email ?? "").trim().toLowerCase();
+      const login_v = String(params.login ?? "");
       setUserEmail(email);
+      setLogin(login_v);
 
-      const accessToken =
-        await getAccessToken();
-
-      if (!accessToken) {
-        return;
+      if (login_v == "offine") {
+        const offineData = await getAccount(email);
+        setFiles(offineData);
       }
+      else {
+        const accessToken = await getAccessToken();
+        if (!accessToken) {
+          return;
+        }
 
-      const NF_token =
-        await registerForPushNotifications();
+        const NF_token =
+          await registerForPushNotifications();
 
-      const googleFiles =
-        await getGoogleSheets(
-          accessToken
+        const googleFiles =
+          await getGoogleSheets(accessToken);
+
+
+        setFiles(googleFiles);
+
+        // Save local copy
+        await saveAccount(
+          email,
+          googleFiles
         );
 
-      setFiles(googleFiles);
+        for (const file of googleFiles) {
 
-      // Save local copy
-      await saveSheetsToDevice(
-        email,
-        googleFiles
-      );
+          const permission =
+            file.permissions?.find(
+              (p: any) =>
+                p.emailAddress
+                  ?.toLowerCase() === email
+            );
 
-      for (const file of googleFiles) {
+          const writerPermission =
+            permission?.role === "writer" ||
+            permission?.role === "owner";
 
-        const permission =
-          file.permissions?.find(
-            (p: any) =>
-              p.emailAddress
-                ?.toLowerCase() === email
+          await notificationAccess(
+            file.id,
+            accessToken,
+            NF_token!,
+            writerPermission
           );
 
-        const writerPermission =
-          permission?.role === "writer" ||
-          permission?.role === "owner";
+          const savedValue =
+            await AsyncStorage.getItem(
+              file.id
+            );
 
-        await notificationAccess(
-          file.id,
-          accessToken,
-          NF_token!,
-          writerPermission
-        );
-
-        const savedValue =
-          await AsyncStorage.getItem(
-            file.id
-          );
-
-        setSheetStatus(prev => ({
-          ...prev,
-          [file.id]: savedValue,
-        }));
+          setSheetStatus(prev => ({
+            ...prev,
+            [file.id]: savedValue,
+          }));
+        }
       }
-
     } catch (error) {
 
       console.error(
@@ -130,7 +120,6 @@ export function useAccount() {
   };
 
   useEffect(() => {
-
     loadHue();
     getSheets();
 

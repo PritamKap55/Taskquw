@@ -1,4 +1,3 @@
-import { registerForPushNotifications } from "@/notification";
 import { sendNotification } from "../app/sendNotification";
 
 export type FileItem = {
@@ -14,7 +13,7 @@ export type FileItem = {
 export const getGoogleSheets = async (
   accessToken: string
 ): Promise<FileItem[]> => {
-
+  console.log("123");
   const query =
     "mimeType='application/vnd.google-apps.spreadsheet' " +
     "and properties has { key='app' and value='PKapp' } " +

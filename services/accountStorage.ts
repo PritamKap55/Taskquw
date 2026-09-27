@@ -4,12 +4,12 @@ export const getSheetsCacheKey = (email: string) => {
   return `${email}Account`;
 };
 
-export const saveSheetsToDevice = async (
+export const saveAccount = async (
   email: string,
   files: any[]
 ): Promise<void> => {
   try {
-    const key = getSheetsCacheKey(email);
+    const key = getSheetsCacheKey(email+"Account");
 
     await AsyncStorage.setItem(
       key,
@@ -22,11 +22,11 @@ export const saveSheetsToDevice = async (
   }
 };
 
-export const getSheetsFromDevice = async (
+export const getAccount = async (
   email: string
 ): Promise<any[]> => {
   try {
-    const key = getSheetsCacheKey(email);
+    const key = getSheetsCacheKey(email+"Account");
 
     const savedData = await AsyncStorage.getItem(key);
 

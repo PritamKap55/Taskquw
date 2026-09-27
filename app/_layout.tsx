@@ -117,12 +117,12 @@ export default function RootLayout() {
           }
         }
       );
-
     // Cleanup listeners
     return () => {
       notificationListener.remove();
       responseListener.remove();
     };
+
   }, []);
 
   async function insertNF_token(

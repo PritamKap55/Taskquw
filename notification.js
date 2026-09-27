@@ -1,5 +1,6 @@
-import * as Notifications from "expo-notifications";
+import NetInfo from "@react-native-community/netinfo";
 import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -31,8 +32,20 @@ export async function registerForPushNotifications() {
     return;
   }
 
-  const token = await Notifications.getExpoPushTokenAsync();
 
 
-  return token.data;
+  const internetAvailable = await checkInternet();
+  if (internetAvailable) {
+    const token = await Notifications.getExpoPushTokenAsync();
+    return token.data;
+
+  }
+  return;
 }
+
+const checkInternet = async () => {
+  const state = await NetInfo.fetch();
+  return Boolean(
+    state.isConnected && state.isInternetReachable
+  );
+};

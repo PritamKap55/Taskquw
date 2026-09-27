@@ -10,6 +10,7 @@ export default function HomeScreen() {
     setEmail,
     changeColor,
     login,
+    offine,
   } = useHomeScreen();
 
   return (
@@ -20,6 +21,7 @@ export default function HomeScreen() {
       setEmail={setEmail}
       changeColor={changeColor}
       login={login}
+      offine={offine}
     />
   );
 }

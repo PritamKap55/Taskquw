@@ -21,18 +21,24 @@ export function useHomeScreen() {
     const login = async (): Promise<void> => {
         try {
             await GoogleSignin.hasPlayServices();
-
             const userInfo = await GoogleSignin.signIn();
-
             const userEmail = userInfo.data?.user?.email ?? "";
-
             setEmail(userEmail);
+            router.push({
+                pathname: "/account",params: {email: userEmail,login:"login"},
+            });
+        } catch (error) {
+            console.error("Error login", error);
+        }
+    };
 
+    const offine = async (): Promise<void> => {
+        try {
+            const userEmail = email ?? "";
+            setEmail(userEmail);
             router.push({
                 pathname: "/account",
-                params: {
-                    email: userEmail,
-                },
+                params: {email: userEmail,login:"offine"},
             });
         } catch (error) {
             console.error("Error login", error);
@@ -41,28 +47,29 @@ export function useHomeScreen() {
 
     const checkInternet = async (): Promise<boolean> => {
         const state = await NetInfo.fetch();
-
-        console.log("Connected:", state.isConnected);
-        console.log("Internet reachable:", state.isInternetReachable);
-
         return Boolean(
             state.isConnected && state.isInternetReachable
         );
     };
 
     useEffect(() => {
+        console.log("login", "1")
         const checkAndLogin = async (): Promise<void> => {
             const internetAvailable = await checkInternet();
 
             if (internetAvailable) {
                 setOnline(true);
                 await login();
-            } else {
+                
+            }
+            else {
                 setOnline(false);
+               
             }
         };
 
         checkAndLogin();
+        console.log("login", "10")
     }, []);
 
     return {
@@ -72,5 +79,6 @@ export function useHomeScreen() {
         setEmail,
         changeColor,
         login,
+        offine,
     };
 }
