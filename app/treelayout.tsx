@@ -135,7 +135,6 @@ export default function TreeLayout({ template }: LayoutProps) {
   }, []);
 
   const handleNodePress = (id: number) => {
-    console.log("handleNodePress", id)
     setSelectnode(id);
     const node = findNodeById(treeData, selectnode);
     setSelectnodetext(node?.name ?? "")
@@ -257,7 +256,6 @@ export default function TreeLayout({ template }: LayoutProps) {
 
   const saveNode = async (node: TreeNodeType) => {
     try {
-      console.log(node);
       const accessToken = await getAccessToken();
       if (!accessToken) return;
 
@@ -291,7 +289,6 @@ export default function TreeLayout({ template }: LayoutProps) {
   };
 
   const toggleNode = (id: number) => {
-    console.log("toggleNode", id)
     setSelectnode(id)
     setOpenNodes((prev) =>
       prev.includes(id)

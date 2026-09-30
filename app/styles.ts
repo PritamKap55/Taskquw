@@ -300,6 +300,38 @@ export const styles = StyleSheet.create({
         backgroundColor: "rgba(255,255,255,0.7)",
         zIndex: 999,
     },
+
+    offlineContainer: {
+        position: "absolute",
+        bottom: -24,
+        left: 0,
+        right: 0,
+        alignItems: "center",
+        zIndex: 10,
+    },
+   offlineBadge: {
+    width: 105,
+    height: 22,
+    backgroundColor: "#fdd9d9",
+    alignItems: "center",
+    justifyContent: "center",
+
+    // Border configuration
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    borderTopWidth: 0, // Removes the top border
+
+    // Bottom rounded corners
+    borderBottomLeftRadius: 35,
+    borderBottomRightRadius: 35,
+
+},
+
+    offlineText: {
+        color: "#eb2626",
+        fontSize: 12,
+        fontWeight: "500",
+    },
 });
 
 

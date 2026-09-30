@@ -1,13 +1,7 @@
-import React from "react";
-import {
-    FlatList,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import React from "react";
+import { FlatList, Text, TouchableOpacity, View, } from "react-native";
 import Loader from "../app/loader";
 import { styles } from "../app/styles";
 import { FileItem } from "../services/accountSheets";
@@ -16,44 +10,27 @@ import HeaderComp from "./headercomp";
 type Props = {
     files: FileItem[];
     selectedFile: FileItem | null;
-    setSelectedFile: (
-        file: FileItem | null
-    ) => void;
+    setSelectedFile: (file: FileItem | null) => void;
 
     hue: number;
     setHue: (hue: number) => void;
 
-    sheetStatus: Record<
-        string,
-        string | null
-    >;
-
+    sheetStatus: Record<string, string | null>;
     loading: boolean;
-
     bgbodyColor: string;
     bgColor: string;
-
     gradientConfig: any;
     gradientLeafbtn: any;
+    userEmail: any;
+    login: any;
 };
 
-export default function AccountView({
-    files,
-    selectedFile,
-    setSelectedFile,
-    hue,
-    setHue,
-    sheetStatus,
-    loading,
-    bgbodyColor,
-    bgColor,
-    gradientConfig,
-    gradientLeafbtn,
+export default function AccountView({ files, selectedFile, setSelectedFile, hue, setHue, sheetStatus, loading, bgbodyColor, bgColor, gradientConfig, gradientLeafbtn, userEmail, login
 }: Props) {
 
     return (
         <>
-            <HeaderComp/>
+            <HeaderComp />
             <View
                 style={[
                     styles.bodyLayout,
@@ -77,31 +54,12 @@ export default function AccountView({
                         index,
                     }) => (
 
-                        <TouchableOpacity
-                            style={[
-                                styles.fileItem,
-
-                                selectedFile?.id === item.id &&
-                                styles.active,
-                            ]}
-
+                        <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
                             onPress={() => {
-
+                                console.log("login",login);
                                 setSelectedFile(item);
-
                                 router.push({
-                                    pathname:
-                                        "/detailspage",
-
-                                    params: {
-                                        layout:
-                                            item.properties?.layout,
-
-                                        id: item.id,
-
-                                        headtext:
-                                            item.name,
-                                    },
+                                    pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login },
                                 });
 
                             }}

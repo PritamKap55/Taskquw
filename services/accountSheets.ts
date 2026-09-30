@@ -1,6 +1,8 @@
 import { sendNotification } from "../app/sendNotification";
 
 export type FileItem = {
+  login: string | number | (string | number)[] | null | undefined;
+  userEmail: string | number | (string | number)[] | null | undefined;
   id: string;
   name: string;
   properties?: {
@@ -13,7 +15,6 @@ export type FileItem = {
 export const getGoogleSheets = async (
   accessToken: string
 ): Promise<FileItem[]> => {
-  console.log("123");
   const query =
     "mimeType='application/vnd.google-apps.spreadsheet' " +
     "and properties has { key='app' and value='PKapp' } " +
@@ -75,12 +76,6 @@ export async function notificationAccess(
     row => row[0] === NF_token
   );
 
-  console.log(
-    "exists:",
-    exists,
-    "writer:",
-    writerPermission
-  );
 
   // Writer / owner
   if (!exists && writerPermission) {
@@ -106,12 +101,7 @@ export async function notificationAccess(
         "Insert failed:",
         appendData
       );
-    } else {
-      console.log(
-        "NF token inserted:",
-        appendData
-      );
-    }
+    } 
 
     return;
   }

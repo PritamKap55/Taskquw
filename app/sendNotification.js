@@ -33,7 +33,6 @@ export async function sendNotification(
             body: raw,
             redirect: "follow",
         };
-        console.log("Api", requestOptions)
         const response = await fetch(API_URL, requestOptions);
         const result = await response.json();
 

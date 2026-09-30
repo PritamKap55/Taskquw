@@ -13,6 +13,8 @@ export default function Account() {
         setHue,
         sheetStatus,
         loading,
+        userEmail,
+        login,
     } = useAccount();
 
     const {
@@ -34,7 +36,9 @@ export default function Account() {
             bgbodyColor={bgbodyColor}
             bgColor={bgColor}
             gradientConfig={gradientConfig}
-            gradientLeafbtn={gradientLeafbtn}
+            gradientLeafbtn={gradientLeafbtn} 
+            userEmail={userEmail} 
+            login={login}            
         />
     );
 }

@@ -1,0 +1,77 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ListItem } from "./listLayoutService";
+
+export const getSheetsCacheKey = (email: string) => {
+  return `${email}Account`;
+};
+
+export const saveInDeviceAccount = async (
+  email: string,
+  files: any[]
+): Promise<void> => {
+  try {
+    const key = getSheetsCacheKey(email + "Account");
+
+    await AsyncStorage.setItem(
+      key,
+      JSON.stringify(files)
+    );
+
+  } catch (error) {
+    console.error("Error saving sheets:", error);
+  }
+};
+
+export const getInDeviceAccount = async (
+  email: string
+): Promise<any[]> => {
+  try {
+    const key = getSheetsCacheKey(email + "Account");
+
+    const savedData = await AsyncStorage.getItem(key);
+
+    if (!savedData) {
+      return [];
+    }
+
+    return JSON.parse(savedData);
+  } catch (error) {
+    console.error("Error reading sheets:", error);
+    return [];
+  }
+};
+
+export const saveInDeviceLayout = async (
+  email: string,
+  files: ListItem[]
+): Promise<void> => {
+  try {
+    const key = getSheetsCacheKey(email + "Layout");
+
+    await AsyncStorage.setItem(
+      key,
+      JSON.stringify(files)
+    );
+
+  } catch (error) {
+    console.error("Error saving sheets:", error);
+  }
+};
+export const getInDeviceLayout = async (
+  email: string
+): Promise<any[]> => {
+  try {
+    const key = getSheetsCacheKey(email + "Layout");
+
+    const savedData = await AsyncStorage.getItem(key);
+
+    if (!savedData) {
+      return [];
+    }
+
+    return JSON.parse(savedData);
+  } catch (error) {
+    console.error("Error reading sheets:", error);
+    return [];
+  }
+};

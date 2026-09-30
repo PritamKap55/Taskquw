@@ -6,10 +6,7 @@ import { getAccessToken } from "../app/googleAuth";
 import { FileItem, getGoogleSheets, notificationAccess, } from "../services/accountSheets";
 
 import { registerForPushNotifications } from "@/notification";
-import {
-  getAccount,
-  saveAccount,
-} from "../services/accountStorage";
+import { getInDeviceAccount, saveInDeviceAccount, } from "../services/dataStorage";
 
 export function useAccount() {
 
@@ -51,7 +48,7 @@ export function useAccount() {
       setLogin(login_v);
 
       if (login_v == "offine") {
-        const offineData = await getAccount(email);
+        const offineData = await getInDeviceAccount(email);
         setFiles(offineData);
       }
       else {
@@ -70,10 +67,7 @@ export function useAccount() {
         setFiles(googleFiles);
 
         // Save local copy
-        await saveAccount(
-          email,
-          googleFiles
-        );
+        await saveInDeviceAccount(email, googleFiles);
 
         for (const file of googleFiles) {
 
@@ -124,15 +118,5 @@ export function useAccount() {
     getSheets();
 
   }, []);
-
-  return {
-    files,
-    selectedFile,
-    setSelectedFile,
-    hue,
-    setHue,
-    sheetStatus,
-    loading,
-    userEmail,
-  };
+  return { files, selectedFile, setSelectedFile, hue, setHue, sheetStatus, loading, userEmail, login };
 }

@@ -9,11 +9,15 @@ import { useListLayout } from "../hooks/useListLayout";
 type LayoutProps = {
   template: string;
   layout: string;
+  userEmail: any;
+  login: any;
 };
 
 export default function ListLayout({
   template,
   layout,
+  userEmail,
+  login,
 }: LayoutProps) {
 
   const {
@@ -35,6 +39,8 @@ export default function ListLayout({
   } = useListLayout({
     template,
     layout,
+    userEmail,
+    login,
   });
 
   const {
@@ -54,27 +60,21 @@ export default function ListLayout({
       items={items}
 
       openNoteIndex={openNoteIndex}
-      setOpenNoteIndex={
-        setOpenNoteIndex
-      }
+      setOpenNoteIndex={setOpenNoteIndex}
 
       loading={loading}
 
       bgbodyColor={bgbodyColor}
-      gradientConfig={
-        gradientConfig
-      }
-      gradientLeafbtn={
-        gradientLeafbtn
-      }
+      gradientConfig={gradientConfig}
+      gradientLeafbtn={gradientLeafbtn}
 
       handleChange={handleChange}
       submit={submit}
       deleteRow={deleteRow}
 
+
       sheetId={String(
         params?.id ?? ""
-      )}
-    />
+      )} userEmail={userEmail} login={login} />
   );
 }

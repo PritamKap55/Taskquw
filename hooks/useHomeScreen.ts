@@ -53,7 +53,6 @@ export function useHomeScreen() {
     };
 
     useEffect(() => {
-        console.log("login", "1")
         const checkAndLogin = async (): Promise<void> => {
             const internetAvailable = await checkInternet();
 
@@ -69,7 +68,6 @@ export function useHomeScreen() {
         };
 
         checkAndLogin();
-        console.log("login", "10")
     }, []);
 
     return {

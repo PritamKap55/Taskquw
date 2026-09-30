@@ -43,7 +43,11 @@ export default function HeaderComp() {
         <Text style={styles.title}>
           {params?.headtext}
         </Text>
-
+        <View style={styles.offlineContainer}>
+          <View style={styles.offlineBadge}>
+            <Text style={styles.offlineText}>Offline</Text>
+          </View>
+        </View>
         <TouchableOpacity style={styles.settings} onPress={() => setShowPopup(prev => !prev)}>
           <Text style={{ fontSize: 25 }}>
             ⚙️

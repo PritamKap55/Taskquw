@@ -5,43 +5,27 @@ import { Alert } from "react-native";
 
 import { list } from "../app/data";
 import { sendNotification } from "../app/sendNotification";
-
-import {
-    ListItem,
-    checkWritePermission,
-    deleteSheetRow,
-    getSheetData,
-    updateSheetValue,
-} from "../services/listLayoutService";
+import { saveInDeviceLayout } from "../services/dataStorage";
+import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateSheetValue, } from "../services/listLayoutService";
 
 type Props = {
     template?: string;
     layout: string;
+    userEmail: string;
+    login: string;
 };
 
-export function useListLayout({
-    template,
-    layout,
+export function useListLayout({ template, layout, userEmail, login,
 }: Props) {
     const params = useLocalSearchParams();
-
     const [fileName, setFileName] = useState("");
     const [hue, setHue] = useState(0);
     const [items, setItems] = useState<ListItem[]>([]);
-    const [showDeletePopup, setShowDeletePopup] =
-        useState(false);
-
-    const [openNoteIndex, setOpenNoteIndex] =
-        useState<number | null>(null);
-
-    const [loading, setLoading] =
-        useState(false);
-
-    const [notificationRef, setNotificationRef] =
-        useState(false);
-
-    const [nftokensRef, setNftokensRef] =
-        useState<string[]>([]);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [notificationRef, setNotificationRef] = useState(false);
+    const [nftokensRef, setNftokensRef] = useState<string[]>([]);
 
     const loadHue = async (): Promise<void> => {
         try {
@@ -59,9 +43,7 @@ export function useListLayout({
     const removeSheetIdFromStorage =
         async (): Promise<void> => {
             try {
-                const sheetId = String(
-                    params?.id ?? ""
-                );
+                const sheetId = String(params?.id ?? "");
 
                 if (!sheetId) {
                     return;
@@ -89,10 +71,10 @@ export function useListLayout({
                 params?.id ?? ""
             );
 
-            const result =
-                await getSheetData(sheetId);
-
+            const result = await getSheetData(sheetId);
             setItems(result.items);
+            // Save local copy
+            await saveInDeviceLayout(userEmail, result.items);
             setNftokensRef(result.tokens);
 
         } catch (error) {
@@ -247,6 +229,7 @@ export function useListLayout({
         };
 
     useEffect(() => {
+        alert("login"+login);
         loadHue();
         removeSheetIdFromStorage();
 
@@ -260,20 +243,15 @@ export function useListLayout({
     return {
         hue,
         setHue,
-
         items,
         openNoteIndex,
         setOpenNoteIndex,
-
         loading,
-
         handleChange,
         submit,
         deleteRow,
-
         nftokensRef,
         callNotification,
-
         params,
         layout,
         template,
