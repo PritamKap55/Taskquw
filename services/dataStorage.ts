@@ -43,28 +43,110 @@ export const getInDeviceAccount = async (
 
 export const saveInDeviceLayout = async (
   email: string,
+  sheetId: string,
   files: ListItem[]
 ): Promise<void> => {
   try {
-    const key = getSheetsCacheKey(email + "Layout");
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
 
     await AsyncStorage.setItem(
       key,
       JSON.stringify(files)
     );
-
+    alert("save")
   } catch (error) {
     console.error("Error saving sheets:", error);
   }
 };
+
+
 export const getInDeviceLayout = async (
-  email: string
+  email: string,
+  sheetId: string,
 ): Promise<any[]> => {
   try {
-    const key = getSheetsCacheKey(email + "Layout");
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
 
     const savedData = await AsyncStorage.getItem(key);
+    alert("get")
+    if (!savedData) {
+      return [];
+    }
 
+    return JSON.parse(savedData);
+  } catch (error) {
+    console.error("Error reading sheets:", error);
+    return [];
+  }
+};
+
+export const saveInDeviceTable = async (
+  email: string,
+  sheetId: string,
+  files: ListItem[]
+): Promise<void> => {
+  try {
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
+
+    await AsyncStorage.setItem(
+      key,
+      JSON.stringify(files)
+    );
+    alert("save")
+  } catch (error) {
+    console.error("Error saving sheets:", error);
+  }
+};
+
+
+export const getInDeviceTable = async (
+  email: string,
+  sheetId: string,
+): Promise<any[]> => {
+  try {
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
+
+    const savedData = await AsyncStorage.getItem(key);
+    alert("get")
+    if (!savedData) {
+      return [];
+    }
+
+    return JSON.parse(savedData);
+  } catch (error) {
+    console.error("Error reading sheets:", error);
+    return [];
+  }
+};
+
+export const saveInDevicetree = async (
+  email: string,
+  sheetId: string,
+  files: ListItem[]
+): Promise<void> => {
+  try {
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
+
+    await AsyncStorage.setItem(
+      key,
+      JSON.stringify(files)
+    );
+    alert("save")
+  } catch (error) {
+    console.error("Error saving sheets:", error);
+  }
+};
+
+
+export const getInDeviceTree = async (
+  email: string,
+  sheetId: string,
+): Promise<any[]> => {
+  try {
+    const key = getSheetsCacheKey(email + sheetId + "Layout");
+
+    const savedData = await AsyncStorage.getItem(key);
+    alert("get")
     if (!savedData) {
       return [];
     }

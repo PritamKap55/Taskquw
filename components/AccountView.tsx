@@ -11,10 +11,8 @@ type Props = {
     files: FileItem[];
     selectedFile: FileItem | null;
     setSelectedFile: (file: FileItem | null) => void;
-
     hue: number;
     setHue: (hue: number) => void;
-
     sheetStatus: Record<string, string | null>;
     loading: boolean;
     bgbodyColor: string;
@@ -30,7 +28,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
     return (
         <>
-            <HeaderComp />
+            <HeaderComp HeaderName="Account" login={login} />
             <View
                 style={[
                     styles.bodyLayout,

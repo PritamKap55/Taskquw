@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 
 import { list } from "../app/data";
 import { sendNotification } from "../app/sendNotification";
-import { saveInDeviceLayout } from "../services/dataStorage";
+import { getInDeviceLayout, saveInDeviceLayout } from "../services/dataStorage";
 import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateSheetValue, } from "../services/listLayoutService";
 
 type Props = {
@@ -70,12 +70,16 @@ export function useListLayout({ template, layout, userEmail, login,
             const sheetId = String(
                 params?.id ?? ""
             );
-
-            const result = await getSheetData(sheetId);
-            setItems(result.items);
-            // Save local copy
-            await saveInDeviceLayout(userEmail, result.items);
-            setNftokensRef(result.tokens);
+            if (login == "login") {
+                const result = await getSheetData(sheetId);
+                setItems(result.items);
+                // Save local copy
+                await saveInDeviceLayout(userEmail, sheetId, result.items);
+                setNftokensRef(result.tokens);
+            } else {
+                const result = await getInDeviceLayout(userEmail, sheetId);
+                setItems(result);
+            }
 
         } catch (error) {
             console.error(
@@ -229,7 +233,7 @@ export function useListLayout({ template, layout, userEmail, login,
         };
 
     useEffect(() => {
-        alert("login"+login);
+        alert("login" + login);
         loadHue();
         removeSheetIdFromStorage();
 

@@ -29,16 +29,16 @@ type Props = {
 
 export default function ListLayoutView(
     {
-        template, layout, items, openNoteIndex, setOpenNoteIndex, loading, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId,userEmail,login
+        template, layout, items, openNoteIndex, setOpenNoteIndex, loading, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login
     }: Props) {
 
     return (
         <>
             {template === undefined && (
-                <HeaderComp />
+                <HeaderComp HeaderName="Account" login={login} />
             )}
 
-            <View style={{height:template === undefined? "68%": "100%", backgroundColor:bgbodyColor,}}>
+            <View style={{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
                 <ScrollView
                     style={{
                         flex: 1,

@@ -2,15 +2,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "../app/styles";
+type Props = {
+  HeaderName: string;
+  login: any;
+};
 
-export default function HeaderComp() {
-  const params = useLocalSearchParams();
+
+export default function HeaderComp({ HeaderName, login }: Props) {
+
   const [showPopup, setShowPopup] = useState(false);
-  const [huechecke, setHuechecke] = useState(false);
   const [hue, setHue] = useState(0);
   const bgColor = `hsl(${hue},100%,27%)`;
   const [showMenu, setShowMenu] = useState(false);
@@ -31,6 +35,23 @@ export default function HeaderComp() {
     }
   };
 
+  const loadHue = async (): Promise<void> => {
+    try {
+      const savedValue =
+        await AsyncStorage.getItem("myHue");
+
+      if (savedValue !== null) {
+        setHue(parseInt(savedValue, 10));
+      }
+    } catch (error) {
+      console.error("Error loadHue", error);
+    }
+  };
+
+  useEffect(() => {
+      loadHue();
+    }, []);
+
   return (
     <>
       <View style={[styles.headerLayout, { backgroundColor: bgColor }]}>
@@ -41,11 +62,11 @@ export default function HeaderComp() {
         </TouchableOpacity>
 
         <Text style={styles.title}>
-          {params?.headtext}
+          {HeaderName}
         </Text>
         <View style={styles.offlineContainer}>
           <View style={styles.offlineBadge}>
-            <Text style={styles.offlineText}>Offline</Text>
+            <Text style={styles.offlineText}>{login}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.settings} onPress={() => setShowPopup(prev => !prev)}>
