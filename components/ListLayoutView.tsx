@@ -5,7 +5,6 @@ import React from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View, } from "react-native";
 import Loader from "../app/loader";
 import { styles } from "../app/styles";
-import HeaderComp from "./headercomp";
 
 type Props = {
     template?: string;
@@ -34,9 +33,6 @@ export default function ListLayoutView(
 
     return (
         <>
-            {template === undefined && (
-                <HeaderComp HeaderName="Account" login={login} />
-            )}
 
             <View style={{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
                 <ScrollView

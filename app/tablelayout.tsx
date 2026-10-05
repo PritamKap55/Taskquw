@@ -3,10 +3,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { getThemeColors } from "./color";
+import { useThemeColors  } from "./color";
 import { tableData } from "./data";
 import { getAccessToken } from './googleAuth';
-import HeaderComp from "./headercomp";
 import { styles } from "./styles";
 
 type LayoutProps = {
@@ -18,7 +17,7 @@ export default function TableLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { gradientLeafbtn, bgbodyColor, bgF1Color, bgF2Color, bgF3Color, bgF4Color, bgColor, gradientConfig, bglabelColor, oppositeColor, oppositeColor1, oppositeColor3, oppositeColor4 } = getThemeColors(hue);
+  const { gradientLeafbtn, bgbodyColor, bgF1Color, bgF2Color, bgF3Color, bgF4Color, bgColor, gradientConfig, bglabelColor, oppositeColor, oppositeColor1, oppositeColor3, oppositeColor4 } = useThemeColors();
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -81,10 +80,6 @@ export default function TableLayout({ template }: LayoutProps) {
   }, []);
   return (
     <>
-
-      {template === undefined && (
-        <HeaderComp hue={hue} setHue={setHue} />
-      )}
       <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
         <ScrollView horizontal showsHorizontalScrollIndicator={true}>

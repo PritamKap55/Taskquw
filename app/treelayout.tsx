@@ -3,10 +3,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getThemeColors } from "./color";
+import { useThemeColors  } from "./color";
 import { treeview } from "./data";
 import { getAccessToken } from "./googleAuth";
-import HeaderComp from "./headercomp";
+//import HeaderComp from "./headercomp";
 import { styles } from "./styles";
 import TreeView from "./treeview";
 
@@ -26,7 +26,7 @@ export default function TreeLayout({ template }: LayoutProps) {
   const params = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = useThemeColors();
   const loadHue = async () => {
     try {
       const savedValue = await AsyncStorage.getItem('myHue');
@@ -359,9 +359,7 @@ export default function TreeLayout({ template }: LayoutProps) {
 
   return (
     <>
-      {template === undefined && (
-        <HeaderComp hue={hue} setHue={setHue} />
-      )}
+     
       <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
 
 

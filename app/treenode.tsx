@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getThemeColors } from "./color";
+import { useThemeColors } from "./color";
 
 
 type TreeNodeType = {
@@ -52,7 +52,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
       console.error("Error loadHue", error);
     }
   };
-  const { oppositeColor, oppositeColor1 } = getThemeColors(hue);
+  const { oppositeColor, oppositeColor1 } = useThemeColors();
   useEffect(() => {
     loadHue();
   }, []);

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { getThemeColors } from "../app/color";
+import { useThemeColors  } from "../app/color";
 
 import ListLayoutView from "../components/ListLayoutView";
 
@@ -47,7 +47,7 @@ export default function ListLayout({
     bgbodyColor,
     gradientConfig,
     gradientLeafbtn,
-  } = getThemeColors(hue);
+  } = useThemeColors ();
 
   return (
     <ListLayoutView

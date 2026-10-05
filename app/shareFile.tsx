@@ -3,14 +3,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getThemeColors } from "./color";
+import { useThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
-import HeaderComp from './headercomp';
+//import HeaderComp from './headercomp';
 import { styles } from './styles';
 
 export default function ShareFile() {
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn, } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn, } = useThemeColors();
   const params = useLocalSearchParams();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"reader" | "writer">("reader");
@@ -120,7 +120,7 @@ export default function ShareFile() {
 
   return (
     <>
-      <HeaderComp hue={hue} setHue={setHue} />
+      {/* <HeaderComp hue={hue} setHue={setHue} /> */}
 
       <View style={[{ height: "68%", backgroundColor: bgbodyColor, },]} >
 

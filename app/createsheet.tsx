@@ -4,8 +4,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Dimensions, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getThemeColors } from "./color";
-import HeaderComp from "./headercomp";
+import { useThemeColors  } from "./color";
+//import HeaderComp from "./headercomp";
 import ListLayout from "./listlayout";
 import { styles } from "./styles";
 import TableLayout from './tablelayout';
@@ -14,7 +14,7 @@ import TreeLayout from './treelayout';
 export default function createsheet() {
   const [fileName, setFileName] = useState("");
   const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor, gradientLeafbtn } = getThemeColors(hue);
+  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor, gradientLeafbtn } = useThemeColors ();
   const [index, setIndex] = useState(0);
   const layoutOptions = ["List", "Check List", "Table", "Table", "Tree"];
   const { width } = Dimensions.get("window");
@@ -160,7 +160,7 @@ export default function createsheet() {
   }, []);
   return (
     <>
-      <HeaderComp hue={hue} setHue={setHue} />
+      {/* <HeaderComp hue={hue} setHue={setHue} /> */}
       <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
         <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={(event) => {
@@ -171,13 +171,13 @@ export default function createsheet() {
           <View style={styles.slide}>
             <View style={styles.card} pointerEvents="none">
 
-              <ListLayout template="New" layout="" />
+              <ListLayout template="New" layout="" userEmail={undefined} login={undefined} />
             </View>
           </View>
 
           <View style={styles.slide}>
             <View style={styles.card} pointerEvents="none">
-              <ListLayout template="New" layout="Check List" />
+              <ListLayout template="New" layout="Check List" userEmail={undefined} login={undefined} />
             </View>
           </View>
 

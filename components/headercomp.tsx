@@ -3,20 +3,24 @@ import Slider from '@react-native-community/slider';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "../app/styles";
 type Props = {
   HeaderName: string;
   login: any;
+  hue: number;
+  setHue: (hue: number) => void;
+  bgColor: string;
+
 };
 
 
-export default function HeaderComp({ HeaderName, login }: Props) {
+export default function HeaderComp({ HeaderName, login, hue, setHue, bgColor }: Props) {
 
   const [showPopup, setShowPopup] = useState(false);
-  const [hue, setHue] = useState(0);
-  const bgColor = `hsl(${hue},100%,27%)`;
+  //const [hue, setHue] = useState(0);
+
   const [showMenu, setShowMenu] = useState(false);
   const saveHue = async (value: number) => {
     try {
@@ -35,22 +39,6 @@ export default function HeaderComp({ HeaderName, login }: Props) {
     }
   };
 
-  const loadHue = async (): Promise<void> => {
-    try {
-      const savedValue =
-        await AsyncStorage.getItem("myHue");
-
-      if (savedValue !== null) {
-        setHue(parseInt(savedValue, 10));
-      }
-    } catch (error) {
-      console.error("Error loadHue", error);
-    }
-  };
-
-  useEffect(() => {
-      loadHue();
-    }, []);
 
   return (
     <>

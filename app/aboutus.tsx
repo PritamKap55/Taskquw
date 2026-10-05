@@ -7,8 +7,8 @@ import {
   View,
 } from "react-native";
 
-import { getThemeColors } from "./color";
-import HeaderComp from "./headercomp";
+import { useThemeColors  } from "./color";
+//import HeaderComp from "./headercomp";
 import { styles } from "./styles";
 
 export default function AboutUs() {
@@ -19,7 +19,7 @@ export default function AboutUs() {
     bgColor,
     gradientConfig,
     oppositeColor,
-  } = getThemeColors(hue);
+  } = useThemeColors();
 
   const loadHue = async () => {
     try {
@@ -39,7 +39,7 @@ export default function AboutUs() {
 
   return (
     <>
-      <HeaderComp hue={hue} setHue={setHue} />
+      {/* <HeaderComp hue={hue} setHue={setHue} /> */}
 
       <View style={[ styles.bodyLayout,
           {

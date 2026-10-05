@@ -2,14 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { getThemeColors } from './color';
-import HeaderComp from "./headercomp";
+import { useThemeColors } from './color';
+//import HeaderComp from "./headercomp";
 import { styles } from "./styles";
 
 
 export default function AppInfo() {
     const [hue, setHue] = useState(0);
-    const { bgbodyColor, bgColor, gradientConfig, } = getThemeColors(hue);
+    const { bgbodyColor, bgColor, gradientConfig, } = useThemeColors();
     const loadHue = async () => {
         try {
             const savedValue = await AsyncStorage.getItem('myHue');
@@ -26,7 +26,7 @@ export default function AppInfo() {
     }, []);
     return (
         <>
-            <HeaderComp hue={hue} setHue={setHue} />
+            {/* <HeaderComp hue={hue} setHue={setHue} /> */}
             <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
                 <Text >About Us</Text>
 

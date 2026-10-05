@@ -4,14 +4,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getThemeColors } from "./color";
+import { useThemeColors } from "./color";
 import { getAccessToken } from "./googleAuth";
-import HeaderComp from "./headercomp";
-import {  styles } from "./styles";
+//import HeaderComp from "./headercomp";
+import { styles } from "./styles";
 
 const TableLayoutEdit = () => {
     const [hue, setHue] = useState(0);
-    const { bgbodyColor, bgColor, gradientConfig,bglabelColor,gradientLeafbtn } = getThemeColors(hue);
+    const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = useThemeColors();
 
 
     type FormField = {
@@ -173,13 +173,13 @@ const TableLayoutEdit = () => {
     return (
         <>
 
-            <HeaderComp hue={hue} setHue={setHue} />
+            {/* <HeaderComp hue={hue} setHue={setHue} /> */}
             <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
                 <ScrollView>
                     {formData.map(
                         (item, index) => (
                             <View key={index} style={styles.inputBox}>
-                                <Text style={[styles.inputlabel,{backgroundColor:bglabelColor}]}>
+                                <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
                                     {params?.selectedId === "1" ? "Name" : item.label}
                                 </Text>
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { getThemeColors } from "./color";
 import AccountView from "../components/AccountView";
 import { useAccount } from "../hooks/useAccount";
+import { useThemeColors } from "./color";
 
 export default function Account() {
 
@@ -9,8 +9,6 @@ export default function Account() {
         files,
         selectedFile,
         setSelectedFile,
-        hue,
-        setHue,
         sheetStatus,
         loading,
         userEmail,
@@ -18,11 +16,13 @@ export default function Account() {
     } = useAccount();
 
     const {
+        hue,
+        setHue,
         bgbodyColor,
         bgColor,
         gradientConfig,
         gradientLeafbtn,
-    } = getThemeColors(hue);
+    } = useThemeColors();
 
     return (
         <AccountView
@@ -36,9 +36,9 @@ export default function Account() {
             bgbodyColor={bgbodyColor}
             bgColor={bgColor}
             gradientConfig={gradientConfig}
-            gradientLeafbtn={gradientLeafbtn} 
-            userEmail={userEmail} 
-            login={login}            
+            gradientLeafbtn={gradientLeafbtn}
+            userEmail={userEmail}
+            login={login}
         />
     );
 }

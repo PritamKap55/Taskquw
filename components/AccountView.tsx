@@ -28,7 +28,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
     return (
         <>
-            <HeaderComp HeaderName="Account" login={login} />
+            <HeaderComp HeaderName="Account" login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
             <View
                 style={[
                     styles.bodyLayout,
@@ -54,7 +54,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                         <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
                             onPress={() => {
-                                console.log("login",login);
+                                console.log("login", login);
                                 setSelectedFile(item);
                                 router.push({
                                     pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login },
