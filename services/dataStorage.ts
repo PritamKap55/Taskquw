@@ -53,7 +53,6 @@ export const saveInDeviceLayout = async (
       key,
       JSON.stringify(files)
     );
-    alert("save")
   } catch (error) {
     console.error("Error saving sheets:", error);
   }
@@ -68,7 +67,6 @@ export const getInDeviceLayout = async (
     const key = getSheetsCacheKey(email + sheetId + "Layout");
 
     const savedData = await AsyncStorage.getItem(key);
-    alert("get")
     if (!savedData) {
       return [];
     }
@@ -92,7 +90,6 @@ export const saveInDeviceTable = async (
       key,
       JSON.stringify(files)
     );
-    alert("save")
   } catch (error) {
     console.error("Error saving sheets:", error);
   }
@@ -107,7 +104,6 @@ export const getInDeviceTable = async (
     const key = getSheetsCacheKey(email + sheetId + "Layout");
 
     const savedData = await AsyncStorage.getItem(key);
-    alert("get")
     if (!savedData) {
       return [];
     }
@@ -131,7 +127,6 @@ export const saveInDevicetree = async (
       key,
       JSON.stringify(files)
     );
-    alert("save")
   } catch (error) {
     console.error("Error saving sheets:", error);
   }
@@ -146,7 +141,7 @@ export const getInDeviceTree = async (
     const key = getSheetsCacheKey(email + sheetId + "Layout");
 
     const savedData = await AsyncStorage.getItem(key);
-    alert("get")
+
     if (!savedData) {
       return [];
     }

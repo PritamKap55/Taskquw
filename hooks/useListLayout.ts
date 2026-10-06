@@ -11,11 +11,12 @@ import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateShe
 type Props = {
     template?: string;
     layout: string;
+    headtext:string;
     userEmail: string;
     login: string;
 };
 
-export function useListLayout({ template, layout, userEmail, login,
+export function useListLayout({ template, layout, headtext,userEmail, login,
 }: Props) {
     const params = useLocalSearchParams();
     const [fileName, setFileName] = useState("");
@@ -233,7 +234,6 @@ export function useListLayout({ template, layout, userEmail, login,
         };
 
     useEffect(() => {
-        alert("login" + login);
         loadHue();
         removeSheetIdFromStorage();
 

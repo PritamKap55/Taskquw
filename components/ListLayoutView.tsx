@@ -2,19 +2,22 @@ import CheckBox from "@react-native-community/checkbox";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
-import { ScrollView, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Loader from "../app/loader";
 import { styles } from "../app/styles";
+import HeaderComp from "./headercomp";
 
 type Props = {
     template?: string;
     layout: string;
+    headtext: string;
     hue: number;
     setHue: (value: number) => void;
     items: any[];
     openNoteIndex: number | null;
     setOpenNoteIndex: (value: number | null) => void;
     loading: boolean;
+    bgColor: string;
     bgbodyColor: string;
     gradientConfig: any;
     gradientLeafbtn: any;
@@ -28,13 +31,19 @@ type Props = {
 
 export default function ListLayoutView(
     {
-        template, layout, items, openNoteIndex, setOpenNoteIndex, loading, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login
+        template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login
     }: Props) {
+
+
 
     return (
         <>
 
-            <View style={{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
+            {template == "" && (
+                <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
+            )}
+
+            <View style={{ height: template == "" ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
                 <ScrollView
                     style={{
                         flex: 1,
@@ -196,7 +205,7 @@ export default function ListLayoutView(
 
             </View>
 
-            {template === undefined && (
+            {template == "" && (
 
                 <LinearGradient
                     {...gradientConfig}

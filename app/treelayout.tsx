@@ -1,434 +1,105 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useThemeColors  } from "./color";
-import { treeview } from "./data";
-import { getAccessToken } from "./googleAuth";
-//import HeaderComp from "./headercomp";
-import { styles } from "./styles";
-import TreeView from "./treeview";
+import React from "react";
 
-type TreeNodeType = {
-  id: number;
-  name: string;
-  parent: number;
-  rowNumber: number;
-  children: TreeNodeType[];
-};
+import { useThemeColors } from "./color";
+
+import TreeLayoutView from "../components/TreeLayoutView";
+
+import { useTreeLayout } from "../hooks/useTreeLayout";
 
 type LayoutProps = {
   template: string;
+  layout: string;
+  headtext: string;
+  userEmail: any;
+  login: any;
 };
 
-export default function TreeLayout({ template }: LayoutProps) {
-  const params = useLocalSearchParams();
-  const [loading, setLoading] = useState(false);
-  const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = useThemeColors();
-  const loadHue = async () => {
-    try {
-      const savedValue = await AsyncStorage.getItem('myHue');
-      if (savedValue !== null) {
-        setHue(parseInt(savedValue, 10));
-      }
-    } catch (error) {
-      console.error("Error loadHue", error);
-    }
-  };
-  const [nodetext, setNodetext] = useState("");
-  const [selectnode, setSelectnode] = useState(0);
-  const [selectnodetext, setSelectnodetext] = useState("");
-  const [openNodes, setOpenNodes] = useState<number[]>([]);
+export default function TreeLayout({
+  template,
+  layout,
+  headtext,
+  userEmail,
+  login,
+}: LayoutProps) {
+  const {
+    loading,
 
-  const [treeData, setTreeData] = useState<TreeNodeType[]>(treeview);
+    nodetext,
+    setNodetext,
 
+    selectnodetext,
 
-  const getSheetData = async () => {
-    try {
-      setLoading(true);
+    openNodes,
+    treeData,
 
-      const accessToken = await getAccessToken();
-      if (!accessToken) return;
+    handleNodePress,
+    toggleNode,
 
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!A1:C100`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+    handleAddRoot,
+    handleAddChild,
+    handleDelete,
+  } = useTreeLayout({
+    template,
+    layout,
+    headtext,
+    userEmail,
+    login,
+  });
 
-      const data = await res.json();
-
-      if (!data.values) {
-        setTreeData([]);
-        return;
-      }
-
-      const rows = data.values.slice(1);
-
-      const list: TreeNodeType[] = rows.map(
-        (r: string[], index: number) => ({
-          id: Number(r[0]),
-          name: r[1] || "",
-          parent: Number(r[2] || 0),
-          rowNumber: index + 2,
-          children: [],
-        })
-      );
-
-      const buildTree = (
-        items: TreeNodeType[]
-      ): TreeNodeType[] => {
-        const map: Record<
-          number,
-          TreeNodeType
-        > = {};
-
-        const roots: TreeNodeType[] = [];
-
-        items.forEach((item) => {
-          map[item.id] = {
-            ...item,
-            children: [],
-          };
-        });
-
-        items.forEach((item) => {
-          if (item.parent === 0) {
-            roots.push(
-              map[item.id]
-            );
-          } else {
-            map[
-              item.parent
-            ]?.children.push(
-              map[item.id]
-            );
-          }
-        });
-
-        return roots;
-      };
-
-      const tree = buildTree(list);
-
-      setTreeData(tree);
-
-    } catch (error) {
-      console.error("Error getSheetData", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadHue();
-
-    if (params?.id) {
-      getSheetData();
-    }
-  }, []);
-
-  const handleNodePress = (id: number) => {
-    setSelectnode(id);
-    const node = findNodeById(treeData, selectnode);
-    setSelectnodetext(node?.name ?? "")
-  };
-
-  const findNodeById = (
-    nodes: TreeNodeType[],
-    id: number
-  ): TreeNodeType | null => {
-    for (const node of nodes) {
-      if (node.id === id) {
-        return node;
-      }
-
-      if (node.children?.length) {
-        const found = findNodeById(node.children, id);
-        if (found) {
-          return found;
-        }
-      }
-    }
-
-    return null;
-  };
-
-  const addChildNode = (
-    nodes: TreeNodeType[],
-    parentId: number,
-    newChild: TreeNodeType
-  ): TreeNodeType[] => {
-    return nodes.map((node) => {
-      if (node.id === parentId) {
-        return {
-          ...node,
-          children: [...(node.children || []), newChild],
-        };
-      }
-
-      return {
-        ...node,
-        children: node.children
-          ? addChildNode(node.children, parentId, newChild)
-          : [],
-      };
-    });
-  };
-
-  const handleAddRoot = () => {
-    if (!nodetext.trim()) {
-      Alert.alert(
-        "Validation",
-        "Please enter a node name."
-      );
-      return;
-    }
-
-    const node = findNodeById(treeData, selectnode);
-
-    const newNode: TreeNodeType = {
-      id: getLastId(treeData) + 1,
-      name: nodetext,
-      parent: node?.parent ?? 0,
-      rowNumber: 6,
-      children: [],
-    };
-
-    saveNode(newNode);
-
-    setTreeData((prev) =>
-      addChildNode(prev, node?.parent ?? 0, newNode)
-    );
-  };
-
-  const handleAddChild = () => {
-
-    if (!nodetext.trim()) {
-      Alert.alert(
-        "Validation",
-        "Please enter a node name."
-      );
-      return;
-    }
-    const node = findNodeById(treeData, selectnode);
-
-    const newNode: TreeNodeType = {
-      id: getLastId(treeData) + 1,
-      name: nodetext,
-      parent: selectnode,
-      rowNumber: 6,
-      children: [],
-    };
-
-    saveNode(newNode);
-
-    setTreeData((prev) =>
-      addChildNode(prev, node?.parent ?? 0, newNode)
-    );
-  };
-
-  const getLastId = (nodes: TreeNodeType[]): number => {
-    let maxId = 0;
-
-    const traverse = (items: TreeNodeType[]) => {
-      for (const item of items) {
-        if (item.id > maxId) {
-          maxId = item.id;
-        }
-
-        if (item.children?.length) {
-          traverse(item.children);
-        }
-      }
-    };
-
-    traverse(nodes);
-
-    return maxId;
-  };
-
-  const saveNode = async (node: TreeNodeType) => {
-    try {
-      const accessToken = await getAccessToken();
-      if (!accessToken) return;
-
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!A:C:append?valueInputOption=USER_ENTERED`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            values: [
-              [
-                node.id,
-                node.name,
-                node.parent,
-              ],
-            ],
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-
-      getSheetData(); // Refresh tree
-    } catch (error) {
-      console.error("Error saveNode", error);
-    }
-  };
-
-  const toggleNode = (id: number) => {
-    setSelectnode(id)
-    setOpenNodes((prev) =>
-      prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id]
-    );
-  };
-
-  const deleteNodeFromSheet = async () => {
-    try {
-
-      const node = findNodeById(treeData, selectnode);
-      if (node == null) return;
-      const accessToken = await getAccessToken();
-      if (!accessToken) return false;
-
-      const rows = getRowsToDelete(node);
-
-      // Delete from bottom to top
-      rows.sort((a: number, b: number) => b - a);
-
-      const requests = rows.map((row: number) => ({
-        deleteDimension: {
-          range: {
-            sheetId: 0, // Sheet1
-            dimension: "ROWS",
-            startIndex: row - 1,
-            endIndex: row,
-          },
-        },
-      }));
-
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}:batchUpdate`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requests,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      return true;
-    } catch (error) {
-      console.error("Error deleteNodeFromSheet", error);
-      return false;
-    }
-  };
-
-  const getRowsToDelete = (
-    node: TreeNodeType,
-    rows: number[] = []
-  ): number[] => {
-    rows.push(node.rowNumber);
-
-    node.children?.forEach((child) => {
-      getRowsToDelete(child, rows);
-    });
-
-    return rows;
-  };
+  const {
+    hue,
+    setHue,
+    bgColor,
+    bgbodyColor,
+    gradientConfig,
+    bglabelColor,
+    gradientLeafbtn,
+  } = useThemeColors();
 
   return (
-    <>
-     
-      <View style={[{ height: template === undefined ? "68%" : "100%", backgroundColor: bgbodyColor, },]} >
+    <TreeLayoutView
+      template={template}
+      layout={layout}
+      headtext={headtext}
+      hue={hue}
+      setHue={setHue}
+      bgColor={bgColor}
+      bgbodyColor={bgbodyColor}
+      bglabelColor={bglabelColor}
 
+      gradientConfig={gradientConfig}
+      gradientLeafbtn={gradientLeafbtn}
 
-        <View>
-          {loading ? (
-            <ActivityIndicator
-              size="large"
-            />
-          ) : (
-            <TreeView
-              data={treeData}
-              onNodePress={handleNodePress}
-              openNodes={openNodes}
-              onToggle={toggleNode}
-              template={template}
-            />
-          )}
-        </View>
+      loading={loading}
 
-      </View>
-      {template === undefined && (
-        <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-          <Text style={[styles.inputlabel,]}>
-            {selectnodetext}</Text>
-          <View style={styles.inputBox}>
-            <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-              Text</Text>
-            <TextInput
-              placeholder="Enter File name"
-              value={nodetext}
-              onChangeText={setNodetext}
-              style={styles.inputtext}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity
-              onPress={handleAddRoot}
-            >
-              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text style={styles.btnText}>Root</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+      treeData={treeData}
 
-            <TouchableOpacity
-              onPress={handleAddChild}
-            >
-              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text style={styles.btnText}> Child </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => deleteNodeFromSheet()}
-            >
-              <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                <Text style={styles.btnText}> Delete </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+      selectnodetext={selectnodetext}
 
-          </View>
+      nodetext={nodetext}
+      userEmail={userEmail} 
+      login={login}
+      setNodetext={setNodetext}
 
-        </LinearGradient>
-      )}
+      openNodes={openNodes}
 
-    </>
+      handleNodePress={
+        handleNodePress
+      }
+
+      toggleNode={toggleNode}
+
+      handleAddRoot={
+        handleAddRoot
+      }
+
+      handleAddChild={
+        handleAddChild
+      }
+
+      handleDelete={
+        handleDelete
+      }
+    />
   );
-};
-
+}
