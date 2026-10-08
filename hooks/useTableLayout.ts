@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
-import { tableData } from "../app/data";
+import { tableData } from "../constants/data";
 import { getTableSheetData } from "../services/tableLayoutService";
 
 export type TableRow = (string | number)[][];

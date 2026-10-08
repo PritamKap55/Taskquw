@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useThemeColors } from "../app/color";
+import { useThemeColors } from "../styles/color";
 
 import ListLayoutView from "../components/ListLayoutView";
 

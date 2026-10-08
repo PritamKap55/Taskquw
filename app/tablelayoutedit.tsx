@@ -1,225 +1,45 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useThemeColors } from "./color";
-import { getAccessToken } from "./googleAuth";
-//import HeaderComp from "./headercomp";
-import { styles } from "./styles";
+// tablelayoutedit.tsx
 
-const TableLayoutEdit = () => {
-    const [hue, setHue] = useState(0);
-    const { bgbodyColor, bgColor, gradientConfig, bglabelColor, gradientLeafbtn } = useThemeColors();
+import React from "react";
 
+import TableLayoutEditView from "../components/TableLayoutEditView";
 
-    type FormField = {
-        label: string;
-        value: string;
-    };
-    const route = useRoute();
-    const navigation = useNavigation();
-    const params = useLocalSearchParams();
-    const [formData, setFormData] = useState<FormField[]>([]);
+import { useTableLayoutEdit } from "../hooks/useTableLayoutEdit";
 
-    const loadHue = async () => {
-        try {
-            const savedValue = await AsyncStorage.getItem('myHue');
-            if (savedValue !== null) {
-                setHue(parseInt(savedValue, 10));
-            }
-        } catch (error) {
-            console.error("Error loadHue", error);
-        }
-    };
+import { useThemeColors } from "../styles/color";
 
-    useEffect(() => {
-        loadHue();
-        GetValue();
-    }, []);
+export default function TableLayoutEdit() {
+    const {
+        formData,
+        selectedId,
 
-    async function GetValue() {
-        try {
-            if (params?.selectedId !== "") {
-                const accessToken = await getAccessToken();
-                if (!accessToken) return;
+        handleChange,
+        addColumn,
+        deleteColumn,
+        submit,
+    } = useTableLayoutEdit();
 
-                const response = await fetch(
-                    `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values:batchGet?ranges=Sheet1!1:1&ranges=Sheet1!${params?.selectedId}:${params?.selectedId}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    }
-                );
-                const data = await response.json();
-                const headers = data.valueRanges?.[0]?.values?.[0] || [];
-                const row = data.valueRanges?.[1]?.values?.[0] || [];
-
-                const formatted =
-                    headers.map(
-                        (key: any, index: string | number) => ({
-                            label: key,
-                            value:
-                                row[index] || "",
-                        })
-                    );
-
-                setFormData(formatted);
-            }
-        } catch (error) {
-
-            console.error("Error GetValue", error)
-        }
-    }
-
-    async function Submit() {
-        try {
-
-            if (params?.selectedId !== "0") {
-
-                const updatedRow =
-                    formData.map(
-                        item => item.value
-                    );
-                const accessToken = await getAccessToken();
-                if (!accessToken) return;
-                await fetch(
-                    `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1!${params?.selectedId}:${params.selectedId}?valueInputOption=RAW`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            Authorization:
-                                `Bearer ${accessToken}`,
-                            "Content-Type":
-                                "application/json",
-                        },
-                        body: JSON.stringify({
-                            range:
-                                `Sheet1!${params?.selectedId}:${params?.selectedId}`,
-                            majorDimension:
-                                "ROWS",
-                            values: [
-                                updatedRow
-                            ],
-                        }),
-                    }
-                );
-
-            } else {
-
-                const newRow =
-                    formData.map(
-                        item => item.value
-                    );
-                const accessToken = await getAccessToken();
-                if (!accessToken) return;
-                await fetch(
-                    `https://sheets.googleapis.com/v4/spreadsheets/${params?.id}/values/Sheet1:append?valueInputOption=RAW`,
-                    {
-                        method: "POST",
-                        headers: {
-                            Authorization:
-                                `Bearer ${accessToken}`,
-                            "Content-Type":
-                                "application/json",
-                        },
-                        body: JSON.stringify({
-                            values: [newRow],
-                        }),
-                    }
-                );
-            }
-
-            Alert.alert("Success", "Data saved");
-
-            //navigation.goBack();
-            router.replace({ pathname: "/tablelayout", params: { layout: params?.layout, id: params?.id, headtext: params?.name }, });
-
-        } catch (error) {
-            console.error("Error Submit", error)
-        }
-    }
-
-    const handleChange = (
-        index: number,
-        newValue: string
-    ) => {
-        const updated = [
-            ...formData
-        ];
-
-        updated[index].value =
-            newValue;
-
-        setFormData(updated);
-    };
-
-    const AddColumn = () => {
-        setFormData([
-            ...formData,
-            {
-                label: "",
-                value: ""
-            }
-        ]);
-    };
-    const deleteColumn = (index: number) => {
-        setFormData((prev) => prev.filter((_, i) => i !== index));
-    };
+    const {
+        bgbodyColor,
+        gradientConfig,
+        bglabelColor,
+        gradientLeafbtn,
+    } = useThemeColors();
 
     return (
-        <>
+        <TableLayoutEditView
+            formData={formData}
+            selectedId={selectedId}
 
-            {/* <HeaderComp hue={hue} setHue={setHue} /> */}
-            <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
-                <ScrollView>
-                    {formData.map(
-                        (item, index) => (
-                            <View key={index} style={styles.inputBox}>
-                                <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-                                    {params?.selectedId === "1" ? "Name" : item.label}
-                                </Text>
+            bgbodyColor={bgbodyColor}
+            bglabelColor={bglabelColor}
+            gradientConfig={gradientConfig}
+            gradientLeafbtn={gradientLeafbtn}
 
-                                <TextInput style={styles.inputtext}
-                                    value={item.value}
-                                    onChangeText={(text) => handleChange(index, text)}
-                                />
-                                {params?.selectedId === "1" && (
-                                    <TouchableOpacity onPress={() => deleteColumn(index)} >
-                                        <Text style={{ fontSize: 20, marginLeft: 10, }}>
-                                            ❌
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                        )
-                    )}
-                </ScrollView>
-            </View>
-            <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-
-                <View style={{ flexDirection: "row", justifyContent: "space-between", }}>
-                    {params?.selectedId === "1" && (
-                        <TouchableOpacity onPress={AddColumn} >
-                            <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                                <Text style={styles.btnText} > Add </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    )}
-
-                    <TouchableOpacity onPress={Submit}>
-                        <LinearGradient {...gradientLeafbtn} style={styles.leafBtn} >
-                            <Text style={styles.btnText}>
-                                Submit
-                            </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                </View>
-            </LinearGradient>
-        </>
+            handleChange={handleChange}
+            addColumn={addColumn}
+            deleteColumn={deleteColumn}
+            submit={submit}
+        />
     );
-};
-export default TableLayoutEdit;
+}

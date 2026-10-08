@@ -8,7 +8,7 @@ import {
     View,
 } from "react-native";
 
-import { styles } from "../app/styles";
+import { styles } from "../styles/styles";
 import HeaderComp from "./headercomp";
 
 type TableRow = (string | number)[][];

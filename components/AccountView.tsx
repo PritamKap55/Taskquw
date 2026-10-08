@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View, } from "react-native";
 import Loader from "../app/loader";
-import { styles } from "../app/styles";
+import { styles } from "../styles/styles";
 import { FileItem } from "../services/accountSheets";
 import HeaderComp from "./headercomp";
 

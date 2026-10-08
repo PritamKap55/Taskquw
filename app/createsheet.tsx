@@ -1,232 +1,26 @@
-import { registerForPushNotifications } from '@/notification';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Dimensions, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useThemeColors  } from "./color";
-//import HeaderComp from "./headercomp";
-import ListLayout from "./listlayout";
-import { styles } from "./styles";
-import TableLayout from './tablelayout';
-import TreeLayout from './treelayout';
+// createsheet.tsx
 
-export default function createsheet() {
-  const [fileName, setFileName] = useState("");
-  const [hue, setHue] = useState(0);
-  const { bgbodyColor, bgColor, gradientConfig, bglabelColor, oppositeColor, gradientLeafbtn } = useThemeColors ();
-  const [index, setIndex] = useState(0);
-  const layoutOptions = ["List", "Check List", "Table", "Table", "Tree"];
-  const { width } = Dimensions.get("window");
-  const [loading, setLoading] = useState(false);
-  const loadHue = async () => {
-    try {
-      const savedValue = await AsyncStorage.getItem('myHue');
-      if (savedValue !== null) {
-        setHue(parseInt(savedValue, 10));
-      }
-    } catch (error) {
-      console.error("Error loadHue", error);
-    }
-  };
+import React from "react";
+import CreateSheetView from "../components/CreateSheetView";
+import { useCreateSheet } from "../hooks/useCreateSheet";
 
-  const getOrCreateFile = async (fileName: string) => {
-    if (!fileName.trim()) {
-      alert("Please enter an account name");
-      return;
-    }
-    setLoading(true);
-    try {
-      const { accessToken } = await GoogleSignin.getTokens();
-      const token = await registerForPushNotifications();
+export default function CreateSheet() {
+  const createSheet = useCreateSheet();
 
-      // Check if file already exists
-      const query = `name='${fileName}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`;
-
-      const searchRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const searchData = await searchRes.json();
-
-      if (searchData.files?.length > 0) {
-        Alert.alert("Success", "File already exists");
-        setLoading(false);
-        return searchData.files[0].id;
-      }
-
-      // Create Spreadsheet
-      const createRes = await fetch(
-        "https://www.googleapis.com/drive/v3/files",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: fileName,
-            mimeType: "application/vnd.google-apps.spreadsheet",
-            properties: {
-              app: "PKapp",
-              layout: layoutOptions[index],
-            },
-          }),
-        }
-      );
-
-      const createData = await createRes.json();
-      const spreadsheetId = createData.id;
-
-      // Wait a moment for spreadsheet creation
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Create Sheet2
-      await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requests: [
-              {
-                addSheet: {
-                  properties: {
-                    title: "Sheet2",
-                  },
-                },
-              },
-            ],
-          }),
-        }
-      );
-
-      // Write Sheet1 headers
-      await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:C1?valueInputOption=RAW`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            values: [["text", "note", "bool"]],
-          }),
-        }
-      );
-
-      // Write Sheet2 values
-      await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A1:B2?valueInputOption=RAW`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            range: "Sheet2!A1:B2",
-            majorDimension: "ROWS",
-            values: [
-              ["Notifications token", "Admin"],
-              [token ?? "", "True"],
-            ],
-          }),
-        }
-      );
-
-      Alert.alert("Success", "created successfully.");
-      setLoading(false);
-      return spreadsheetId;
-    } catch (error) {
-      console.error("Error getOrCreateFile", error);
-      Alert.alert("Error", "Failed to create spreadsheet.");
-      setLoading(false);
-    }
-  };
-
-
-  useEffect(() => {
-    loadHue();
-  }, []);
   return (
-    <>
-      {/* <HeaderComp hue={hue} setHue={setHue} /> */}
-      <View style={[styles.bodyLayout, { backgroundColor: bgbodyColor }]}>
-        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(event) => {
-            const pageIndex = Math.round(event.nativeEvent.contentOffset.x / width)
-            setIndex(pageIndex);
-          }}
-        >
-          <View style={styles.slide}>
-            <View style={styles.card} pointerEvents="none">
-
-              <ListLayout template="New" layout="" userEmail={undefined} login={undefined} />
-            </View>
-          </View>
-
-          <View style={styles.slide}>
-            <View style={styles.card} pointerEvents="none">
-              <ListLayout template="New" layout="Check List" userEmail={undefined} login={undefined} />
-            </View>
-          </View>
-
-          <View style={{ width: width * 2 }}>
-            <View pointerEvents="none" >
-              <TableLayout template="New" />
-            </View>
-          </View>
-
-          <View style={styles.slide}>
-            <View style={styles.card}>
-              <TreeLayout template="New" />
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-      <LinearGradient {...gradientConfig} style={[styles.footerLayout]}>
-
-
-        <View style={styles.inputBox}>
-          <Text style={[styles.inputlabel, { backgroundColor: bglabelColor }]}>
-            Name</Text>
-
-          <TextInput
-            placeholder="Enter File name"
-            value={fileName}
-            onChangeText={setFileName}
-
-            style={styles.inputtext}
-          />
-        </View>
-        <TouchableOpacity onPress={async () => {
-          const fileId = await getOrCreateFile(fileName);
-        }}
-        >
-          <LinearGradient {...gradientLeafbtn} style={styles.leafBtn}  >
-
-            <Text style={styles.btnText}>
-              Create New Account
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
-      </LinearGradient>
-      {loading && (
-        <View style={styles.loaderOverlay}>
-          <ActivityIndicator size="large" color={oppositeColor} />
-        </View>
-      )}
-    </>
+    <CreateSheetView
+      fileName={createSheet.fileName}
+      setFileName={createSheet.setFileName}
+      index={createSheet.index}
+      setIndex={createSheet.setIndex}
+      width={createSheet.width}
+      loading={createSheet.loading}
+      bgbodyColor={createSheet.bgbodyColor}
+      gradientConfig={createSheet.gradientConfig}
+      bglabelColor={createSheet.bglabelColor}
+      oppositeColor={createSheet.oppositeColor}
+      gradientLeafbtn={createSheet.gradientLeafbtn}
+      onCreate={createSheet.getOrCreateFile}
+    />
   );
 }

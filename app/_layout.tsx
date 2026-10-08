@@ -14,7 +14,7 @@ import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 
 import { registerForPushNotifications } from "../notification";
-import { getAccessToken } from "./googleAuth";
+import { getAccessToken } from "../services/googleAuth";
 
 // ----------------------------------------
 // Notification display settings

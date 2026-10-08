@@ -7,9 +7,9 @@ import {
   View,
 } from "react-native";
 
-import { useThemeColors  } from "./color";
+import { useThemeColors  } from "../styles/color";
 //import HeaderComp from "./headercomp";
-import { styles } from "./styles";
+import { styles } from "../styles/styles";
 
 export default function AboutUs() {
   const [hue, setHue] = useState(0);

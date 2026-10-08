@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useThemeColors } from "./color";
+import { useThemeColors } from "../styles/color";
 
 
 type TreeNodeType = {

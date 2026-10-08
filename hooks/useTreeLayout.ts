@@ -2,7 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
-import { getAccessToken } from "../app/googleAuth";
+import { getAccessToken } from "../services/googleAuth";
 
 import {
     TreeNodeType,
@@ -13,7 +13,7 @@ import {
     saveTreeToDevice,
 } from "../services/treeService";
 
-import { treeview } from "../app/data";
+import { treeview } from "../constants/data";
 
 
 type Props = {

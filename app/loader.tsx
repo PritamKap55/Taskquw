@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { useThemeColors  } from "./color";
-import { styles } from "./styles";
+import { useThemeColors  } from "../styles/color";
+import { styles } from "../styles/styles";
 
 interface LoaderProps {
   visible?: boolean;

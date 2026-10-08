@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
-import { getAccessToken } from "../app/googleAuth";
+import { getAccessToken } from "../services/googleAuth";
 import { FileItem, getGoogleSheets, notificationAccess, } from "../services/accountSheets";
 
 import { registerForPushNotifications } from "@/notification";

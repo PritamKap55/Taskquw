@@ -9,7 +9,7 @@ import {
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { styles } from "../app/styles";
+import { styles } from "../styles/styles";
 import TreeView from "../app/treeview";
 import HeaderComp from "./headercomp";
 

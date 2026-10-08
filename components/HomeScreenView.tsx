@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, Text, TextInput, View, } from "react-native";
 
-import { styles } from "../app/loginstyles";
+import { styles } from "../styles/loginstyles";
 
 type HomeScreenViewProps = {
     bgColor: string;

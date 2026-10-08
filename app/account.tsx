@@ -1,7 +1,7 @@
 import React from "react";
 import AccountView from "../components/AccountView";
 import { useAccount } from "../hooks/useAccount";
-import { useThemeColors } from "./color";
+import { useThemeColors } from "../styles/color";
 
 export default function Account() {
 

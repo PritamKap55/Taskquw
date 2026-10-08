@@ -1,4 +1,4 @@
-import { sendNotification } from "../app/sendNotification";
+import { sendNotification } from "./sendNotification";
 
 export type FileItem = {
   login: string | number | (string | number)[] | null | undefined;

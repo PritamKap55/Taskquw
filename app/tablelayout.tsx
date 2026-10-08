@@ -2,7 +2,7 @@ import React from "react";
 
 import TableLayoutView from "../components/TableLayoutView";
 import { useTableLayout } from "../hooks/useTableLayout";
-import { useThemeColors } from "./color";
+import { useThemeColors } from "../styles/color";
 
 type LayoutProps = {
   template?: string;

@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import React from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Loader from "../app/loader";
-import { styles } from "../app/styles";
+import { styles } from "../styles/styles";
 import HeaderComp from "./headercomp";
 
 type Props = {

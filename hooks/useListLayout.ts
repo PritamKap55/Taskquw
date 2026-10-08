@@ -3,8 +3,8 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
-import { list } from "../app/data";
-import { sendNotification } from "../app/sendNotification";
+import { list } from "../constants/data";
+import { sendNotification } from "../services/sendNotification";
 import { getInDeviceLayout, saveInDeviceLayout } from "../services/dataStorage";
 import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateSheetValue, } from "../services/listLayoutService";
 

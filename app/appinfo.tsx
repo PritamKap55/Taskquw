@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { useThemeColors } from './color';
+import { useThemeColors } from '../styles/color';
 //import HeaderComp from "./headercomp";
-import { styles } from "./styles";
+import { styles } from "../styles/styles";
 
 
 export default function AppInfo() {

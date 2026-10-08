@@ -1,4 +1,4 @@
-import { getAccessToken } from "../app/googleAuth";
+import { getAccessToken } from "./googleAuth";
 
 export type ListItem = {
     text: string;

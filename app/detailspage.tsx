@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
-import { useThemeColors } from "./color";
+import { useThemeColors } from "../styles/color";
 import ListLayout from './listlayout';
 import TableLayout from './tablelayout';
 import TreeLayout from './treelayout';

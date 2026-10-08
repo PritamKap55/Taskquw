@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { styles } from "../app/styles";
+import { styles } from "../styles/styles";
 type Props = {
   HeaderName: string;
   login: any;

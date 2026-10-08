@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useThemeColors } from "./color";
+import { useThemeColors } from "../styles/color";
 
 import TreeLayoutView from "../components/TreeLayoutView";
 
