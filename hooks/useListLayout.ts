@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 
 import { list } from "../constants/data";
 import { sendNotification } from "../services/sendNotification";
-import { getInDeviceLayout, saveInDeviceLayout } from "../services/dataStorage";
+import { getInDeviceList, saveInDeviceList } from "../services/dataStorage";
 import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateSheetValue, } from "../services/listLayoutService";
 
 type Props = {
@@ -71,14 +71,14 @@ export function useListLayout({ template, layout, headtext,userEmail, login,
             const sheetId = String(
                 params?.id ?? ""
             );
-            if (login == "login") {
+            if (login == "Login") {
                 const result = await getSheetData(sheetId);
                 setItems(result.items);
                 // Save local copy
-                await saveInDeviceLayout(userEmail, sheetId, result.items);
+                await saveInDeviceList(userEmail, sheetId, result.items);
                 setNftokensRef(result.tokens);
             } else {
-                const result = await getInDeviceLayout(userEmail, sheetId);
+                const result = await getInDeviceList(userEmail, sheetId);
                 setItems(result);
             }
 

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
+import { getInDeviceTable, saveInDeviceTable } from "@/services/dataStorage";
 import { tableData } from "../constants/data";
 import { getTableSheetData } from "../services/tableLayoutService";
 
@@ -10,19 +11,20 @@ export type TableRow = (string | number)[][];
 type UseTableLayoutProps = {
     template?: string;
     layout: string;
-    headtext:string;
+    headtext: string;
     userEmail: string;
     login: string;
 };
 
 export const useTableLayout = ({
     template,
-    layout, headtext,userEmail, login,
+    layout, headtext, userEmail, login,
 }: UseTableLayoutProps) => {
     const params = useLocalSearchParams();
 
     const [hue, setHue] = useState(0);
     const [items, setItems] = useState<TableRow>([]);
+    
     const [loading, setLoading] = useState(false);
 
     const loadHue = async () => {
@@ -42,12 +44,18 @@ export const useTableLayout = ({
 
         try {
             setLoading(true);
+            if (login == "Login") {
+                const sheetData = await getTableSheetData(
+                    String(params.id)
+                );
+                setItems(sheetData);
+                await saveInDeviceTable(userEmail, String(params.id), sheetData);
+            } else {
+                const result = await getInDeviceTable(userEmail, String(params.id));
+                setItems(result);
+            }
 
-            const sheetData = await getTableSheetData(
-                String(params.id)
-            );
 
-            setItems(sheetData);
         } catch (error) {
             console.error("Error loading table:", error);
         } finally {

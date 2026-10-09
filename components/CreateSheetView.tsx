@@ -15,6 +15,7 @@ import ListLayout from "../app/listlayout";
 import TableLayout from "../app/tablelayout";
 import TreeLayout from "../app/treelayout";
 import { styles } from "../styles/styles";
+import HeaderComp from "./headercomp";
 
 type Props = {
   fileName: string;
@@ -31,7 +32,10 @@ type Props = {
   bglabelColor: string;
   oppositeColor: string;
   gradientLeafbtn: any;
-
+  hue: number;
+  setHue: (hue: number) => void;
+  bgColor: string;
+  login: any;
   onCreate: () => void;
 };
 
@@ -48,9 +52,12 @@ export default function CreateSheetView({
   oppositeColor,
   gradientLeafbtn,
   onCreate,
+  hue, setHue,
+  bgColor, login
 }: Props) {
   return (
     <>
+      <HeaderComp HeaderName="Account" login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
       <View
         style={[
           styles.bodyLayout,

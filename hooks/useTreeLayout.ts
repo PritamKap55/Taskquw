@@ -2,15 +2,13 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
+import { getInDeviceTree, saveInDevicetree } from "../services/dataStorage";
 import { getAccessToken } from "../services/googleAuth";
-
 import {
     TreeNodeType,
     appendTreeNode,
     deleteTreeRows,
     fetchTreeFromSheet,
-    getTreeFromDevice,
-    saveTreeToDevice,
 } from "../services/treeService";
 
 import { treeview } from "../constants/data";
@@ -19,12 +17,12 @@ import { treeview } from "../constants/data";
 type Props = {
     template?: string;
     layout: string;
-    headtext:string;
+    headtext: string;
     userEmail: string;
     login: string;
 };
 
-export const useTreeLayout = ({ template, layout, headtext,userEmail, login,
+export const useTreeLayout = ({ template, layout, headtext, userEmail, login,
 }: Props) => {
     const params = useLocalSearchParams();
 
@@ -149,15 +147,7 @@ export const useTreeLayout = ({ template, layout, headtext,userEmail, login,
         return rows;
     };
 
-    /**
-     * Load tree
-     *
-     * Online:
-     *   Google Sheets -> Device cache
-     *
-     * Offline:
-     *   Device cache
-     */
+
     const getSheetData = async () => {
         if (!spreadsheetId) {
             return;
@@ -172,20 +162,22 @@ export const useTreeLayout = ({ template, layout, headtext,userEmail, login,
             // ONLINE
             if (accessToken) {
                 try {
-                    const tree =
-                        await fetchTreeFromSheet(
-                            spreadsheetId,
-                            accessToken
-                        );
+                    if (login == "Login") {
+                        const tree =
+                            await fetchTreeFromSheet(
+                                spreadsheetId,
+                                accessToken
+                            );
 
-                    setTreeData(tree);
+                        setTreeData(tree);
 
-                    // Save latest data for offline use
-                    await saveTreeToDevice(
-                        spreadsheetId,
-                        tree
-                    );
-
+                        // Save latest data for offline use
+                        await saveInDevicetree(userEmail, spreadsheetId, tree);
+                    }
+                    else {
+                        const result = await getInDeviceTree(userEmail, spreadsheetId);
+                        setTreeData(result);
+                    }
                     return;
                 } catch (error) {
                     console.log(
@@ -194,17 +186,7 @@ export const useTreeLayout = ({ template, layout, headtext,userEmail, login,
                 }
             }
 
-            // OFFLINE
-            const cachedTree =
-                await getTreeFromDevice(
-                    spreadsheetId
-                );
-
-            if (cachedTree.length > 0) {
-                setTreeData(cachedTree);
-            } else {
-                setTreeData([]);
-            }
+            
 
         } catch (error) {
             console.error(

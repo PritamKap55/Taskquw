@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type TableRow = (string | number)[][];
 
+
 export const getTableSheetData = async (
   sheetId: string
 ): Promise<TableRow> => {

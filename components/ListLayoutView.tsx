@@ -93,6 +93,7 @@ export default function ListLayoutView(
                                     )}
 
                                 <TextInput
+                                    editable={login === "Login"}
                                     style={{
                                         flex: 1,
                                         borderBottomWidth: 1,
@@ -137,21 +138,22 @@ export default function ListLayoutView(
                                             : "📋"}
                                     </Text>
                                 </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        deleteRow(index)
-                                    }
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 20,
-                                            marginLeft: 10,
-                                        }}
+                                {login == "Login" && (
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            deleteRow(index)
+                                        }
                                     >
-                                        ❌
-                                    </Text>
-                                </TouchableOpacity>
+                                        <Text
+                                            style={{
+                                                fontSize: 20,
+                                                marginLeft: 10,
+                                            }}
+                                        >
+                                            ❌
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
 
                                 {openNoteIndex === index && (
 
@@ -162,7 +164,7 @@ export default function ListLayoutView(
                                         value={item.note}
 
                                         placeholder="Write note..."
-
+                                        editable={login === "Login"}
                                         onChangeText={text =>
                                             handleChange(
                                                 index,
@@ -231,17 +233,18 @@ export default function ListLayoutView(
                                 })
                             }
                         >
-
-                            <LinearGradient
-                                {...gradientLeafbtn}
-                                style={styles.leafBtn}
-                            >
-                                <Text
-                                    style={styles.btnText}
+                            {login == "Login" && (
+                                <LinearGradient
+                                    {...gradientLeafbtn}
+                                    style={styles.leafBtn}
                                 >
-                                    Share
-                                </Text>
-                            </LinearGradient>
+                                    <Text
+                                        style={styles.btnText}
+                                    >
+                                        Share
+                                    </Text>
+                                </LinearGradient>
+                            )}
 
                         </TouchableOpacity>
 

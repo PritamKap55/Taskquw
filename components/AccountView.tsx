@@ -3,8 +3,8 @@ import { router } from "expo-router";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View, } from "react-native";
 import Loader from "../app/loader";
-import { styles } from "../styles/styles";
 import { FileItem } from "../services/accountSheets";
+import { styles } from "../styles/styles";
 import HeaderComp from "./headercomp";
 
 type Props = {
@@ -54,7 +54,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                         <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
                             onPress={() => {
-                                console.log("login", login);
+                                
                                 setSelectedFile(item);
                                 router.push({
                                     pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login },
@@ -122,17 +122,17 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
                         })
                     }
                 >
+                    {login == "Login" && (
+                        <LinearGradient
+                            {...gradientLeafbtn}
+                            style={styles.leafBtn}
+                        >
 
-                    <LinearGradient
-                        {...gradientLeafbtn}
-                        style={styles.leafBtn}
-                    >
+                            <Text style={styles.btnText}>
+                                Create New Account
+                            </Text>
 
-                        <Text style={styles.btnText}>
-                            Create New Account
-                        </Text>
-
-                    </LinearGradient>
+                        </LinearGradient>)}
 
                 </TouchableOpacity>
 

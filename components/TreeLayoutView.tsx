@@ -9,8 +9,8 @@ import {
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { styles } from "../styles/styles";
 import TreeView from "../app/treeview";
+import { styles } from "../styles/styles";
 import HeaderComp from "./headercomp";
 
 type Props = {
@@ -50,7 +50,7 @@ type Props = {
 
 export default function TreeLayoutView({
   template,
-  layout, headtext, hue, setHue,bgColor,
+  layout, headtext, hue, setHue, bgColor,
   bgbodyColor,
   bglabelColor,
 
@@ -79,10 +79,10 @@ export default function TreeLayoutView({
 }: Props) {
   return (
     <>
-    {template == "" && (
-                    <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
-                )}
-    
+      {template == "" && (
+        <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
+      )}
+
       <View
         style={{
           height:
@@ -110,7 +110,7 @@ export default function TreeLayoutView({
         </View>
       </View>
 
-      {template =="" && (
+      {template == "" && (
         <LinearGradient
           {...gradientConfig}
           style={styles.footerLayout}
@@ -120,24 +120,26 @@ export default function TreeLayoutView({
           </Text>
 
           <View style={styles.inputBox}>
-            <Text
-              style={[
-                styles.inputlabel,
-                {
-                  backgroundColor:
-                    bglabelColor,
-                },
-              ]}
-            >
-              Text
-            </Text>
+            {login == "Login" && (
+              <Text
+                style={[
+                  styles.inputlabel,
+                  {
+                    backgroundColor:
+                      bglabelColor,
+                  },
+                ]}
+              >
+                Text
+              </Text>)}
+            {login == "Login" && (
 
-            <TextInput
-              placeholder="Enter File name"
-              value={nodetext}
-              onChangeText={setNodetext}
-              style={styles.inputtext}
-            />
+              <TextInput
+                placeholder="Enter File name"
+                value={nodetext}
+                onChangeText={setNodetext}
+                style={styles.inputtext}
+              />)}
           </View>
 
           <View
@@ -147,50 +149,51 @@ export default function TreeLayoutView({
                 "space-between",
             }}
           >
-            <TouchableOpacity
-              onPress={handleAddRoot}
-            >
-              <LinearGradient
-                {...gradientLeafbtn}
-                style={styles.leafBtn}
+            {login == "Login" && (
+              <TouchableOpacity
+                onPress={handleAddRoot}
               >
-                <Text
-                  style={styles.btnText}
+                <LinearGradient
+                  {...gradientLeafbtn}
+                  style={styles.leafBtn}
                 >
-                  Root
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleAddChild}
-            >
-              <LinearGradient
-                {...gradientLeafbtn}
-                style={styles.leafBtn}
+                  <Text
+                    style={styles.btnText}
+                  >
+                    Root
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>)}
+            {login == "Login" && (
+              <TouchableOpacity
+                onPress={handleAddChild}
               >
-                <Text
-                  style={styles.btnText}
+                <LinearGradient
+                  {...gradientLeafbtn}
+                  style={styles.leafBtn}
                 >
-                  Child
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleDelete}
-            >
-              <LinearGradient
-                {...gradientLeafbtn}
-                style={styles.leafBtn}
+                  <Text
+                    style={styles.btnText}
+                  >
+                    Child
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>)}
+            {login == "Login" && (
+              <TouchableOpacity
+                onPress={handleDelete}
               >
-                <Text
-                  style={styles.btnText}
+                <LinearGradient
+                  {...gradientLeafbtn}
+                  style={styles.leafBtn}
                 >
-                  Delete
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+                  <Text
+                    style={styles.btnText}
+                  >
+                    Delete
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>)}
           </View>
         </LinearGradient>
       )}

@@ -47,7 +47,7 @@ export function useAccount() {
       setUserEmail(email);
       setLogin(login_v);
 
-      if (login_v == "offine") {
+      if (login_v == "Offline") {
         const offineData = await getInDeviceAccount(email);
         setFiles(offineData);
       }

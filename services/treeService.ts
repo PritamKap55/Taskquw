@@ -80,41 +80,7 @@ const buildTree = (
     return roots;
 };
 
-/**
- * Save tree to device
- */
-export const saveTreeToDevice = async (
-    spreadsheetId: string,
-    tree: TreeNodeType[]
-): Promise<void> => {
-    const key = getCacheKey(spreadsheetId);
 
-    await AsyncStorage.setItem(
-        key,
-        JSON.stringify(tree)
-    );
-};
-
-/**
- * Get tree from device
- */
-export const getTreeFromDevice = async (
-    spreadsheetId: string
-): Promise<TreeNodeType[]> => {
-    const key = getCacheKey(spreadsheetId);
-
-    const saved = await AsyncStorage.getItem(key);
-
-    if (!saved) {
-        return [];
-    }
-
-    return JSON.parse(saved);
-};
-
-/**
- * Append a new node to Google Sheet
- */
 export const appendTreeNode = async (
     spreadsheetId: string,
     accessToken: string,

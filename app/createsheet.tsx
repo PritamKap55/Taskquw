@@ -3,9 +3,12 @@
 import React from "react";
 import CreateSheetView from "../components/CreateSheetView";
 import { useCreateSheet } from "../hooks/useCreateSheet";
+import { useThemeColors } from "../styles/color";
 
 export default function CreateSheet() {
   const createSheet = useCreateSheet();
+
+  const ThemeColors = useThemeColors();
 
   return (
     <CreateSheetView
@@ -15,12 +18,16 @@ export default function CreateSheet() {
       setIndex={createSheet.setIndex}
       width={createSheet.width}
       loading={createSheet.loading}
-      bgbodyColor={createSheet.bgbodyColor}
-      gradientConfig={createSheet.gradientConfig}
-      bglabelColor={createSheet.bglabelColor}
-      oppositeColor={createSheet.oppositeColor}
-      gradientLeafbtn={createSheet.gradientLeafbtn}
+      bgbodyColor={ThemeColors.bgbodyColor}
+      gradientConfig={ThemeColors.gradientConfig}
+      bglabelColor={ThemeColors.bglabelColor}
+      oppositeColor={ThemeColors.oppositeColor}
+      gradientLeafbtn={ThemeColors.gradientLeafbtn}
       onCreate={createSheet.getOrCreateFile}
+      hue={ThemeColors.hue}
+      setHue={ThemeColors.setHue}
+      bgColor={ThemeColors.bgColor}
+      login={createSheet.login}
     />
   );
 }

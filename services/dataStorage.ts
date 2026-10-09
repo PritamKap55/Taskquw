@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListItem } from "./listLayoutService";
+import { TableRow } from "./tableLayoutService";
+import { TreeNodeType } from "./treeService";
 
 export const getSheetsCacheKey = (email: string) => {
   return `${email}Account`;
@@ -41,7 +43,7 @@ export const getInDeviceAccount = async (
   }
 };
 
-export const saveInDeviceLayout = async (
+export const saveInDeviceList = async (
   email: string,
   sheetId: string,
   files: ListItem[]
@@ -59,7 +61,7 @@ export const saveInDeviceLayout = async (
 };
 
 
-export const getInDeviceLayout = async (
+export const getInDeviceList = async (
   email: string,
   sheetId: string,
 ): Promise<any[]> => {
@@ -81,7 +83,7 @@ export const getInDeviceLayout = async (
 export const saveInDeviceTable = async (
   email: string,
   sheetId: string,
-  files: ListItem[]
+  files: TableRow
 ): Promise<void> => {
   try {
     const key = getSheetsCacheKey(email + sheetId + "Layout");
@@ -118,7 +120,7 @@ export const getInDeviceTable = async (
 export const saveInDevicetree = async (
   email: string,
   sheetId: string,
-  files: ListItem[]
+  files: TreeNodeType | TreeNodeType[]
 ): Promise<void> => {
   try {
     const key = getSheetsCacheKey(email + sheetId + "Layout");

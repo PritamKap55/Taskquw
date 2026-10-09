@@ -1,28 +1,17 @@
 // hooks/useCreateSheet.ts
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Dimensions } from "react-native";
-import { useThemeColors } from "../styles/color";
 import { createOrGetFile } from "../services/createSheet";
 
 export const useCreateSheet = () => {
+  const params = useLocalSearchParams();
   const [fileName, setFileName] = useState("");
-  const [hue, setHue] = useState(0);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const [login, setLogin] = useState("");
   const { width } = Dimensions.get("window");
-
-  const {
-    bgbodyColor,
-    bgColor,
-    gradientConfig,
-    bglabelColor,
-    oppositeColor,
-    gradientLeafbtn,
-  } = useThemeColors();
 
   const layoutOptions = [
     "List",
@@ -31,17 +20,7 @@ export const useCreateSheet = () => {
     "Tree",
   ];
 
-  const loadHue = async () => {
-    try {
-      const savedValue = await AsyncStorage.getItem("myHue");
 
-      if (savedValue !== null) {
-        setHue(parseInt(savedValue, 10));
-      }
-    } catch (error) {
-      console.error("Error loadHue:", error);
-    }
-  };
 
   const getOrCreateFile = async () => {
     if (!fileName.trim()) {
@@ -77,31 +56,20 @@ export const useCreateSheet = () => {
   };
 
   useEffect(() => {
-    loadHue();
+
+    const login_v = String(params.login ?? "");
+    setLogin(login_v);
   }, []);
 
   return {
     fileName,
     setFileName,
-
-    hue,
-    setHue,
-
     index,
     setIndex,
-
     width,
     loading,
-
-    bgbodyColor,
-    bgColor,
-    gradientConfig,
-    bglabelColor,
-    oppositeColor,
-    gradientLeafbtn,
-
     layoutOptions,
-
+    login,
     getOrCreateFile,
   };
 };

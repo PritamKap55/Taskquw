@@ -54,7 +54,7 @@ export default function TableLayoutView({
 
             <View
                 style={{
-                    height: template =="" ? "68%" : "100%",
+                    height: template == "" ? "68%" : "100%",
                     backgroundColor: bgbodyColor,
                 }}
             >
@@ -161,53 +161,57 @@ export default function TableLayoutView({
             </View>
 
             {/* Footer */}
-            {template =="" && (
+            {template == "" && (
                 <LinearGradient
                     {...gradientConfig}
                     style={styles.footerLayout}
                 >
                     {/* Add New Row */}
-                    <TouchableOpacity
-                        onPress={() =>
-                            router.push({
-                                pathname: "/tablelayoutedit",
-                                params: {
-                                    layout: "",
-                                    id: params?.id,
-                                    headtext: "Table Edit",
-                                    selectedId: items.length + 1,
-                                },
-                            })
-                        }
-                    >
-                        <LinearGradient
-                            {...gradientLeafbtn}
-                            style={styles.leafBtn}
-                        >
-                            <Text style={styles.btnText}>
-                                + Add New Row
-                            </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
 
-                    {/* Share */}
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <TouchableOpacity>
+                    {login == "Login" && (
+                        <TouchableOpacity
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/tablelayoutedit",
+                                    params: {
+                                        layout: "",
+                                        id: params?.id,
+                                        headtext: "Table Edit",
+                                        selectedId: items.length + 1,
+                                    },
+                                })
+                            }
+                        >
                             <LinearGradient
                                 {...gradientLeafbtn}
                                 style={styles.leafBtn}
                             >
                                 <Text style={styles.btnText}>
-                                    Share
+                                    + Add New Row
                                 </Text>
                             </LinearGradient>
                         </TouchableOpacity>
-                    </View>
+                    )}
+                    {/* Share */}
+                    {login == "Login" && (
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <TouchableOpacity>
+                                <LinearGradient
+                                    {...gradientLeafbtn}
+                                    style={styles.leafBtn}
+                                >
+                                    <Text style={styles.btnText}>
+                                        Share
+                                    </Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </LinearGradient>
             )}
         </>

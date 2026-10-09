@@ -25,7 +25,7 @@ export function useHomeScreen() {
             const userEmail = userInfo.data?.user?.email ?? "";
             setEmail(userEmail);
             router.push({
-                pathname: "/account",params: {email: userEmail,login:"login"},
+                pathname: "/account",params: {email: userEmail,login:"Login"},
             });
         } catch (error) {
             console.error("Error login", error);
@@ -38,7 +38,7 @@ export function useHomeScreen() {
             setEmail(userEmail);
             router.push({
                 pathname: "/account",
-                params: {email: userEmail,login:"offine"},
+                params: {email: userEmail,login:"Offline"},
             });
         } catch (error) {
             console.error("Error login", error);
