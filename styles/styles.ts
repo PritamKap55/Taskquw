@@ -309,28 +309,119 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         zIndex: 10,
     },
-   offlineBadge: {
-    width: 105,
-    height: 22,
-    backgroundColor: "#fdd9d9",
-    alignItems: "center",
-    justifyContent: "center",
+    offlineBadge: {
+        width: 105,
+        height: 22,
+        backgroundColor: "#fdd9d9",
+        alignItems: "center",
+        justifyContent: "center",
 
-    // Border configuration
-    borderWidth: 1,
-    borderColor: "#ffffff",
-    borderTopWidth: 0, // Removes the top border
+        // Border configuration
+        borderWidth: 1,
+        borderColor: "#ffffff",
+        borderTopWidth: 0, // Removes the top border
 
-    // Bottom rounded corners
-    borderBottomLeftRadius: 35,
-    borderBottomRightRadius: 35,
+        // Bottom rounded corners
+        borderBottomLeftRadius: 35,
+        borderBottomRightRadius: 35,
 
-},
+    },
 
     offlineText: {
         color: "#eb2626",
         fontSize: 12,
         fontWeight: "500",
+    },
+    header: {
+        alignItems: "center" as const,
+        marginBottom: 20,
+    },
+    logoCircle: {
+        width: 75,
+        height: 75,
+        borderRadius: 40,
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
+        marginBottom: 10,
+        marginTop: 20,
+    },
+    logoText: {
+        fontSize: 38,
+    },
+
+    appName: {
+        fontSize: 26,
+        fontWeight: "700" as const,
+    },
+
+    version: {
+        marginTop: 4,
+        fontSize: 13,
+        color: "#777",
+    },
+
+    Infocard: {
+        borderRadius: 15,
+        padding: 18,
+        marginBottom: 15,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.08,
+        shadowRadius: 5,
+
+        elevation: 3,
+    },
+
+    // title: {
+    //     fontSize: 19,
+    //     fontWeight: "700" as const,
+    //     marginBottom: 10,
+    // },
+
+    description: {
+        fontSize: 15,
+        lineHeight: 23,
+        color: "#444",
+        marginBottom: 8,
+    },
+
+    item: {
+        fontSize: 15,
+        lineHeight: 28,
+        color: "#444",
+    },
+
+    label: {
+        fontSize: 14,
+        color: "#777",
+        marginBottom: 4,
+    },
+
+    developerName: {
+        fontSize: 20,
+        fontWeight: "700" as const,
+    },
+
+    email: {
+        marginTop: 10,
+        fontSize: 15,
+        fontWeight: "600" as const,
+    },
+
+    bottom: {
+        alignItems: "center" as const,
+        marginTop: 10,
+        marginBottom: 20,
+    },
+
+    copyright: {
+        fontSize: 12,
+        color: "#888",
+        lineHeight: 20,
     },
 });
 

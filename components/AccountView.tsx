@@ -111,15 +111,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                 <TouchableOpacity
                     onPress={() =>
-                        router.push({
-                            pathname:
-                                "/createsheet",
-
-                            params: {
-                                headtext:
-                                    "Create Page",
-                            },
-                        })
+                        router.push({pathname:"/createsheet",params: {headtext:"Create Page", login: login },})
                     }
                 >
                     {login == "Login" && (

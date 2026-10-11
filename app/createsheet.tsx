@@ -1,11 +1,13 @@
 // createsheet.tsx
 
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import CreateSheetView from "../components/CreateSheetView";
 import { useCreateSheet } from "../hooks/useCreateSheet";
 import { useThemeColors } from "../styles/color";
 
 export default function CreateSheet() {
+  const params = useLocalSearchParams();
   const createSheet = useCreateSheet();
 
   const ThemeColors = useThemeColors();
@@ -13,6 +15,7 @@ export default function CreateSheet() {
   return (
     <CreateSheetView
       fileName={createSheet.fileName}
+      headtext={String(params.headtext ?? "")}
       setFileName={createSheet.setFileName}
       index={createSheet.index}
       setIndex={createSheet.setIndex}

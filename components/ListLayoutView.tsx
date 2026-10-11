@@ -228,7 +228,7 @@ export default function ListLayoutView(
                                     pathname:
                                         "/shareFile",
                                     params: {
-                                        id: sheetId,
+                                        id: sheetId,headtext:headtext,login: login
                                     },
                                 })
                             }

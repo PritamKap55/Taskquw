@@ -10,48 +10,49 @@ import {
   View,
 } from "react-native";
 
-import { styles } from "../styles/styles";
 import { SharedUser } from "../services/shareFileService";
+import { styles } from "../styles/styles";
+import HeaderComp from "./headercomp";
 
 type Props = {
   email: string;
+  headtext: string;
   setEmail: (value: string) => void;
-
   role: "reader" | "writer";
   setRole: (role: "reader" | "writer") => void;
-
   sharedUsers: SharedUser[];
   loading: boolean;
-
   bgbodyColor: string;
   bglabelColor: string;
   gradientConfig: any;
   gradientLeafbtn: any;
   oppositeColor?: string;
-
+  userEmail: any;
+  login: any;
+  bgColor: string;
+  hue: number;
+  setHue: (hue: number) => void;
   onShare: () => void;
 };
 
 export default function ShareFileView({
   email,
   setEmail,
-
   role,
   setRole,
-
   sharedUsers,
   loading,
-
   bgbodyColor,
   bglabelColor,
   gradientConfig,
   gradientLeafbtn,
   oppositeColor,
-
+  hue, setHue, bgColor, login, headtext,
   onShare,
 }: Props) {
   return (
     <>
+      <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
       <View
         style={[
           {
@@ -89,7 +90,7 @@ export default function ShareFileView({
             style={[
               styles.roleButton,
               role === "reader" &&
-                styles.selectedButton,
+              styles.selectedButton,
             ]}
             onPress={() => setRole("reader")}
           >
@@ -97,7 +98,7 @@ export default function ShareFileView({
               style={[
                 styles.roleText,
                 role === "reader" &&
-                  styles.selectedText,
+                styles.selectedText,
               ]}
             >
               Viewer
@@ -108,7 +109,7 @@ export default function ShareFileView({
             style={[
               styles.roleButton,
               role === "writer" &&
-                styles.selectedButton,
+              styles.selectedButton,
             ]}
             onPress={() => setRole("writer")}
           >
@@ -116,7 +117,7 @@ export default function ShareFileView({
               style={[
                 styles.roleText,
                 role === "writer" &&
-                  styles.selectedText,
+                styles.selectedText,
               ]}
             >
               Editor

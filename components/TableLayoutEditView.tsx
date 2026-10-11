@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { styles } from "../styles/styles";
+import HeaderComp from "./headercomp";
 
 type FormField = {
   label: string;
@@ -25,6 +26,12 @@ type Props = {
   bglabelColor: string;
   gradientConfig: any;
   gradientLeafbtn: any;
+
+  hue: number;
+  setHue: (hue: number) => void;
+  bgColor: string;
+  login: any;
+  headtext: string;
 
   handleChange: (
     index: number,
@@ -48,14 +55,17 @@ export default function TableLayoutEditView({
   bglabelColor,
   gradientConfig,
   gradientLeafbtn,
-
+  hue, setHue,
+  bgColor, login, headtext,
   handleChange,
   addColumn,
   deleteColumn,
   submit,
+
 }: Props) {
   return (
     <>
+      <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
       <View
         style={[
           styles.bodyLayout,

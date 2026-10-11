@@ -19,6 +19,7 @@ import HeaderComp from "./headercomp";
 
 type Props = {
   fileName: string;
+  headtext: string;
   setFileName: (value: string) => void;
 
   index: number;
@@ -41,6 +42,7 @@ type Props = {
 
 export default function CreateSheetView({
   fileName,
+  headtext,
   setFileName,
   index,
   setIndex,
@@ -57,7 +59,7 @@ export default function CreateSheetView({
 }: Props) {
   return (
     <>
-      <HeaderComp HeaderName="Account" login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
+      <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
       <View
         style={[
           styles.bodyLayout,
