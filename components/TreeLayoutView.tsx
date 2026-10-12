@@ -22,27 +22,19 @@ type Props = {
   bgColor: string;
   bgbodyColor: string;
   bglabelColor: string;
-
+  oppositeColor: string;
   gradientConfig: any;
   gradientLeafbtn: any;
-
   loading: boolean;
-
   treeData: any[];
-
   selectnodetext: string;
-
   nodetext: string;
-
   userEmail: any;
   login: any;
   setNodetext: (value: string) => void;
-
   openNodes: number[];
-
   handleNodePress: (id: number) => void;
   toggleNode: (id: number) => void;
-
   handleAddRoot: () => void;
   handleAddChild: () => void;
   handleDelete: () => void;
@@ -53,26 +45,18 @@ export default function TreeLayoutView({
   layout, headtext, hue, setHue, bgColor,
   bgbodyColor,
   bglabelColor,
-
+  oppositeColor,
   gradientConfig,
   gradientLeafbtn,
-
   loading,
-
   treeData,
-
   selectnodetext,
-
   nodetext,
-
   userEmail, login,
   setNodetext,
-
   openNodes,
-
   handleNodePress,
   toggleNode,
-
   handleAddRoot,
   handleAddChild,
   handleDelete,
@@ -115,9 +99,7 @@ export default function TreeLayoutView({
           {...gradientConfig}
           style={styles.footerLayout}
         >
-          <Text style={styles.inputlabel}>
-            {selectnodetext}
-          </Text>
+          
 
           <View style={styles.inputBox}>
             {login == "Login" && (

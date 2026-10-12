@@ -11,36 +11,14 @@ interface LoaderProps {
 
 const Loader = ({ visible = false }: LoaderProps) => {
 
-  const [hue, setHue] = useState(0);
   const { oppositeColor } = useThemeColors();
 
-
-
-  const loadHue = async () => {
-
-    try {
-      const savedValue = await AsyncStorage.getItem('myHue');
-      if (savedValue !== null) {
-        setHue(parseInt(savedValue, 10));
-      }
-
-    } catch (error) {
-      console.error("Error loadHue", error);
-    }
-  };
-
-  useEffect(() => {
-    loadHue();
-  }, []);
-
   if (!visible) return null;
-
   return (
     <View style={styles.loaderOverlay}>
       <ActivityIndicator size="large" color={oppositeColor} />
     </View>
   );
 };
-
 
 export default Loader;

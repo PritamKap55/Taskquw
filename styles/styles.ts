@@ -423,9 +423,105 @@ export const styles = StyleSheet.create({
         color: "#888",
         lineHeight: 20,
     },
+
+    containerNode: {
+        marginVertical: 3,
+    },
+
+    nodeRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        minHeight: 38,
+    },
+
+    // + / -
+    toggleContainer: {
+        width: 28,
+        height: 32,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    toggle: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "#555",
+    },
+
+    // Folder + name
+    nodeContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 6,
+        paddingHorizontal: 8,
+        borderRadius: 5,
+    },
+
+    nodeIcon: {
+        fontSize: 17,
+        width: 25,
+        textAlign: "center",
+    },
+
+    // Bullet for final item
+    bullet: {
+        fontSize: 18,
+        color: "#555",
+    },
+
+    nodeName: {
+        fontSize: 16,
+        color: "#222",
+        marginLeft: 5,
+    },
+
+
+    children: {
+        flexDirection: "row",
+        marginLeft: 14,
+    },
+
+    // Vertical tree line
+    verticalLine: {
+        width: 1,
+        backgroundColor: "#BDBDBD",
+        marginLeft: 14,
+        marginRight: 8,
+    },
+
+    childrenContent: {
+        flex: 1,
+    },
+
+    // Each child
+    childWrapper: {
+        flexDirection: "row",
+        alignItems: "flex-start",
+        minHeight: 36,
+    },
+
+    // Horizontal tree line
+    horizontalLine: {
+        width: 18,
+        height: 1,
+        backgroundColor: "#BDBDBD",
+        marginTop: 19,
+        marginRight: 3,
+    },
+
+    // Last item's horizontal line
+    lastHorizontalLine: {
+        backgroundColor: "#BDBDBD",
+    },
+    selectedNodeName: {
+        color: "#028702",
+        fontWeight: "700",
+    },
+
+    tree: {
+        padding: 10,
+    },
 });
-
-
 
 export const gradientLeafbtn: {
     colors: readonly [string, string];

@@ -23,18 +23,13 @@ export default function TreeLayout({
 }: LayoutProps) {
   const {
     loading,
-
     nodetext,
     setNodetext,
-
     selectnodetext,
-
     openNodes,
     treeData,
-
     handleNodePress,
     toggleNode,
-
     handleAddRoot,
     handleAddChild,
     handleDelete,
@@ -54,6 +49,7 @@ export default function TreeLayout({
     gradientConfig,
     bglabelColor,
     gradientLeafbtn,
+    oppositeColor
   } = useThemeColors();
 
   return (
@@ -66,18 +62,14 @@ export default function TreeLayout({
       bgColor={bgColor}
       bgbodyColor={bgbodyColor}
       bglabelColor={bglabelColor}
-
+      oppositeColor={oppositeColor}
       gradientConfig={gradientConfig}
       gradientLeafbtn={gradientLeafbtn}
-
       loading={loading}
-
       treeData={treeData}
-
       selectnodetext={selectnodetext}
-
       nodetext={nodetext}
-      userEmail={userEmail} 
+      userEmail={userEmail}
       login={login}
       setNodetext={setNodetext}
 

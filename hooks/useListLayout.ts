@@ -4,19 +4,19 @@ import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
 import { list } from "../constants/data";
-import { sendNotification } from "../services/sendNotification";
 import { getInDeviceList, saveInDeviceList } from "../services/dataStorage";
 import { ListItem, checkWritePermission, deleteSheetRow, getSheetData, updateSheetValue, } from "../services/listLayoutService";
+import { sendNotification } from "../services/sendNotification";
 
 type Props = {
     template?: string;
     layout: string;
-    headtext:string;
+    headtext: string;
     userEmail: string;
     login: string;
 };
 
-export function useListLayout({ template, layout, headtext,userEmail, login,
+export function useListLayout({ template, layout, headtext, userEmail, login,
 }: Props) {
     const params = useLocalSearchParams();
     const [fileName, setFileName] = useState("");
@@ -128,9 +128,10 @@ export function useListLayout({ template, layout, headtext,userEmail, login,
 
             if (notificationRef) {
                 await callNotification();
+                setNotificationRef(false);
             }
 
-            setNotificationRef(false);
+
 
         } catch (error) {
             console.error(

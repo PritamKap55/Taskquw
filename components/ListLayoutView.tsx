@@ -34,7 +34,8 @@ export default function ListLayoutView(
         template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login
     }: Props) {
 
-
+    // alert(template)
+    // alert(layout)
 
     return (
         <>
@@ -228,7 +229,7 @@ export default function ListLayoutView(
                                     pathname:
                                         "/shareFile",
                                     params: {
-                                        id: sheetId,headtext:headtext,login: login
+                                        id: sheetId, headtext: headtext, login: login
                                     },
                                 })
                             }
