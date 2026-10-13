@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
-import { getAccessToken } from "../services/googleAuth";
 import { FileItem, getGoogleSheets, notificationAccess, } from "../services/accountSheets";
+import { getAccessToken } from "../services/googleAuth";
 
 import { registerForPushNotifications } from "@/notification";
 import { getInDeviceAccount, saveInDeviceAccount, } from "../services/dataStorage";
@@ -65,7 +65,7 @@ export function useAccount() {
 
 
         setFiles(googleFiles);
-
+        
         // Save local copy
         await saveInDeviceAccount(email, googleFiles);
 

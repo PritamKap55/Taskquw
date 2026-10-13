@@ -54,8 +54,17 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                         <TouchableOpacity style={[styles.fileItem, selectedFile?.id === item.id && styles.active,]}
                             onPress={() => {
-                                
+
                                 setSelectedFile(item);
+                                const permission = item.permissions?.find(
+                                    (p) => p.emailAddress?.toLowerCase() === userEmail.toLowerCase()
+                                );
+
+                                const access =
+                                    permission?.role === "owner" ||
+                                        permission?.role === "writer"
+                                        ? "write"
+                                        : "read";
                                 router.push({
                                     pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login },
                                 });
@@ -86,12 +95,26 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                             </View>
 
+
+
+                            <View >
+                                {item.permissions?.map((permission) => (
+                                    <Text key={permission.id} style={styles.fileName}>
+                                        {permission.role === "owner"
+                                            ? "👑 "
+                                            : permission.role === "reader"
+                                                ? "📖 "
+                                                : permission.role === "writer"
+                                                    ? "✍️ "
+                                                    : permission.role}
+                                    </Text>
+                                ))}
+                            </View>
                             <Text
                                 style={styles.fileName}
                             >
                                 {item.name}
                             </Text>
-
                             <Text
                                 style={styles.arrow}
                             >
@@ -111,7 +134,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                 <TouchableOpacity
                     onPress={() =>
-                        router.push({pathname:"/createsheet",params: {headtext:"Create Page", login: login },})
+                        router.push({ pathname: "/createsheet", params: { headtext: "Create Page", login: login }, })
                     }
                 >
                     {login == "Login" && (

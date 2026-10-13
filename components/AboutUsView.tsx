@@ -1,4 +1,5 @@
 
+import * as Application from "expo-application";
 import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
@@ -33,7 +34,7 @@ export default function AboutUsView() {
                         <View
                             style={[
                                 styles.logoCircle,
-                                
+
                             ]}
                         >
                             <Image
@@ -47,11 +48,11 @@ export default function AboutUsView() {
                         <Text
                             style={[styles.appName, { color: bgColor }]}
                         >
-                            Your App Name
+                            Task quw
                         </Text>
 
                         <Text style={styles.version}>
-                            Version 1.0.0
+                            Version {Application.nativeApplicationVersion ?? "1.0.0"}
                         </Text>
                     </View>
 
