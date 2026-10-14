@@ -9,9 +9,10 @@ import { useListLayout } from "../hooks/useListLayout";
 type LayoutProps = {
   template: string;
   layout: string;
-  headtext:string;
+  headtext: string;
   userEmail: any;
   login: any;
+  canEdit: string;
 };
 
 export default function ListLayout({
@@ -20,6 +21,7 @@ export default function ListLayout({
   headtext,
   userEmail,
   login,
+  canEdit
 }: LayoutProps) {
 
   const {
@@ -37,6 +39,7 @@ export default function ListLayout({
     headtext,
     userEmail,
     login,
+    canEdit
   });
 
   const {
@@ -67,9 +70,11 @@ export default function ListLayout({
       handleChange={handleChange}
       submit={submit}
       deleteRow={deleteRow}
-
+      login={login}
+      canEdit={canEdit}
       sheetId={String(
         params?.id ?? ""
-      )} userEmail={userEmail} login={login} />
+      )} userEmail={userEmail}
+       />
   );
 }

@@ -56,17 +56,9 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
                             onPress={() => {
 
                                 setSelectedFile(item);
-                                const permission = item.permissions?.find(
-                                    (p) => p.emailAddress?.toLowerCase() === userEmail.toLowerCase()
-                                );
 
-                                const access =
-                                    permission?.role === "owner" ||
-                                        permission?.role === "writer"
-                                        ? "write"
-                                        : "read";
                                 router.push({
-                                    pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login },
+                                    pathname: "/detailspage", params: { layout: item.properties?.layout, id: item.id, headtext: item.name, userEmail: userEmail, login: login, canEdit: String(item.capabilities?.canEdit ?? false) },
                                 });
 
                             }}
@@ -95,20 +87,13 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
 
                             </View>
 
-
-
                             <View >
-                                {item.permissions?.map((permission) => (
-                                    <Text key={permission.id} style={styles.fileName}>
-                                        {permission.role === "owner"
-                                            ? "👑 "
-                                            : permission.role === "reader"
-                                                ? "📖 "
-                                                : permission.role === "writer"
-                                                    ? "✍️ "
-                                                    : permission.role}
-                                    </Text>
-                                ))}
+
+                                <Text key={item.id} style={styles.fileName}>
+                                    {item.capabilities?.canEdit === true ? "✍️ " : "📖 "}
+
+                                </Text>
+
                             </View>
                             <Text
                                 style={styles.fileName}

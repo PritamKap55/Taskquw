@@ -71,16 +71,7 @@ export function useAccount() {
 
         for (const file of googleFiles) {
 
-          const permission =
-            file.permissions?.find(
-              (p: any) =>
-                p.emailAddress
-                  ?.toLowerCase() === email
-            );
-
-          const writerPermission =
-            permission?.role === "writer" ||
-            permission?.role === "owner";
+          const writerPermission = file.capabilities?.canEdit??false
 
           await notificationAccess(
             file.id,

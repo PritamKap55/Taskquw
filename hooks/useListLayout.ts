@@ -14,9 +14,10 @@ type Props = {
     headtext: string;
     userEmail: string;
     login: string;
+    canEdit:string;
 };
 
-export function useListLayout({ template, layout, headtext, userEmail, login,
+export function useListLayout({ template, layout, headtext, userEmail, login,canEdit
 }: Props) {
     const params = useLocalSearchParams();
     const [fileName, setFileName] = useState("");

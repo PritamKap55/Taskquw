@@ -9,7 +9,11 @@ export type FileItem = {
     layout?: string;
     [key: string]: any;
   };
-  permissions?: any[];
+ 
+  capabilities?: {
+    canEdit?: boolean;
+    canReadRevisions?: boolean;
+  };
 };
 
 export const getGoogleSheets = async (
@@ -20,10 +24,13 @@ export const getGoogleSheets = async (
     "and properties has { key='app' and value='PKapp' } " +
     "and trashed=false";
 
+    const fields =
+  "files(id,name,properties,capabilities(canEdit,canReadRevisions))";
+
   const url =
     `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
       query
-    )}&fields=files(id,name,properties,permissions)`;
+    )}&fields=${encodeURIComponent(fields)}`;
 
   const response = await fetch(url, {
     headers: {
@@ -38,6 +45,8 @@ export const getGoogleSheets = async (
   }
 
   const data = await response.json();
+  console.log("Data",data.files[0].capabilities);
+  
 
   return data.files ?? [];
 };
@@ -101,7 +110,7 @@ export async function notificationAccess(
         "Insert failed:",
         appendData
       );
-    } 
+    }
 
     return;
   }

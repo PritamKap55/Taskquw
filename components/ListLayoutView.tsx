@@ -27,11 +27,12 @@ type Props = {
     sheetId: string;
     userEmail: any;
     login: any;
+    canEdit:string;
 };
 
 export default function ListLayoutView(
     {
-        template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login
+        template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login,canEdit
     }: Props) {
 
     // alert(template)
@@ -234,7 +235,7 @@ export default function ListLayoutView(
                                 })
                             }
                         >
-                            {login == "Login" && (
+                            {(login == "Login" && canEdit=="true") && (
                                 <LinearGradient
                                     {...gradientLeafbtn}
                                     style={styles.leafBtn}
