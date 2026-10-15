@@ -14,17 +14,20 @@ type UseTableLayoutProps = {
     headtext: string;
     userEmail: string;
     login: string;
+    canEdit: string;
 };
 
 export const useTableLayout = ({
     template,
     layout, headtext, userEmail, login,
+    canEdit,
+
 }: UseTableLayoutProps) => {
     const params = useLocalSearchParams();
 
     const [hue, setHue] = useState(0);
     const [items, setItems] = useState<TableRow>([]);
-    
+
     const [loading, setLoading] = useState(false);
 
     const loadHue = async () => {

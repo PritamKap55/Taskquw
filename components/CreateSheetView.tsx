@@ -91,8 +91,7 @@ export default function CreateSheetView({
                 layout=""
                 userEmail={undefined}
                 login={undefined}
-                headtext=""
-              />
+                headtext="" canEdit={""}              />
             </View>
           </View>
 
@@ -107,8 +106,8 @@ export default function CreateSheetView({
                 layout="Check List"
                 userEmail={undefined}
                 login={undefined}
-                headtext=""
-              />
+                headtext="" 
+                canEdit={""}              />
             </View>
           </View>
 
@@ -123,8 +122,7 @@ export default function CreateSheetView({
                 layout=""
                 headtext=""
                 userEmail={undefined}
-                login={undefined}
-              />
+                login={undefined} canEdit={""}              />
             </View>
           </View>
 
@@ -136,8 +134,7 @@ export default function CreateSheetView({
                 layout=""
                 headtext=""
                 userEmail={undefined}
-                login={undefined}
-              />
+                login={undefined} canEdit={""}              />
             </View>
           </View>
         </ScrollView>

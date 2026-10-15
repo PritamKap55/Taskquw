@@ -29,6 +29,7 @@ type Props = {
     gradientLeafbtn: any;
     userEmail: any;
     login: any;
+    canEdit: string;
 };
 
 export default function TableLayoutView({
@@ -45,6 +46,7 @@ export default function TableLayoutView({
     gradientLeafbtn,
     userEmail,
     login,
+    canEdit,
 }: Props) {
     return (
         <>
@@ -168,7 +170,7 @@ export default function TableLayoutView({
                 >
                     {/* Add New Row */}
 
-                    {login == "Login" && (
+                    {(login == "Login" && canEdit == "true") && (
                         <TouchableOpacity
                             onPress={() =>
                                 router.push({
@@ -193,7 +195,7 @@ export default function TableLayoutView({
                         </TouchableOpacity>
                     )}
                     {/* Share */}
-                    {login == "Login" && (
+                    {(login == "Login" && canEdit == "true") && (
                         <View
                             style={{
                                 flexDirection: "row",

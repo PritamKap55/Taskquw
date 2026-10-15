@@ -27,12 +27,12 @@ type Props = {
     sheetId: string;
     userEmail: any;
     login: any;
-    canEdit:string;
+    canEdit: string;
 };
 
 export default function ListLayoutView(
     {
-        template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login,canEdit
+        template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login, canEdit
     }: Props) {
 
     // alert(template)
@@ -95,7 +95,7 @@ export default function ListLayoutView(
                                     )}
 
                                 <TextInput
-                                    editable={login === "Login"}
+                                    editable={(login == "Login" && canEdit == "true")}
                                     style={{
                                         flex: 1,
                                         borderBottomWidth: 1,
@@ -140,7 +140,7 @@ export default function ListLayoutView(
                                             : "📋"}
                                     </Text>
                                 </TouchableOpacity>
-                                {login == "Login" && (
+                                {(login == "Login" && canEdit == "true") && (
                                     <TouchableOpacity
                                         onPress={() =>
                                             deleteRow(index)
@@ -166,7 +166,7 @@ export default function ListLayoutView(
                                         value={item.note}
 
                                         placeholder="Write note..."
-                                        editable={login === "Login"}
+                                        editable={(login == "Login" && canEdit == "true")}
                                         onChangeText={text =>
                                             handleChange(
                                                 index,
@@ -235,7 +235,7 @@ export default function ListLayoutView(
                                 })
                             }
                         >
-                            {(login == "Login" && canEdit=="true") && (
+                            {(login == "Login" && canEdit == "true") && (
                                 <LinearGradient
                                     {...gradientLeafbtn}
                                     style={styles.leafBtn}

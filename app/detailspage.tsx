@@ -16,10 +16,10 @@ export default function DetailsPage() {
         <ListLayout template={''} layout={String(params.layout ?? "")} headtext={String(params.headtext ?? "")} userEmail={params.email ?? ""} login={params.login ?? ""} canEdit={String(params.canEdit ?? "false")} />
       )}
       {params.layout === "Tree" && (
-        <TreeLayout template={''} layout={''} headtext={String(params.headtext ?? "")} userEmail={params.email ?? ""} login={params.login ?? ""} />
+        <TreeLayout template={''} layout={''} headtext={String(params.headtext ?? "")} userEmail={params.email ?? ""} login={params.login ?? ""} canEdit={String(params.canEdit ?? "false")}/>
       )}
       {params.layout === "Table" && (
-        <TableLayout template={''} layout={''} headtext={String(params.headtext ?? "")} userEmail={params.email ?? ""} login={params.login ?? ""} />
+        <TableLayout template={''} layout={''} headtext={String(params.headtext ?? "")} userEmail={params.email ?? ""} login={params.login ?? ""} canEdit={String(params.canEdit ?? "false")}/>
       )}
     </>
   );

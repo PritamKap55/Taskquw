@@ -10,6 +10,8 @@ type LayoutProps = {
   headtext: string;
   userEmail: any;
   login: any;
+  canEdit: string;
+
 };
 
 export default function TableLayout({
@@ -18,6 +20,8 @@ export default function TableLayout({
   headtext,
   userEmail,
   login,
+  canEdit,
+
 }: LayoutProps) {
 
   const {
@@ -30,6 +34,8 @@ export default function TableLayout({
     headtext,
     userEmail,
     login,
+    canEdit,
+
   });
 
   const {
@@ -60,6 +66,7 @@ export default function TableLayout({
       gradientLeafbtn={gradientLeafbtn}
       userEmail={userEmail}
       login={login}
+      canEdit={canEdit}
     />
   );
 }

@@ -20,34 +20,20 @@ type Props = {
     headtext: string;
     userEmail: string;
     login: string;
+  canEdit:string
+
 };
 
-export const useTreeLayout = ({ template, layout, headtext, userEmail, login,
-}: Props) => {
+export const useTreeLayout = ({ template, layout, headtext, userEmail, login,canEdit,}: Props) => {
     const params = useLocalSearchParams();
-
     const spreadsheetId = String(params?.id ?? "");
-
     const [loading, setLoading] = useState(false);
-
     const [nodetext, setNodetext] = useState("");
-
     const [selectnode, setSelectnode] = useState(0);
-
-    const [selectnodetext, setSelectnodetext] =
-        useState("");
-
-    const [openNodes, setOpenNodes] =
-        useState<number[]>([]);
-
-    const [treeData, setTreeData] =
-        useState<TreeNodeType[]>(treeview);
-
+    const [selectnodetext, setSelectnodetext] = useState("");
+    const [openNodes, setOpenNodes] = useState<number[]>([]);
+    const [treeData, setTreeData] = useState<TreeNodeType[]>(treeview);
     const [hue, setHue] = useState(0);
-
-    /**
-     * Find node recursively
-     */
     const findNodeById = (
         nodes: TreeNodeType[],
         id: number
@@ -72,9 +58,6 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login,
         return null;
     };
 
-    /**
-     * Get maximum ID
-     */
     const getLastId = (
         nodes: TreeNodeType[]
     ): number => {

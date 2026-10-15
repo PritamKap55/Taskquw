@@ -31,6 +31,7 @@ type Props = {
   nodetext: string;
   userEmail: any;
   login: any;
+  canEdit: string;
   setNodetext: (value: string) => void;
   openNodes: number[];
   handleNodePress: (id: number) => void;
@@ -60,6 +61,7 @@ export default function TreeLayoutView({
   handleAddRoot,
   handleAddChild,
   handleDelete,
+  canEdit,
 }: Props) {
   return (
     <>
@@ -99,10 +101,10 @@ export default function TreeLayoutView({
           {...gradientConfig}
           style={styles.footerLayout}
         >
-          
+
 
           <View style={styles.inputBox}>
-            {login == "Login" && (
+            {(login == "Login" && canEdit == "true") && (
               <Text
                 style={[
                   styles.inputlabel,
@@ -114,7 +116,7 @@ export default function TreeLayoutView({
               >
                 Text
               </Text>)}
-            {login == "Login" && (
+            {(login == "Login" && canEdit == "true") && (
 
               <TextInput
                 placeholder="Enter File name"
@@ -131,7 +133,7 @@ export default function TreeLayoutView({
                 "space-between",
             }}
           >
-            {login == "Login" && (
+            {(login == "Login" && canEdit == "true") && (
               <TouchableOpacity
                 onPress={handleAddRoot}
               >
@@ -146,7 +148,7 @@ export default function TreeLayoutView({
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>)}
-            {login == "Login" && (
+            {(login == "Login" && canEdit == "true") && (
               <TouchableOpacity
                 onPress={handleAddChild}
               >
@@ -161,7 +163,7 @@ export default function TreeLayoutView({
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>)}
-            {login == "Login" && (
+            {(login == "Login" && canEdit == "true") && (
               <TouchableOpacity
                 onPress={handleDelete}
               >

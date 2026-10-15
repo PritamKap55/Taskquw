@@ -12,6 +12,7 @@ type LayoutProps = {
   headtext: string;
   userEmail: any;
   login: any;
+  canEdit: string;
 };
 
 export default function TreeLayout({
@@ -20,6 +21,8 @@ export default function TreeLayout({
   headtext,
   userEmail,
   login,
+  canEdit,
+
 }: LayoutProps) {
   const {
     loading,
@@ -39,6 +42,8 @@ export default function TreeLayout({
     headtext,
     userEmail,
     login,
+    canEdit,
+
   });
 
   const {
@@ -72,26 +77,13 @@ export default function TreeLayout({
       userEmail={userEmail}
       login={login}
       setNodetext={setNodetext}
-
       openNodes={openNodes}
-
-      handleNodePress={
-        handleNodePress
-      }
-
+      handleNodePress={handleNodePress}
       toggleNode={toggleNode}
-
-      handleAddRoot={
-        handleAddRoot
-      }
-
-      handleAddChild={
-        handleAddChild
-      }
-
-      handleDelete={
-        handleDelete
-      }
+      handleAddRoot={handleAddRoot}
+      handleAddChild={handleAddChild}
+      handleDelete={handleDelete}
+      canEdit={canEdit}
     />
   );
 }
