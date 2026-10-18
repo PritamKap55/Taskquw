@@ -26,7 +26,7 @@ export function useListLayout({ template, layout, headtext, userEmail, login,can
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [openNoteIndex, setOpenNoteIndex] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
-    const [notificationRef, setNotificationRef] = useState(false);
+    const [notificationRef, setNotificationRef] = useState(true);
     const [nftokensRef, setNftokensRef] = useState<string[]>([]);
 
     const loadHue = async (): Promise<void> => {

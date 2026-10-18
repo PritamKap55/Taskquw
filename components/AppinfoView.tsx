@@ -68,7 +68,7 @@ export default function AppinfoView() {
                         </Text>
 
                         <Text style={styles.description}>
-                            This app provides a simple way for two people to
+                            This app provides a simple way for  people to
                             communicate and share information using Google Sheets
                             as the backend database.
                         </Text>
@@ -120,7 +120,7 @@ export default function AppinfoView() {
                         </Text>
 
                         <Text style={styles.item}>
-                            • Simple data sharing between two people
+                            • Simple data sharing between people
                         </Text>
                     </View>
 

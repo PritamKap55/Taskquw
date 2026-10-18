@@ -191,6 +191,7 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        
     },
 
     headerRow: {
@@ -303,7 +304,7 @@ export const styles = StyleSheet.create({
 
     offlineContainer: {
         position: "absolute",
-        bottom: -24,
+        bottom: -22,
         left: 0,
         right: 0,
         alignItems: "center",

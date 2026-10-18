@@ -70,6 +70,7 @@ export default function TableLayoutEditView({
         style={[
           styles.bodyLayout,
           {
+            paddingTop: 25,
             backgroundColor: bgbodyColor,
           },
         ]}

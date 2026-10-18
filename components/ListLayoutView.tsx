@@ -45,7 +45,7 @@ export default function ListLayoutView(
                 <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
             )}
 
-            <View style={{ height: template == "" ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
+            <View style={{  height: template == "" ? "68%" : "100%", backgroundColor: bgbodyColor, }}>
                 <ScrollView
                     style={{
                         flex: 1,
@@ -69,6 +69,7 @@ export default function ListLayoutView(
                                     template === "Check List") && (
 
                                         <CheckBox
+                                            disabled={!(login === "Login" && canEdit === "true")}
                                             value={
                                                 String(item.bool)
                                                     .trim()

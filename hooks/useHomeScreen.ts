@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export function useHomeScreen() {
     const [bgColor, setBgColor] = useState("#008080");
-    const [email, setEmail] = useState("pritam");
+    const [email, setEmail] = useState("");
     const [online, setOnline] = useState(true);
 
     const changeColor = (): void => {
@@ -25,7 +25,7 @@ export function useHomeScreen() {
             const userEmail = userInfo.data?.user?.email ?? "";
             setEmail(userEmail);
             router.push({
-                pathname: "/account",params: {email: userEmail,login:"Login"},
+                pathname: "/account", params: { email: userEmail, login: "Login" },
             });
         } catch (error) {
             console.error("Error login", error);
@@ -38,7 +38,7 @@ export function useHomeScreen() {
             setEmail(userEmail);
             router.push({
                 pathname: "/account",
-                params: {email: userEmail,login:"Offline"},
+                params: { email: userEmail, login: "Offline" },
             });
         } catch (error) {
             console.error("Error login", error);
@@ -59,11 +59,11 @@ export function useHomeScreen() {
             if (internetAvailable) {
                 setOnline(true);
                 await login();
-                
+
             }
             else {
                 setOnline(false);
-               
+
             }
         };
 

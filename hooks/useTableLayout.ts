@@ -17,11 +17,7 @@ type UseTableLayoutProps = {
     canEdit: string;
 };
 
-export const useTableLayout = ({
-    template,
-    layout, headtext, userEmail, login,
-    canEdit,
-
+export const useTableLayout = ({template,layout, headtext, userEmail, login,canEdit,
 }: UseTableLayoutProps) => {
     const params = useLocalSearchParams();
 

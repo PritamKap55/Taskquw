@@ -33,6 +33,7 @@ export default function AccountView({ files, selectedFile, setSelectedFile, hue,
                 style={[
                     styles.bodyLayout,
                     {
+                        paddingTop: 10,
                         backgroundColor:
                             bgbodyColor,
                     },

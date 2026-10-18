@@ -7,6 +7,15 @@ import { getAccessToken } from "../services/googleAuth";
 
 import { registerForPushNotifications } from "@/notification";
 import { getInDeviceAccount, saveInDeviceAccount, } from "../services/dataStorage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
+GoogleSignin.configure({
+  webClientId:
+    '2799593297-t7c7s058d9inlbfl37et9837ob39ku5f.apps.googleusercontent.com',
+  scopes: [
+    'https://www.googleapis.com/auth/drive.readonly',
+  ],
+});
 
 export function useAccount() {
 
