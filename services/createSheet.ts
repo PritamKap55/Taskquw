@@ -63,7 +63,7 @@ export const createOrGetFile = async (
       }),
     }
   );
-
+  console.log("createRes1", createRes);
   if (!createRes.ok) {
     throw new Error("Failed to create spreadsheet");
   }

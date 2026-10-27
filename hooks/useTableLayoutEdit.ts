@@ -1,7 +1,7 @@
 // hooks/useTableLayoutEdit.ts
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
@@ -21,9 +21,6 @@ export const useTableLayoutEdit = () => {
   const selectedId = String(params?.selectedId ?? "");
   const spreadsheetId = String(params?.id ?? "");
   const layout = String(params?.layout ?? "");
-  const userEmail = String(params?.userEmail ?? "");
-  const login = String(params?.login ?? "");
-  const canEdit = String(params?.canEdit ?? "");
   const name = String(params?.name ?? "");
 
   const loadHue = async () => {
@@ -77,15 +74,14 @@ export const useTableLayoutEdit = () => {
 
       Alert.alert("Success", "Data saved");
 
-      router.replace({ pathname: "/tablelayout", params: { layout, id: spreadsheetId, headtext: name, }, });
       router.replace({
         pathname: "/tablelayout",
         params: {
-          layout, id: spreadsheetId, headtext: name, email: userEmail, login: String(login), canEdit: String(canEdit),
+          layout,
+          id: spreadsheetId,
+          headtext: name,
         },
       });
-
-
     } catch (error) {
       console.error("Error Submit:", error);
 
@@ -104,9 +100,9 @@ export const useTableLayoutEdit = () => {
       prev.map((item, i) =>
         i === index
           ? {
-            ...item,
-            value: newValue,
-          }
+              ...item,
+              value: newValue,
+            }
           : item
       )
     );

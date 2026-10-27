@@ -57,8 +57,9 @@ export default function RootLayout() {
     GoogleSignin.configure({
       webClientId: "2799593297-t7c7s058d9inlbfl37et9837ob39ku5f.apps.googleusercontent.com",
       scopes: [
-        'https://www.googleapis.com/auth/drive.readonly',
+        'https://www.googleapis.com/auth/drive.file',
         'https://www.googleapis.com/auth/spreadsheets',
+
       ]
     });
 

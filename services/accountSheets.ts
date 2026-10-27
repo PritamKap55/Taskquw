@@ -9,7 +9,7 @@ export type FileItem = {
     layout?: string;
     [key: string]: any;
   };
- 
+
   capabilities?: {
     canEdit?: boolean;
     canReadRevisions?: boolean;
@@ -24,8 +24,8 @@ export const getGoogleSheets = async (
     "and properties has { key='app' and value='PKapp' } " +
     "and trashed=false";
 
-    const fields =
-  "files(id,name,properties,capabilities(canEdit,canReadRevisions))";
+  const fields =
+    "files(id,name,properties,capabilities(canEdit,canReadRevisions))";
 
   const url =
     `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
@@ -38,6 +38,20 @@ export const getGoogleSheets = async (
     },
   });
 
+  if (response.status === 401) {
+    console.log("Token expired or unauthorized. Opening login window...");
+    try {
+      // This will trigger the Google sign-in window / scope consent screen
+      accessToken = await signInWithGoogle();
+
+      // 3. Retry the request using the NEW access token
+      //response = await makeRequest(accessToken);
+    } catch (error) {
+      console.error("Re-authentication failed:", error);
+      throw error;
+    }
+  }
+
   if (!response.ok) {
     throw new Error(
       `Drive API error: ${response.status}`
@@ -45,8 +59,8 @@ export const getGoogleSheets = async (
   }
 
   const data = await response.json();
-  console.log("Data",data.files[0].capabilities);
-  
+  console.log("Data", data.files[0].capabilities);
+
 
   return data.files ?? [];
 };
@@ -140,4 +154,8 @@ export async function notificationAccess(
       }
     ).catch(console.error);
   }
+}
+
+function signInWithGoogle(): string | PromiseLike<string> {
+  throw new Error("Function not implemented.");
 }

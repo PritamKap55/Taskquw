@@ -6,8 +6,8 @@ import { FileItem, getGoogleSheets, notificationAccess, } from "../services/acco
 import { getAccessToken } from "../services/googleAuth";
 
 import { registerForPushNotifications } from "@/notification";
-import { getInDeviceAccount, saveInDeviceAccount, } from "../services/dataStorage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { getInDeviceAccount, saveInDeviceAccount, } from "../services/dataStorage";
 
 GoogleSignin.configure({
   webClientId:
@@ -62,25 +62,27 @@ export function useAccount() {
       }
       else {
         const accessToken = await getAccessToken();
+        console.log("accessToken", "1");
         if (!accessToken) {
           return;
         }
 
         const NF_token =
           await registerForPushNotifications();
+        console.log("accessToken", "3");
 
         const googleFiles =
           await getGoogleSheets(accessToken);
-
+        console.log("accessToken", "2");
 
         setFiles(googleFiles);
-        
+
         // Save local copy
         await saveInDeviceAccount(email, googleFiles);
-
+        setLoading(false);
         for (const file of googleFiles) {
 
-          const writerPermission = file.capabilities?.canEdit??false
+          const writerPermission = file.capabilities?.canEdit ?? false
 
           await notificationAccess(
             file.id,

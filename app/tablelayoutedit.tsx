@@ -9,7 +9,18 @@ import { useTableLayoutEdit } from "../hooks/useTableLayoutEdit";
 import { useLocalSearchParams } from "expo-router";
 import { useThemeColors } from "../styles/color";
 
-export default function TableLayoutEdit() {
+type TableLayoutEditProps = {
+  template?: string;
+  layout: string;
+  headtext: string;
+  userEmail: any;
+  login: any;
+  canEdit: string;
+
+};
+
+
+export default function TableLayoutEdit({headtext,userEmail,login,canEdit,}:TableLayoutEditProps) {
     const params = useLocalSearchParams();
     const {
         formData,
@@ -37,8 +48,10 @@ export default function TableLayoutEdit() {
             hue={ThemeColors.hue}
             setHue={ThemeColors.setHue}
             bgColor={ThemeColors.bgColor}
-            login={params.login}
-            headtext={String(params.headtext ?? "")}
-        />
+            login={login}
+            headtext={headtext}
+            userEmail={userEmail} 
+            canEdit={canEdit}
+            />
     );
 }

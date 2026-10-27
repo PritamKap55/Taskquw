@@ -56,6 +56,7 @@ export default function ShareFileView({
       <View
         style={[
           {
+            paddingTop: 20,
             height: "68%",
             backgroundColor: bgbodyColor,
           },

@@ -30,8 +30,10 @@ type Props = {
   hue: number;
   setHue: (hue: number) => void;
   bgColor: string;
-  login: any;
   headtext: string;
+  userEmail: any;
+  login: any;
+  canEdit: string;
 
   handleChange: (
     index: number,
@@ -50,17 +52,20 @@ type Props = {
 export default function TableLayoutEditView({
   formData,
   selectedId,
-
   bgbodyColor,
   bglabelColor,
   gradientConfig,
   gradientLeafbtn,
   hue, setHue,
-  bgColor, login, headtext,
+  bgColor, headtext,
   handleChange,
   addColumn,
   deleteColumn,
   submit,
+
+  userEmail,
+  login,
+  canEdit,
 
 }: Props) {
   return (

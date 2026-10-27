@@ -17,7 +17,7 @@ type UseTableLayoutProps = {
     canEdit: string;
 };
 
-export const useTableLayout = ({template,layout, headtext, userEmail, login,canEdit,
+export const useTableLayout = ({ template, layout, headtext, userEmail, login, canEdit,
 }: UseTableLayoutProps) => {
     const params = useLocalSearchParams();
 
@@ -40,7 +40,7 @@ export const useTableLayout = ({template,layout, headtext, userEmail, login,canE
 
     const getSheetData = async () => {
         if (!params?.id) return;
-
+        console.log("getSheetData login", login);
         try {
             setLoading(true);
             if (login == "Login") {
