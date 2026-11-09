@@ -152,3 +152,32 @@ export const deleteTreeRows = async (
         throw new Error(`Delete failed: ${res.status}`);
     }
 };
+
+/**
+ * Update existing tree node name in Google Sheet
+ */
+export const updateTreeNode = async (
+    spreadsheetId: string,
+    accessToken: string,
+    rowNumber: number,
+    newName: string
+): Promise<void> => {
+
+    const res = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!B${rowNumber}?valueInputOption=USER_ENTERED`,
+        {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                values: [[newName]],
+            }),
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error(`Update node failed: ${res.status}`);
+    }
+};

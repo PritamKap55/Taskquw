@@ -22,6 +22,7 @@ type TreeNodeProps = {
   onToggle: (id: number) => void;
   template: string;
   selectedNodeId: number | null;
+  onDelete: (id: number) => void;
 };
 
 const TreeNode: React.FC<TreeNodeProps> = ({
@@ -31,6 +32,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onToggle,
   template,
   selectedNodeId,
+  onDelete,
 }) => {
   const isOpen =
     template === "New" ? true : openNodes.includes(node.id);
@@ -92,8 +94,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           ]}>
             {node.name}
           </Text>
-        </TouchableOpacity>
 
+        </TouchableOpacity>
+        {selectedNodeId === node.id && (
+          <TouchableOpacity onPress={() => onDelete(node.id)}>
+            <Text>🚫</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Children */}
@@ -124,6 +131,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                     onToggle={onToggle}
                     template={template}
                     selectedNodeId={selectedNodeId}
+                    onDelete={onDelete}
                   />
 
                 </View>

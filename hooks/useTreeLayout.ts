@@ -7,6 +7,7 @@ import { getAccessToken } from "../services/googleAuth";
 import {
     TreeNodeType,
     appendTreeNode,
+    updateTreeNode,
     deleteTreeRows,
     fetchTreeFromSheet,
 } from "../services/treeService";
@@ -20,11 +21,11 @@ type Props = {
     headtext: string;
     userEmail: string;
     login: string;
-  canEdit:string
+    canEdit: string
 
 };
 
-export const useTreeLayout = ({ template, layout, headtext, userEmail, login,canEdit,}: Props) => {
+export const useTreeLayout = ({ template, layout, headtext, userEmail, login, canEdit, }: Props) => {
     const params = useLocalSearchParams();
     const spreadsheetId = String(params?.id ?? "");
     const [loading, setLoading] = useState(false);
@@ -169,7 +170,7 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login,can
                 }
             }
 
-            
+
 
         } catch (error) {
             console.error(
@@ -271,6 +272,62 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login,can
         }
     };
 
+    const handleUpdate = async () => {
+        if (!nodetext.trim()) {
+            Alert.alert(
+                "Validation",
+                "Please enter a node name."
+            );
+            return;
+        }
+
+        if (selectnode === 0) {
+            Alert.alert(
+                "Select node",
+                "Please select a node first."
+            );
+            return;
+        }
+
+        const selectedNode = findNodeById(
+            treeData,
+            selectnode
+        );
+
+        if (!selectedNode) {
+            return;
+        }
+
+        try {
+            const accessToken = await getAccessToken();
+
+            if (!accessToken) {
+                Alert.alert(
+                    "Offline",
+                    "Cannot update a node while offline."
+                );
+                return;
+            }
+
+            // Update node name in Google Sheets
+            await updateTreeNode(
+                spreadsheetId,
+                accessToken,
+                selectedNode.rowNumber,
+                nodetext.trim()
+            );
+
+            setNodetext("");
+
+            await getSheetData();
+
+            Alert.alert("Success", "Node updated successfully.");
+
+        } catch (error) {
+            console.error("Error handleUpdate:", error);
+        }
+    };
+
     /**
      * Add child
      */
@@ -341,7 +398,9 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login,can
     /**
      * Delete selected node
      */
-    const handleDelete = async () => {
+
+
+    const onDelete = async (id: number) => {
         if (selectnode === 0) {
             Alert.alert(
                 "Select node",
@@ -436,7 +495,8 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login,can
 
         handleAddRoot,
         handleAddChild,
-        handleDelete,
+        handleUpdate,
+        onDelete,
 
         getSheetData,
     };

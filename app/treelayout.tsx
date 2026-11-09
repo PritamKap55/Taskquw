@@ -35,7 +35,8 @@ export default function TreeLayout({
     toggleNode,
     handleAddRoot,
     handleAddChild,
-    handleDelete,
+    handleUpdate,
+    onDelete,
   } = useTreeLayout({
     template,
     layout,
@@ -82,7 +83,8 @@ export default function TreeLayout({
       toggleNode={toggleNode}
       handleAddRoot={handleAddRoot}
       handleAddChild={handleAddChild}
-      handleDelete={handleDelete}
+      handleUpdate={handleUpdate}
+      onDelete={onDelete}
       canEdit={canEdit}
     />
   );

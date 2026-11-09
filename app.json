@@ -2,7 +2,7 @@
   "expo": {
     "name": "Taskquw",
     "slug": "Taskquw",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "taskquw",
@@ -17,6 +17,7 @@
     },
     "android": {
       "package": "com.pritamkap1512.taskquw",
+      "versionCode": 4,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",

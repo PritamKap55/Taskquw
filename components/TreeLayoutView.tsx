@@ -38,7 +38,9 @@ type Props = {
   toggleNode: (id: number) => void;
   handleAddRoot: () => void;
   handleAddChild: () => void;
-  handleDelete: () => void;
+  handleUpdate:()=>void;
+  // handleDelete: () => void;
+  onDelete: (id: number) => void;
 };
 
 export default function TreeLayoutView({
@@ -60,8 +62,10 @@ export default function TreeLayoutView({
   toggleNode,
   handleAddRoot,
   handleAddChild,
-  handleDelete,
+  handleUpdate,
+  //handleDelete,
   canEdit,
+  onDelete,
 }: Props) {
   return (
     <>
@@ -90,7 +94,7 @@ export default function TreeLayoutView({
               data={treeData}
               onNodePress={handleNodePress}
               openNodes={openNodes}
-              onToggle={toggleNode} template={""}            //   template={template}
+              onToggle={toggleNode} template={""} onDelete={onDelete}
             />
           )}
         </View>
@@ -163,9 +167,10 @@ export default function TreeLayoutView({
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>)}
+
             {(login == "Login" && canEdit == "true") && (
               <TouchableOpacity
-                onPress={handleDelete}
+                onPress={handleUpdate}
               >
                 <LinearGradient
                   {...gradientLeafbtn}
@@ -174,7 +179,7 @@ export default function TreeLayoutView({
                   <Text
                     style={styles.btnText}
                   >
-                    Delete
+                    Update
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>)}

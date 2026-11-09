@@ -35,8 +35,6 @@ export default function ListLayoutView(
         template, layout, headtext, items, hue, setHue, openNoteIndex, setOpenNoteIndex, loading, bgColor, bgbodyColor, gradientConfig, gradientLeafbtn, handleChange, submit, deleteRow, sheetId, userEmail, login, canEdit
     }: Props) {
 
-    // alert(template)
-    // alert(layout)
 
     return (
         <>

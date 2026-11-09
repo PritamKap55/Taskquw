@@ -25,10 +25,11 @@ export function useHomeScreen() {
             const userEmail = userInfo.data?.user?.email ?? "";
             setEmail(userEmail);
             router.push({
+
                 pathname: "/account", params: { email: userEmail, login: "Login" },
             });
         } catch (error) {
-            console.error("Error login", error);
+            alert(error)
         }
     };
 

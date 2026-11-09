@@ -14,10 +14,11 @@ type TreeViewProps = {
   openNodes: number[];
   onToggle: (id: number) => void;
   template: string;
+  onDelete: (id: number) => void;
 };
 
 
-const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onToggle, template }) => {
+const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onToggle, template, onDelete, }) => {
 
   const [selectedNodeId, setSelectedNodeId] =
     useState<number | null>(null);
@@ -29,7 +30,7 @@ const TreeView: React.FC<TreeViewProps> = ({ data, onNodePress, openNodes, onTog
           item.id.toString()
         }
         renderItem={({ item }) => (
-          <TreeNode node={item} onNodePress={(id) => { onNodePress; setSelectedNodeId(id); }} openNodes={openNodes} onToggle={onToggle} template={template}
+          <TreeNode node={item} onNodePress={(id) => { onNodePress; setSelectedNodeId(id); }} openNodes={openNodes} onToggle={onToggle} template={template} onDelete={onDelete}
             selectedNodeId={selectedNodeId} />
         )}
       />
