@@ -4,15 +4,18 @@ import { Alert } from "react-native";
 
 import { getInDeviceTree, saveInDevicetree } from "../services/dataStorage";
 import { getAccessToken } from "../services/googleAuth";
+
 import {
     TreeNodeType,
     appendTreeNode,
-    updateTreeNode,
     deleteTreeRows,
     fetchTreeFromSheet,
+    updateTreeNode,
 } from "../services/treeService";
 
 import { treeview } from "../constants/data";
+
+import { sendNotification } from "../services/sendNotification";
 
 
 type Props = {
@@ -27,13 +30,15 @@ type Props = {
 
 export const useTreeLayout = ({ template, layout, headtext, userEmail, login, canEdit, }: Props) => {
     const params = useLocalSearchParams();
-    const spreadsheetId = String(params?.id ?? "");
+    const sheetId = String(params?.id ?? "");
     const [loading, setLoading] = useState(false);
     const [nodetext, setNodetext] = useState("");
     const [selectnode, setSelectnode] = useState(0);
     const [selectnodetext, setSelectnodetext] = useState("");
     const [openNodes, setOpenNodes] = useState<number[]>([]);
     const [treeData, setTreeData] = useState<TreeNodeType[]>(treeview);
+    const [notificationRef, setNotificationRef] = useState(true);
+    const [nftokensRef, setNftokensRef] = useState<string[]>([]);
     const [hue, setHue] = useState(0);
     const findNodeById = (
         nodes: TreeNodeType[],
@@ -133,7 +138,7 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
 
 
     const getSheetData = async () => {
-        if (!spreadsheetId) {
+        if (!sheetId) {
             return;
         }
 
@@ -147,19 +152,21 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
             if (accessToken) {
                 try {
                     if (login == "Login") {
-                        const tree =
+                        const result =
                             await fetchTreeFromSheet(
-                                spreadsheetId,
-                                accessToken
+                                sheetId
                             );
 
-                        setTreeData(tree);
+                        setTreeData(result.tree);
 
                         // Save latest data for offline use
-                        await saveInDevicetree(userEmail, spreadsheetId, tree);
+                        if (result.tree.length > 0) {
+                            await saveInDevicetree(userEmail, sheetId, result.tree);
+                        }
+                        setNftokensRef(result.tokens);
                     }
                     else {
-                        const result = await getInDeviceTree(userEmail, spreadsheetId);
+                        const result = await getInDeviceTree(userEmail, sheetId);
                         setTreeData(result);
                     }
                     return;
@@ -255,10 +262,16 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
             }
 
             await appendTreeNode(
-                spreadsheetId,
+                sheetId,
                 accessToken,
                 newNode
             );
+
+            if (notificationRef) {
+                await callNotification();
+                setNotificationRef(false);
+            }
+
 
             setNodetext("");
 
@@ -311,11 +324,17 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
 
             // Update node name in Google Sheets
             await updateTreeNode(
-                spreadsheetId,
+                sheetId,
                 accessToken,
                 selectedNode.rowNumber,
                 nodetext.trim()
             );
+
+            if (notificationRef) {
+                await callNotification();
+                setNotificationRef(false);
+            }
+
 
             setNodetext("");
 
@@ -378,10 +397,15 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
             }
 
             await appendTreeNode(
-                spreadsheetId,
+                sheetId,
                 accessToken,
                 newNode
             );
+
+            if (notificationRef) {
+                await callNotification();
+                setNotificationRef(false);
+            }
 
             setNodetext("");
 
@@ -446,10 +470,14 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
                                 getRowsToDelete(node);
 
                             await deleteTreeRows(
-                                spreadsheetId,
+                                sheetId,
                                 accessToken,
                                 rows
                             );
+                            if (notificationRef) {
+                                await callNotification();
+                                setNotificationRef(false);
+                            }
 
                             setSelectnode(0);
                             setSelectnodetext("");
@@ -468,36 +496,52 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
         );
     };
 
+    const callNotification =
+        async (): Promise<void> => {
+            try {
+                await sendNotification(
+                    nftokensRef,
+                    String(
+                        params?.headtext ?? ""
+                    ),
+                    "normal",
+                    {
+                        sheetId: params?.id,
+                        NF_Type: 2,
+                    }
+                );
+            } catch (error) {
+                console.error(
+                    "Error call_notification:",
+                    error
+                );
+            }
+        };
+
+
     useEffect(() => {
-        if (spreadsheetId) {
+        if (sheetId) {
             getSheetData();
         }
-    }, [spreadsheetId]);
+    }, [sheetId]);
 
     return {
         loading,
-
         hue,
         setHue,
-
         nodetext,
         setNodetext,
-
         selectnode,
         selectnodetext,
-
         openNodes,
-
         treeData,
-
         handleNodePress,
         toggleNode,
-
         handleAddRoot,
         handleAddChild,
         handleUpdate,
         onDelete,
-
         getSheetData,
+        nftokensRef,
     };
 };

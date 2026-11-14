@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAccessToken } from "./googleAuth";
 
 export type TreeNodeType = {
     id: number;
@@ -14,12 +14,23 @@ const getCacheKey = (spreadsheetId: string) =>
 /**
  * Get tree data from Google Sheets
  */
-export const fetchTreeFromSheet = async (
-    spreadsheetId: string,
-    accessToken: string
-): Promise<TreeNodeType[]> => {
+export async function fetchTreeFromSheet(
+    sheetId: string
+): Promise<{
+    tree: TreeNodeType[];
+    tokens: string[];
+}> {
+
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+        return {
+            tree: [],
+            tokens: [],
+        };
+    }
+
     const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:C100`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:C100`,
         {
             method: "GET",
             headers: {
@@ -35,7 +46,10 @@ export const fetchTreeFromSheet = async (
     const data = await res.json();
 
     if (!data.values) {
-        return [];
+        return {
+            tree: [],
+            tokens: [],
+        };
     }
 
     const rows = data.values.slice(1);
@@ -50,7 +64,29 @@ export const fetchTreeFromSheet = async (
         })
     );
 
-    return buildTree(list);
+    // Sheet2 notification tokens
+    const range = encodeURIComponent("Sheet2!A:A");
+
+    const tokenResponse = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    const tokenData = await tokenResponse.json();
+
+    const tokens = (tokenData.values || [])
+        .slice(1)
+        .map((row: any[]) => row[0])
+        .filter(Boolean);
+
+    return {
+        tree: buildTree(list),
+        tokens,
+    };
 };
 
 /**

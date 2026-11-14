@@ -235,7 +235,7 @@ export function useListLayout({ template, layout, headtext, userEmail, login,can
             }
         };
 
-    useEffect(() => {
+        useEffect(() => {
         loadHue();
         removeSheetIdFromStorage();
 

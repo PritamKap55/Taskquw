@@ -62,18 +62,16 @@ export function useAccount() {
       }
       else {
         const accessToken = await getAccessToken();
-        console.log("accessToken", "1");
+    
         if (!accessToken) {
           return;
         }
 
         const NF_token =
           await registerForPushNotifications();
-        console.log("accessToken", "3");
 
         const googleFiles =
           await getGoogleSheets(accessToken);
-        console.log("accessToken", "2");
 
         setFiles(googleFiles);
 
