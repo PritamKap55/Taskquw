@@ -15,6 +15,7 @@ import {
 
 import { treeview } from "../constants/data";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { sendNotification } from "../services/sendNotification";
 
 
@@ -518,10 +519,33 @@ export const useTreeLayout = ({ template, layout, headtext, userEmail, login, ca
             }
         };
 
+    const removeSheetIdFromStorage =
+        async (): Promise<void> => {
+            try {
+                const sheetId = String(params?.id ?? "");
+
+                if (!sheetId) {
+                    return;
+                }
+
+                const savedValue = await AsyncStorage.getItem(sheetId);
+
+                if (savedValue !== null) {
+                    await AsyncStorage.removeItem(sheetId);
+                }
+            } catch (error) {
+                console.error(
+                    "Error removing sheetId:",
+                    error
+                );
+            }
+        };
+
 
     useEffect(() => {
         if (sheetId) {
             getSheetData();
+            removeSheetIdFromStorage();
         }
     }, [sheetId]);
 

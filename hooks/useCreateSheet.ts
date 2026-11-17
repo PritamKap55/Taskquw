@@ -1,6 +1,7 @@
 // hooks/useCreateSheet.ts
 
-import { useLocalSearchParams } from "expo-router";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Dimensions } from "react-native";
 import { createOrGetFile } from "../services/createSheet";
@@ -11,6 +12,7 @@ export const useCreateSheet = () => {
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const { width } = Dimensions.get("window");
 
   const layoutOptions = [
@@ -33,12 +35,18 @@ export const useCreateSheet = () => {
     try {
       const layout = layoutOptions[index];
 
-      const fileId = await createOrGetFile(
+      const [fileId, message] = await createOrGetFile(
         fileName.trim(),
         layout
       );
+      if (fileId === false) {
+        Alert.alert("Error", message);
+        return;
+      }
 
-      Alert.alert("Success", "Created successfully.");
+      Alert.alert("Success",message);
+
+      router.push({ pathname: "/account", params: { email: email, login: login }, });
 
       return fileId;
     } catch (error) {
@@ -56,9 +64,22 @@ export const useCreateSheet = () => {
   };
 
   useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const login_v = String(params.login ?? "");
 
-    const login_v = String(params.login ?? "");
-    setLogin(login_v);
+        const userInfo = await GoogleSignin.signIn();
+
+        const userEmail = userInfo.data?.user?.email ?? "";
+
+        setEmail(userEmail);
+        setLogin(login_v);
+      } catch (error) {
+        console.error("Google Sign-In Error:", error);
+      }
+    };
+
+    checkLogin();
   }, []);
 
   return {

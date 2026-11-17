@@ -14,12 +14,12 @@ const getCacheKey = (spreadsheetId: string) =>
 /**
  * Get tree data from Google Sheets
  */
-export async function fetchTreeFromSheet(
+export const  fetchTreeFromSheet = async(
     sheetId: string
 ): Promise<{
     tree: TreeNodeType[];
     tokens: string[];
-}> {
+}> =>{
 
     const accessToken = await getAccessToken();
     if (!accessToken) {

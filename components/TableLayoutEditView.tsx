@@ -31,6 +31,7 @@ type Props = {
   setHue: (hue: number) => void;
   bgColor: string;
   headtext: string;
+  template:string,
   userEmail: any;
   login: any;
   canEdit: string;
@@ -62,7 +63,7 @@ export default function TableLayoutEditView({
   addColumn,
   deleteColumn,
   submit,
-
+  template,
   userEmail,
   login,
   canEdit,

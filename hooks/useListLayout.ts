@@ -51,8 +51,7 @@ export function useListLayout({ template, layout, headtext, userEmail, login,can
                     return;
                 }
 
-                const savedValue =
-                    await AsyncStorage.getItem(sheetId);
+                const savedValue = await AsyncStorage.getItem(sheetId);
 
                 if (savedValue !== null) {
                     await AsyncStorage.removeItem(sheetId);
@@ -213,8 +212,7 @@ export function useListLayout({ template, layout, headtext, userEmail, login,can
         );
     };
 
-    const callNotification =
-        async (): Promise<void> => {
+    const callNotification = async (): Promise<void> => {
             try {
                 await sendNotification(
                     nftokensRef,

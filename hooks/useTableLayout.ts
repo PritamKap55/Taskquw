@@ -40,7 +40,6 @@ export const useTableLayout = ({ template, layout, headtext, userEmail, login, c
 
     const getSheetData = async () => {
         if (!params?.id) return;
-        console.log("getSheetData login", login);
         try {
             setLoading(true);
             if (login == "Login") {
@@ -62,6 +61,28 @@ export const useTableLayout = ({ template, layout, headtext, userEmail, login, c
         }
     };
 
+    const removeSheetIdFromStorage =
+        async (): Promise<void> => {
+            try {
+                const sheetId = String(params?.id ?? "");
+
+                if (!sheetId) {
+                    return;
+                }
+
+                const savedValue = await AsyncStorage.getItem(sheetId);
+
+                if (savedValue !== null) {
+                    await AsyncStorage.removeItem(sheetId);
+                }
+            } catch (error) {
+                console.error(
+                    "Error removing sheetId:",
+                    error
+                );
+            }
+        };
+
     useEffect(() => {
         loadHue();
 
@@ -70,6 +91,7 @@ export const useTableLayout = ({ template, layout, headtext, userEmail, login, c
         } else {
             setItems(tableData);
         }
+        removeSheetIdFromStorage();
     }, []);
 
     return {

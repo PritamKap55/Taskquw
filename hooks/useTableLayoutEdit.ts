@@ -1,9 +1,10 @@
 // hooks/useTableLayoutEdit.ts
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
+import { sendNotification } from "../services/sendNotification";
 
 import {
   appendTableRow,
@@ -12,19 +13,27 @@ import {
   updateTableRow,
 } from "../services/tableLayoutService";
 
+
+
+
 export const useTableLayoutEdit = () => {
   const params = useLocalSearchParams();
-
   const [hue, setHue] = useState(0);
   const [formData, setFormData] = useState<FormField[]>([]);
-
   const selectedId = String(params?.selectedId ?? "");
   const spreadsheetId = String(params?.id ?? "");
   const layout = String(params?.layout ?? "");
   const name = String(params?.name ?? "");
+  const template = String(params?.template ?? "");
+  const userEmail = String(params?.userEmail ?? "");
+  const login = String(params?.login ?? "");
+  const canEdit = String(params?.canEdit ?? "");
+  const [notificationRef, setNotificationRef] = useState(true);
+  const [nftokensRef, setNftokensRef] = useState<string[]>([]);
 
   const loadHue = async () => {
     try {
+
       const savedValue = await AsyncStorage.getItem("myHue");
 
       if (savedValue !== null) {
@@ -36,17 +45,20 @@ export const useTableLayoutEdit = () => {
   };
 
   const getValue = async () => {
+
+
     if (!selectedId || selectedId === "0") {
       return;
     }
 
     try {
-      const data = await getTableRow(
+      const result = await getTableRow(
         spreadsheetId,
         selectedId
       );
+      setFormData(result.FormField);
+      setNftokensRef(result.tokens);
 
-      setFormData(data);
     } catch (error) {
       console.error("Error GetValue:", error);
 
@@ -72,15 +84,14 @@ export const useTableLayoutEdit = () => {
         );
       }
 
-      Alert.alert("Success", "Data saved");
+      if (notificationRef) {
+        await callNotification();
+        setNotificationRef(false);
+      }
 
-      router.replace({
-        pathname: "/tablelayout",
-        params: {
-          layout,
-          id: spreadsheetId,
-          headtext: name,
-        },
+      Alert.alert("Success", "Data saved");
+      router.push({
+        pathname: "/detailspage", params: { canEdit: canEdit, layout: "Table", id: spreadsheetId, headtext: name, userEmail: userEmail, login: login, },
       });
     } catch (error) {
       console.error("Error Submit:", error);
@@ -100,9 +111,9 @@ export const useTableLayoutEdit = () => {
       prev.map((item, i) =>
         i === index
           ? {
-              ...item,
-              value: newValue,
-            }
+            ...item,
+            value: newValue,
+          }
           : item
       )
     );
@@ -122,6 +133,26 @@ export const useTableLayoutEdit = () => {
     setFormData(prev =>
       prev.filter((_, i) => i !== index)
     );
+  };
+  const callNotification = async (): Promise<void> => {
+    try {
+      await sendNotification(
+        nftokensRef,
+        String(
+          params?.headtext ?? ""
+        ),
+        "normal",
+        {
+          sheetId: params?.id,
+          NF_Type: 2,
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Error call_notification:",
+        error
+      );
+    }
   };
 
   useEffect(() => {

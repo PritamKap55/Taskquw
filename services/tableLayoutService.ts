@@ -1,5 +1,4 @@
 import { getAccessToken } from "./googleAuth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type TableRow = (string | number)[][];
 
@@ -44,18 +43,21 @@ export type FormField = {
 };
 
 export const getTableRow = async (
-  spreadsheetId: string,
+  sheetId: string,
   selectedId: string
-): Promise<FormField[]> => {
+): Promise<{ FormField: FormField[], tokens: string[]; }> => {
   const accessToken = await getAccessToken();
 
   if (!accessToken) {
-    throw new Error("Access token not available");
+    return {
+      FormField: [],
+      tokens: [],
+    };
   }
 
   const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet` +
-      `?ranges=Sheet1!1:1&ranges=Sheet1!${selectedId}:${selectedId}`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchGet` +
+    `?ranges=Sheet1!1:1&ranges=Sheet1!${selectedId}:${selectedId}`,
     {
       method: "GET",
       headers: {
@@ -65,7 +67,10 @@ export const getTableRow = async (
   );
 
   if (!response.ok) {
-    throw new Error("Failed to get sheet data");
+    return {
+      FormField: [],
+      tokens: [],
+    };
   }
 
   const data = await response.json();
@@ -73,14 +78,40 @@ export const getTableRow = async (
   const headers = data.valueRanges?.[0]?.values?.[0] || [];
   const row = data.valueRanges?.[1]?.values?.[0] || [];
 
-  return headers.map((key: string, index: number) => ({
+  const formFields: FormField[] = headers.map((key: string, index: number) => ({
     label: key,
     value: row[index] || "",
   }));
+
+
+  // Sheet2 notification tokens
+  const range = encodeURIComponent("Sheet2!A:A");
+
+  const tokenResponse = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  const tokenData = await tokenResponse.json();
+
+  const tokens = (tokenData.values || [])
+    .slice(1)
+    .map((row: any[]) => row[0])
+    .filter(Boolean);
+
+
+  return {
+    FormField: formFields,
+    tokens,
+  };
 };
 
 export const updateTableRow = async (
-  spreadsheetId: string,
+  sheetId: string,
   selectedId: string,
   formData: FormField[]
 ) => {
@@ -93,7 +124,7 @@ export const updateTableRow = async (
   const updatedRow = formData.map(item => item.value);
 
   const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!${selectedId}:${selectedId}?valueInputOption=RAW`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!${selectedId}:${selectedId}?valueInputOption=RAW`,
     {
       method: "PUT",
       headers: {
@@ -114,7 +145,7 @@ export const updateTableRow = async (
 };
 
 export const appendTableRow = async (
-  spreadsheetId: string,
+  sheetId: string,
   formData: FormField[]
 ) => {
   const accessToken = await getAccessToken();
@@ -126,7 +157,7 @@ export const appendTableRow = async (
   const newRow = formData.map(item => item.value);
 
   const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1:append?valueInputOption=RAW`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1:append?valueInputOption=RAW`,
     {
       method: "POST",
       headers: {

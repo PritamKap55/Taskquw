@@ -14,28 +14,16 @@ type LayoutProps = {
 
 };
 
-export default function TableLayout({
-  template,
-  layout,
-  headtext,
-  userEmail,
-  login,
-  canEdit,
+export default function TableLayout({ template, layout, headtext, userEmail, login, canEdit, }: LayoutProps) {
 
-}: LayoutProps) {
 
-  const {
-    params,
-    items,
-    loading,
-  } = useTableLayout({
+  const { params, items, loading, } = useTableLayout({
     template,
     layout,
     headtext,
     userEmail,
     login,
     canEdit,
-
   });
 
   const {
@@ -68,5 +56,7 @@ export default function TableLayout({
       login={login}
       canEdit={canEdit}
     />
+
   );
+
 }

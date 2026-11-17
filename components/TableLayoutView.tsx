@@ -49,7 +49,9 @@ export default function TableLayoutView({
     canEdit,
 }: Props) {
     return (
+
         <>
+            {console.log("table",layout)}
             {template == "" && (
                 <HeaderComp HeaderName={headtext} login={login} hue={hue} setHue={setHue} bgColor={bgColor} />
             )}
@@ -60,6 +62,7 @@ export default function TableLayoutView({
                     backgroundColor: bgbodyColor,
                 }}
             >
+
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={true}
@@ -94,7 +97,7 @@ export default function TableLayoutView({
                                 <TouchableOpacity
                                     onPress={() =>
                                         router.push({
-                                            pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Column Edit", selectedId: 1, userEmail: userEmail, login: login, canEdit: canEdit },
+                                            pathname: "/tablelayoutedit", params: { layout: layout, id: params?.id, name: headtext, headtext: "Column Edit", selectedId: 1, template: template, userEmail: userEmail, login: login, canEdit: canEdit },
                                         })
                                     }
                                 >
@@ -131,7 +134,7 @@ export default function TableLayoutView({
                                         <TouchableOpacity
                                             onPress={() =>
                                                 router.push({
-                                                    pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: rowIndex + 2, userEmail: userEmail, login: login, canEdit: canEdit },
+                                                    pathname: "/tablelayoutedit", params: { layout: layout, id: params?.id, name: headtext, headtext: "Table Edit", selectedId: rowIndex + 2, template: template, userEmail: userEmail, login: login, canEdit: canEdit },
                                                 })
                                             }
                                         >
@@ -163,8 +166,8 @@ export default function TableLayoutView({
                         <TouchableOpacity
                             onPress={() =>
                                 router.push({
-                                    pathname: "/tablelayoutedit", params: { layout: "", id: params?.id, headtext: "Table Edit", selectedId: items.length + 1, userEmail: userEmail, login: login, canEdit: canEdit },
-                                 
+                                    pathname: "/tablelayoutedit", params: { layout: layout, id: params?.id, name: headtext, headtext: "Table Edit", selectedId: items.length + 1, template: template, userEmail: userEmail, login: login, canEdit: canEdit },
+
                                 })
                             }
                         >
